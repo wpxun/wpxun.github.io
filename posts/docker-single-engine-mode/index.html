@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Dockerfile 应用容器化及 Compose 部署应用 - HOME</title>
+  <meta property="og:title" content="Dockerfile 应用容器化及 Compose 部署应用 - HOME" />
+  <meta name="twitter:title" content="Dockerfile 应用容器化及 Compose 部署应用 - HOME" />
+  <meta name="description" content="将应用整合到容器中并且运行起来的这个过程，或者把应用打包成为一个镜像的过程，称为容器化，有时也叫作“Docker 化”。容器化核心就是创建镜像，创建镜像有两种方式，一种是 commit 容器，还有一种是使用 Dockerfile 快速创建自定义镜像。
+docker compose 能够在 Docker 节点上，以**单引擎模式(Single-Engine Mode)**进行多容器应用的部署和管理。它区别于 Swarm 和 Kubernetes 可以进行多引擎多容器应用部署(在 docker 中叫 swarm mode，Compose does not use swarm mode to deploy services to multiple nodes in a swarm)。compose 和 Kubernetes 其适用范围不同，所以不适合作对比。">
+  <meta property="og:description" content="将应用整合到容器中并且运行起来的这个过程，或者把应用打包成为一个镜像的过程，称为容器化，有时也叫作“Docker 化”。容器化核心就是创建镜像，创建镜像有两种方式，一种是 commit 容器，还有一种是使用 Dockerfile 快速创建自定义镜像。
+docker compose 能够在 Docker 节点上，以**单引擎模式(Single-Engine Mode)**进行多容器应用的部署和管理。它区别于 Swarm 和 Kubernetes 可以进行多引擎多容器应用部署(在 docker 中叫 swarm mode，Compose does not use swarm mode to deploy services to multiple nodes in a swarm)。compose 和 Kubernetes 其适用范围不同，所以不适合作对比。">
+  <meta name="twitter:description" content="将应用整合到容器中并且运行起来的这个过程，或者把应用打包成为一个镜像的过程，称为容器化，有时也叫作“Docker 化”。容器化核心就是创建镜像，创建镜像有两种方式，一种是 commit 容器，还有一种是使用 Dockerfile 快速创建自定义镜像。
+docker compose 能够在 Docker 节点上，以**单引擎模式(Single-Engine Mode)**进行多容器应用的部署和管理。 …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/docker-single-engine-mode/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Dockerfile 应用容器化及 Compose 部署应用</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 15, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/docker/">
+            <i class="fas fa-folder"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/docker/">
+            <i class="fas fa-tag"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%AE%B9%E5%99%A8/">
+            <i class="fas fa-tag"></i>
+            容器
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbspshell-基础">1   shell 基础</a></li>
+    <li><a href="#2-nbspnbspdockerfile">2   Dockerfile</a>
+      <ul>
+        <li><a href="#21-nbspnbsp命令">2.1   命令</a></li>
+        <li><a href="#22-nbspnbsp指令">2.2   指令</a></li>
+        <li><a href="#23-nbspnbspdockerfile-最佳实践">2.3   Dockerfile 最佳实践</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbspcompose">3   Compose</a>
+      <ul>
+        <li><a href="#31-nbspnbsp安装">3.1   安装</a></li>
+        <li><a href="#32-nbspnbsp命令">3.2   命令</a></li>
+        <li><a href="#33-nbspnbsp指令">3.3   指令</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-nbspnbsp实战部署">4   实战部署</a>
+      <ul>
+        <li><a href="#41-nbspnbsp业务代码">4.1   业务代码</a></li>
+        <li><a href="#42-nbspnbsp容器化">4.2   容器化</a></li>
+        <li><a href="#43-nbspnbsp单引擎部署">4.3   单引擎部署</a></li>
+        <li><a href="#44-nbspnbsp浏览器看结果">4.4   浏览器看结果</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+      <p>将应用整合到容器中并且运行起来的这个过程，或者把应用打包成为一个镜像的过程，称为<strong>容器化</strong>，有时也叫作“Docker 化”。容器化核心就是创建镜像，创建镜像有两种方式，一种是 commit 容器，还有一种是使用 Dockerfile 快速创建自定义镜像。</p>
+<p>docker compose 能够在 Docker 节点上，以**单引擎模式(Single-Engine Mode)**进行多容器应用的部署和管理。它区别于 Swarm 和 Kubernetes 可以进行多引擎多容器应用部署(在 docker 中叫 swarm mode，Compose does not use swarm mode to deploy services to multiple nodes in a swarm)。compose 和 Kubernetes 其适用范围不同，所以不适合作对比。</p>
+<h2 id="1-nbspnbspshell-基础">1   shell 基础</h2>
+<ol>
+<li>
+<p>熟悉 shell 语法，比如<code>$</code>的应用规则：$?(上一个命令的返回值)、$0 $1 $2（表示指令，参数1、参数2）、$() = ` `、$NAME（引用变量）等，脚本经常会先执行 set -xe（e 表示单个命令执行返回非零时立即退出，包括函数返回非零，x 执行指令前会先显示该完整的命令）。</p>
+</li>
+<li>
+<p>理解程序运行的原理，shell 是一个等待输入的程序，输入的命令有外部命令和内部命令之分；外部命令是通过系统调用或独立的程序实现的，如 sed、awk 等。内部命令是由特殊的文件格式（.def）所实现，如 cd、history、exec、source 等。其接收到指令后有三种方式运行：
+（1）在当前的 shell 上运行
+（2）fork 新的 shell 运行，环境变量会从父进程传递给子进程
+（3）系统调用 exec 函数簇执行，一般是 fork 父进程，父子进程拥有共同的地址空间，只有当子进程需要写入数据时(如向缓冲区写入数据),这时候会复制地址空间，复制缓冲区到子进程中去。
+同理，运行一个脚本也有三种方式一一对应上面三种，当然前提是有一个已经在运行的 shell。
+（1）source：也就是 <code>. 命令</code>，在当前上下文中执行脚本，不会生成新的进程。脚本执行完毕，shell 继续等待输入。影响上下文；
+（2）<code>./script.sh</code>（以 #!/bin/sh 开头） 与 <code>sh script.sh</code>（无需 #!/bin/sh 开头） 等效，当前shell是父进程，fork 子 shell 进程，在子 shell 进程中执行脚本。脚本执行完毕，退出子shell，回到当前shell。不影响上下文。
+（3）执行完不返回 shell，直接退出 shell，关闭上下文。
+如以下脚本，通过 <code>. jump.sh</code> 后返回到原来的 shell 其当前目录也变了成 /，而 <code>./jump.sh 或 sh jump.sh</code> 则不会影响上下文。</p>
+</li>
+</ol>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt; jump.sh
+#!/bin/sh
+cd /
+pwd
+echo $HOME
+EOF
+</code></pre><h2 id="2-nbspnbspdockerfile">2   Dockerfile</h2>
+<p>Dockerfile 具有众多的指令。一般分为四部分：基础镜像信息、维护者信息、镜像操作指令和容器启动时执行指令。</p>
+<h3 id="21-nbspnbsp命令">2.1   命令</h3>
+<p>镜像常用 Dockerfile 指令文件创建，创建命令：<code>docker image build -t NAME[:TAG] Dockerfile-Path</code>。它几乎无需指定参数，但还是简单说明几个：</p>
+<ul>
+<li>&ndash;rm 成功 build 后删除中间运行的容器，默认为true。还有一个 &ndash;force-rm，无论成不成功都删除，不建议使用，因为失败了还可以通过容器调试。
+注意这里要区别于中间镜像，在 build 中 <code>---&gt; cdf98d1859c1</code> 表示依赖的镜像或者中间镜像，<code>---&gt; Running in 1d2485ce71e9</code> 表示中间容器。</li>
+<li>&ndash;no-cache 不走缓存。构建的时候会搜索开始到当前的指令是否有缓存，有则直接拿来用提升速度，但有注意 COPY、ADD 指定即使没变也会检查复制的文件有没有改动过。既然缓存会自动判断，那为什么要设置不走缓存，那是因为像 RUN，即使命令都没变，但可能因为时间、远程版本变化导致运行结果也有变化，这时候就可以指定不走缓存。</li>
+<li>&ndash;squash，压缩层，即把所有的层压缩成一个层，这对本地使用还好，对需要 pull、push 的增加了网络负担。所以尽量不用，而是在 Dockerfile 里选择性的合并指令达到压缩层的目的。像 git 也有该参数，同样各有利弊。</li>
+</ul>
+<h3 id="22-nbspnbsp指令">2.2   指令</h3>
+<p>有些指令会新建镜像层，有些只会增加元数据，关于如何区分命令是否会新建镜像层，一个基本的原则是，**如果指令的作用是向镜像中增添新的文件或者程序，那么这条指令就会新建镜像层；**如果只是告诉 Docker 如何完成构建或者如何运行应用程序，那么就只会增加镜像的元数据。所以并非所有的 RUN 都会有创建新层，比如 <code>RUN echo &quot;no data&quot;</code> 就不会创建新的层。</p>
+<p>需要注意的一点是镜像<strong>没有任何运行时的宿主机信息</strong>，比如不可能有端口映射，端口映射一定是在启动容器的时候才会指定，否则宿主机的端口未知是否可用，则容器也未知是否可用。</p>
+<p>下面列举一些常用的指令：</p>
+<ul>
+<li>FROM：指定基础镜像，推荐 Alpine，只有 5M 左右；</li>
+<li>RUN：有 shell 和 exec 两种执行方式：</li>
+</ul>
+<pre tabindex="0"><code>RUN &lt;command&gt;  //shell
+RUN [&#34;executable&#34;, &#34;param1&#34;, &#34;param2&#34;]  //exec
+</code></pre><ul>
+<li>COPY、ADD：COPY 只能复制宿主机文件，ADD 支持远端复制，并且会自动解压压缩文件，不过不会删除压缩文件。</li>
+<li>EXPOSE、-p、-P：设置镜像暴露端口，容器启动时就会监听的端口，<strong>但是不导出（publish）端口到主机，不过容器之间 link 可以使用暴露的端口通信</strong>。docker run 命令的 -p 和 -P 表示是否设置容器的端口到宿主机的映射； 其中 -P 表示将 EXPOSE 暴露的端口映射到本地主机的随机端口；-p 设置容器新暴露端口并映射到宿主机的指定端口。</li>
+</ul>
+<pre tabindex="0"><code>EXPOSE 80   //Dockerfile
+------------------------
+PORTS
+80/tcp, 0.0.0.0:91-&gt;8080/tcp  //80端口只是暴露没有导出，只能用于容器之间的 link；-p 91:8080
+0.0.0.0:32768-&gt;80/tcp, 0.0.0.0:90-&gt;8080/tcp // 80端口导出到宿主机随机端口；-P -p 90:8080
+</code></pre><ul>
+<li>ENTRYPOINT、CMD、docker run 的命令：</li>
+<li>Dockerfile 中应至少一条 CMD 或 ENTRYPOINT 指令，如果有多条，他们都是最后一条生效；而且逻辑是 CMD 在后面，如果不写在后面也不会报错，不过还是会追回在 ENTRYPOINT 参数后面；</li>
+<li>CMD 和 docker run 本质上是一样的，只不过前者是默认，后者会覆盖前者；如果有 ENTRYPOINT 指令，则他们只能是 ENTRYPOINT 指令的追加参数；</li>
+<li>docker run 中加入 &ndash;entrypoint，会覆盖镜像中的 ENTRYPOINT；</li>
+<li>当使用容器作为一个程序容器时，应使用 ENTRYPOINT 定义入口程序。</li>
+</ul>
+<pre tabindex="0"><code>CMD [&#34;executable&#34;, &#34;param1&#34;, &#34;param2&#34;]  //exec， json数组格式，所有参数都必须有双引号
+CMD [&#34;param1&#34;, &#34;param2&#34;]  // 结合 ENTRYPOINT 指令追加参数
+CMD command param1 param2  //shell
+
+ENTRYPOINT [&#34;executable&#34;, &#34;param1&#34;, &#34;param2&#34;]  //exec， json数组格式，所有参数都必须有双引号
+ENTRYPOINT command param1 param2  //shell
+</code></pre><ul>
+<li>
+<p>WORKDIR：需要注意如果是相对路径，则会以上一条绝对路径为前缀，像 cd 改变目录的功能。</p>
+</li>
+<li>
+<p>USER：如果容器中的应用程序运行时不需要特殊权限，则可以通过 USER 指令把应用程序的所有者设置为非 root 用户。</p>
+</li>
+</ul>
+<pre tabindex="0"><code>RUN groupadd -r postgres &amp;&amp; useradd -r -g postgres postgres
+USER postgres
+</code></pre><ul>
+<li>
+<p>ENV：有两种方式，但推荐第二种减少中间镜像数量</p>
+</li>
+<li>
+<p><code>ENV &lt;key&gt; &lt;value&gt;</code></p>
+</li>
+<li>
+<p><code>ENV &lt;key1&gt;=&lt;value1&gt; &lt;key2&gt;=&lt;value2&gt;</code>，这种情况字符串有空格一定要用双引号括起来</p>
+</li>
+<li>
+<p>VOLUME、-v：挂载卷，启动容器的时候会把容器中的目录挂载到宿主机中。docker run 的 -v 是可以指定宿主机的目录名的。</p>
+</li>
+</ul>
+<h3 id="23-nbspnbspdockerfile-最佳实践">2.3   Dockerfile 最佳实践</h3>
+<ol>
+<li>让层尽量的少，加快编译时间；但是保留共用层，避免 push 或 pull 重复的数据</li>
+</ol>
+<ul>
+<li>RUN 时一般使用 <code>\</code> 把长的指令分成多行，把多个 RUN 指令合并成一个 RUN 指令，达到压缩镜像层的目的；</li>
+<li>ENV <code>ENV &lt;key1&gt;=&lt;value1&gt; &lt;key2&gt;=&lt;value2&gt;</code> 减少中间镜像层</li>
+</ul>
+<ol start="2">
+<li>让镜像的大小尽量的小，只留必要的文件，其它的如构建工具、依赖、代码等如对服务没有帮助则应该删除</li>
+</ol>
+<ul>
+<li>运行结束后应该清理缓存和中间工具使得每一层的 SIZE 最小，这主要有两种方式：
+<ul>
+<li>编写命令清理不需要的数据，php 镜像就是这么干的，apk add &ndash;no-cache &ndash;virtual .build-deps 和 apk del .build-deps；phpize 和 docker-php-source delete等；</li>
+<li>建造者模式：把有用的数据移到最小版本，需要多个 Dockerfile；</li>
+<li>多阶段构建方式：利用 COPY &ndash;from 参数指定要复制指定的数据，只需要一个 Dockerfile。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-nbspnbspcompose">3   Compose</h2>
+<h3 id="31-nbspnbsp安装">3.1   安装</h3>
+<p>三大版本的关系：docker compose 版本、Compose file format 版本和 Docker Engine 版本，可以参见 github 库 <a href="https://github.com/docker/compose/releases">docker/compose</a>。比如 docker compose v1.21.0 只能支持 Compose file format v3.6 基于 Docker Engine v18.02.0+，docker compose v1.22.0 才增加了 Compose file format v3.7，而且 docker-compose.yml specification v3.7 版本要求 Docker Engine 在 v18.06.0 以上；目前最新的 docker compose v1.24.0 只能支持 Compose file format v3.7 基于 Docker Engine v18.06.0+。
+版本号如果写成 version: &lsquo;3&rsquo;，则表示为 3.0 版本。关于 docker compose file format 的差异可以看 <a href="https://docs.docker.com/compose/compose-file/compose-versioning/">Compose file versions and upgrading</a>。</p>
+<p>docker compose 是收购 fig，它是一个 python 工具，按<a href="https://docs.docker.com/compose/install/">官方下载</a>就可以了；升级也很简单，重新下载一次就可以了。</p>
+<h3 id="32-nbspnbsp命令">3.2   命令</h3>
+<ul>
+<li>up：启动，-d 表示后台运行；</li>
+<li>down：关闭，会把容器和网络删除，但不会删除卷；</li>
+<li>logs：如果加了 -d 参数，可以通过该命令查看日志，但日志的输出是依赖于服务内部的设计的；</li>
+<li>build：重建镜像用 <code>docker-compose build</code> or <code>docker-compose up --build</code>；</li>
+</ul>
+<h3 id="33-nbspnbsp指令">3.3   指令</h3>
+<p>需要注意的是可以在 Compose 文件中用<code>$</code>直接引用宿主机的变量，而 Dockerfile 文件是不行的，<code>$</code>只是引用 ENV 定义的变量。下面以 3.7 版本格式列举一些常见的指令：</p>
+<p>一级指令：</p>
+<ul>
+<li>version：版本号，规定版本的格式</li>
+<li>services：服务</li>
+<li>build：本地找，找不到就构建，如果指定 image 则用其值，如没有就用 “服务名:latest“</li>
+<li>image：如指定 build 则其规则看 build；如未指定 build，则本地找，本地没有上 hub 拉取</li>
+<li>environment：在 docker-compose 运行时导入容器，这极大的方便了引用宿主机环境变量</li>
+<li>networks：网络</li>
+<li>volumes：卷</li>
+</ul>
+<h2 id="4-nbspnbsp实战部署">4   实战部署</h2>
+<p>本节以一个计数器进行实战部署，目录结构：</p>
+<pre tabindex="0"><code>&gt; tree gomicro
+gomicro
+├── config.yaml
+├── docker-compose.yml
+├── Dockerfile
+├── main.go
+└── service
+    ├── config.go
+    └── redis.go
+</code></pre><p>除了 Dockerfile 和 docker-compose.yml，其余的都是业务代码。</p>
+<h3 id="41-nbspnbsp业务代码">4.1   业务代码</h3>
+<ol>
+<li>使用 go 作为 web 服务器，开发路径为 <code>$GOPATH/github.com/wpxun/gomicro</code>，开发环境和生产环境保持一致，需要发布 80 端口；</li>
+<li>使用 redis 存储计数，并作持久存储，该服务只供 go web 服务请求，所以暴露的端口(6379)不需要发布；</li>
+</ol>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/gomicro/main.go
+package main
+
+import (
+    &#34;fmt&#34;
+    &#34;github.com/wpxun/gomicro/service&#34;
+    &#34;net/http&#34;
+    &#34;os&#34;
+    &#34;strconv&#34;
+)
+
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+    redis := service.GetRedis()
+    val, err := redis.Incr(&#34;count&#34;).Result()
+    if err != nil {
+        panic(err)
+    }
+    host := os.Getenv(&#34;FROMHOSTNAME&#34;) //读取 docker-compose.yml 中引入到容器的环境变量
+    fmt.Fprintln(w, &#34;hello world &#34;+ host +&#34;, visitors = &#34; + strconv.FormatInt(val, 10) )
+}
+
+func main()  {
+    http.Handle(&#34;/pattern&#34;, http.HandlerFunc(IndexHandler))
+    http.ListenAndServe(&#34;:80&#34;, nil)
+}
+EOF
+</code></pre><pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/gomicro/config.yaml
+Redis:
+  DialTimeout: 2000000000 #连接超时设定(s)，默认200ms
+  Network: tcp #网络连接协议
+  Address: redis:6379 #连接地址(带端口)
+  Password:  #密码
+  Database: 0 #数据库，默认0
+EOF
+</code></pre><pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/gomicro/service/redis.go
+package service
+
+import (
+    &#34;github.com/go-redis/redis&#34;
+)
+
+func GetRedis() *redis.Client {
+    return redis.NewClient(&amp;redis.Options {
+        Addr:         Conf.Redis.Address,
+        Password:     Conf.Redis.Password,
+        DB:           Conf.Redis.Database,
+        Network:      Conf.Redis.Network,
+        DialTimeout:  Conf.Redis.DialTimeout,
+    })
+}
+EOF
+</code></pre><pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/gomicro/service/config.go
+package service
+
+import (
+    &#34;fmt&#34;
+    &#34;gopkg.in/yaml.v2&#34;
+    &#34;io/ioutil&#34;
+    &#34;time&#34;
+)
+
+type confstruct struct {
+    Redis struct {
+        Address     string          `yaml:&#34;Address&#34;`
+        Database    int             `yaml:&#34;Database&#34;`
+        DialTimeout time.Duration   `yaml:&#34;DialTimeout&#34;`
+        Network     string          `yaml:&#34;Network&#34;`
+        Password    string          `yaml:&#34;Password&#34;`
+    } `yaml:&#34;Redis&#34;`
+}
+
+var Conf confstruct
+
+func init() {
+    GetYaml(&#34;config&#34;, &amp;Conf)
+}
+
+func GetYaml(filename string, out interface{}) {
+    yamlFile, err := ioutil.ReadFile(fmt.Sprintf(&#34;%s.yaml&#34;, filename))
+    if err != nil {
+        fmt.Println(&#34;Read config file error:&#34;, err.Error())
+    }
+
+    err = yaml.Unmarshal(yamlFile, out)
+
+    if (err != nil) {
+        fmt.Println(&#34;Unmarshal config file error:&#34;, err.Error())
+    }
+}
+
+EOF
+</code></pre><h3 id="42-nbspnbsp容器化">4.2   容器化</h3>
+<p>这一步我们只需要把 go web 服务器容器化，而 redis 我们直接用官方的容器。</p>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/gomicro/Dockerfile
+# 多阶段构建
+# 第一阶段，391MB，编译前准备：go 和 git 工具、代码依赖库
+FROM golang:1.12.4-alpine3.9  AS front
+RUN set -xe &amp;&amp; \
+    apk add git &amp;&amp; \
+    go get -v github.com/go-redis/redis &amp;&amp; \
+    go get -v gopkg.in/yaml.v2
+
+# 分成两次 RUN 目的是可复用上面的缓存，编译 go 代码
+COPY . /go/src/github.com/wpxun/gomicro
+RUN set -xe &amp;&amp; \
+    go install github.com/wpxun/gomicro
+
+
+# 第二阶段，14.6MB；仅仅复制了可执行程序和程序的配置文件
+FROM alpine:3.9
+ENV GOM_VERSION   1904.1
+COPY --from=front /go/bin /go/src/github.com/wpxun/gomicro/config.yaml /go/bin/
+EXPOSE 80
+WORKDIR /go/bin
+CMD [&#34;/go/bin/gomicro&#34;]
+EOF
+</code></pre><p>我们采用多阶段构建，最终只需要 go web 服务器的可执行程序和启动时需要读取的配置文件，这里我把他们放在 /go/bin 目录下，因为 go 程序中基于当前目录读取的 config.yaml，所以需要设置工作目录为配置文件所在的目录 WORKDIR /go/bin。</p>
+<h3 id="43-nbspnbsp单引擎部署">4.3   单引擎部署</h3>
+<p>这一步我们需要把 go web 服务和 redis 服务进行编排管理，两者的通信需要配置同一个 networks。而且还在运行容器的时候添加 FROMHOSTNAME 环境变量等于宿主机的 HOSTNAME 环境变量，这里要注意，运行时的 compose 里的环境变量是宿主机的环境变量，而构建时的 Dockerfile 不能包含宿主机的信息（build 的时候可以通过 &ndash;build-arg 传变量）。</p>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/gomicro/docker-compose.yml
+version: &#34;3.7&#34;
+services:
+  gomicro:
+    build: .
+    image: wpxun/gomicro:v1
+    environment:
+      FROMHOSTNAME: $HOSTNAME
+    ports:
+      - target: 80
+        published: 80
+    networks:
+      - counter-net
+
+  redis:
+    image: &#34;redis:5.0.4-alpine3.9&#34;
+    networks:
+      - counter-net
+
+networks:
+  counter-net:
+
+volumes:
+  counter-vol:
+EOF
+</code></pre><h3 id="44-nbspnbsp浏览器看结果">4.4   浏览器看结果</h3>
+<p><code>docker-compose up -d</code> 运行</p>
+<pre tabindex="0"><code>&gt; docker ps -a
+IMAGE                   COMMAND                  CREATED             STATUS                     PORTS                                      NAMES
+gomicro_gomicro         &#34;/go/bin/gomicro&#34;        3 hours ago         Up 2 hours                 0.0.0.0:80-&gt;80/tcp                         gomicro_gomicro_1
+edis:5.0.4-alpine3.9    &#34;docker-entrypoint.s…&#34;   3 hours ago         Up 2 hours                 6379/tcp                                   gomicro_redis_1
+</code></pre><p>访问 <code>http://&lt;ip&gt;/pattern</code> 即可以看到打印的次数加 1。如果容器被 stop，计数次数保留，如果容器被 down 掉（也就是容器被删除），则计数丢失。当然可以把 redis 的数据保存在卷中，这样即使容器被删除，redis 持久化数据还在卷中，下次重启可以挂载。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] Nigel Poulton. 深入浅出 Dokcer. 版次：2019年4月第1版
+[2] 廖煜 晏东. Docker 容器实战. 版次：2016年11月第1版
+[3] Dockerfile 最佳实践. <a href="https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/">https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/docker-swarm-mode/" data-toggle="tooltip" data-placement="top" title="Docker Swarm 集群">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/docker-engine/" data-toggle="tooltip" data-placement="top" title="Docker Engine">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

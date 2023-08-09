@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>SSL/TLS 协议 - HOME</title>
+  <meta property="og:title" content="SSL/TLS 协议 - HOME" />
+  <meta name="twitter:title" content="SSL/TLS 协议 - HOME" />
+  <meta name="description" content="SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。">
+  <meta property="og:description" content="SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。">
+  <meta name="twitter:description" content="SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/tls/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">SSL/TLS 协议</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 24, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/http/">
+            <i class="fas fa-folder"></i>
+            HTTP
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/tls/">
+            <i class="fas fa-tag"></i>
+            TLS
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+            <i class="fas fa-tag"></i>
+            协议
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp记录层协议">1   记录层协议</a></li>
+    <li><a href="#2-nbspnbsp握手协议">2   握手协议</a>
+      <ul>
+        <li><a href="#21-nbspnbsp密码套件协商">2.1   密码套件协商</a></li>
+        <li><a href="#22-nbspnbsp身份认证">2.2   身份认证</a></li>
+        <li><a href="#23-nbspnbsp密钥协商">2.3   密钥协商</a></li>
+        <li><a href="#24-nbspnbsp完成握手">2.4   完成握手</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsp会话恢复">3   会话恢复</a>
+      <ul>
+        <li><a href="#31-nbspnbsp基于-session-id-的会话恢复">3.1   基于 Session ID 的会话恢复</a></li>
+        <li><a href="#32-nbspnbsp基于-sessionticket-的会话恢复">3.2   基于 SessionTicket 的会话恢复</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-nbspnbsp总结">4   总结</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。</p>
+<p>网络通信存在三个风险：</p>
+<ol>
+<li>窃听风险（eavesdropping）：机密性，需要机密性，用公钥分发&quot;对话密钥&quot;，并使用它对称加密数据；</li>
+<li>篡改风险（tampering）：完整性，对数据的篡改，数字签名，需要权威的 CA 机构证明；</li>
+<li>冒充风险（pretending）：身份验证，对公钥的冒充，数字签名，需要权威的 CA 机构证明；</li>
+</ol>
+<p>TLS 便是要解决通信中存在的安全风险，并提供减少延迟可用方案。对于安全风险的处理方式，为了便于理解，可以看这一张简化的流程图：
+<img src="https://wpxun.github.io/image/2019/03/https.png" alt="SSL/TLS 通信流程"></p>
+<p>TLS 是一个分层协议，具体的文档可以查阅《RFC 5246》。</p>
+<p><img src="https://wpxun.github.io/image/2019/03/TLS_SSL%E6%A0%BC%E5%BC%8F%E5%8D%8F%E8%AE%AE.png" alt="TLS/SSL格式协议">
+协议-&gt;消息类型-&gt;子消息类型（如果有的话）
+其中握手协议的子消息类型 HandshakeType(十六进制)常规有以下这些：
+hello_request(0x00), client_hello(0x01), server_hello(0x02),certificate(0x0b), server_key_exchange (0x0c),certificate_request(0x0d), server_hello_done(0x0e),certificate_verify(0x0f), client_key_exchange(0x10),finished(0x14), (0xff)
+扩展消息还增加了一些子消息类型，后面涉及时再介绍。需要注意的是，对于 TLS 协议来说，多个子协议可以合并到一个 TLS 协议包中，减少延迟；</p>
+<p>下面主要以 TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 密钥套件为例来分析 TLS。</p>
+<h2 id="1-nbspnbsp记录层协议">1   记录层协议</h2>
+<p>主要有四部分的逻辑处理：
+（握手完成，从应用层接收数据）</p>
+<ul>
+<li>数据分块：每个块的大小小于2^14字节（16KB）；生成 TLSPlaintext 结构；</li>
+<li>压缩：由于存在一些安全问题，一般不启用压缩；TLSPlaintext 结构转换为 TLSCompressed 结构，如果不压缩，可以认为 TLSPlaintext 和 TLSCompressed 一致，其实是 TLSPlaintext 和 TLSCompressed.fragment 一致；</li>
+<li>加密和完整性保护：TLSCompressed 结构转换为 TLSCiphertext 结构，对 TLSCiphertext 解压后 其实就是 TLSCompressed.fragment，</li>
+<li>添加记录层消息头：看格式协议图；
+（交付给 TCP 层传输）</li>
+</ul>
+<p>接下来单独解释一下加密和完整性保护，这里以 AEAD 为例，AEAD 函数将 TLSCompressed.fragment 结构转换/逆转换为 AEAD TLSCiphertext.fragment 结构。</p>
+<p><img src="https://wpxun.github.io/image/2019/03/AEAD%E6%A8%A1%E5%BC%8F%E9%80%BB%E8%BE%91%E5%9B%BE.png" alt="AEAD 模式逻辑图"></p>
+<pre tabindex="0"><code>additional_data = seq_num + TLSCompressed.type +
+                        TLSCompressed.version + TLSCompressed.length;
+</code></pre><p>（1）加密</p>
+<pre tabindex="0"><code>AEADEncrypted = AEAD-Encrypt(write_key, nonce, plaintext, additional_data)
+</code></pre><p>其中 nonce 是明文传输的；plaintext 为 TLSCompressed.fragment；这里的 AEAD 函数校验数据完整性是通过 additional_data 这个数据，所以 Mac 密钥已经不需要了。下面这段引自 rfc5246</p>
+<p>AEAD ciphers take as input a single key, a nonce, a plaintext, and
+&ldquo;additional data&rdquo; to be included in the authentication check, as
+described in Section 2.1 of [AEAD].  The key is either the
+client_write_key or the server_write_key.  No MAC key is used.</p>
+<p>（2）解密</p>
+<pre tabindex="0"><code>TLSCompressed.fragment = AEAD-Decrypt(write_key, nonce, AEADEncrypted, additional_data)
+</code></pre><h2 id="2-nbspnbsp握手协议">2   握手协议</h2>
+<p>完整的握手消息流.</p>
+<pre tabindex="0"><code>      Client                                               Server
+
+      ClientHello                  --------&gt;
+                                                      ServerHello
+                                                     Certificate*
+                                               ServerKeyExchange*
+                                              CertificateRequest*
+                                   &lt;--------      ServerHelloDone
+      Certificate*
+      ClientKeyExchange
+      CertificateVerify*
+      [ChangeCipherSpec]
+      Finished                     --------&gt;
+                                               [ChangeCipherSpec]
+                                   &lt;--------             Finished
+      Application Data             &lt;-------&gt;     Application Data
+</code></pre><h3 id="21-nbspnbsp密码套件协商">2.1   密码套件协商</h3>
+<ul>
+<li><strong>client_hello</strong>: 密码套件支持，曲线支持（ecc_curve）等。</li>
+<li><strong>server_hello</strong>: 协商出密码套件。</li>
+</ul>
+<p>密码套件提供了身份认证、数据机密性和数据完整性，是 TLS/SSL 的核心，可以说只有充分理解密码套件才能真正理解 TLS/SSL 协议。以 TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256(IANA 表示法，编号 0xC02F，OpenSSL 表示为 ECDHE_RSA_AES128_GCM_SHA256) 密钥套件为例，其总体上由三部分组成：(1)Key Exchange(ECDHE_RSA)、(2)Cipher(AES_128_GCM)、(3)Mac(SHA256)。</p>
+<ol>
+<li>使用 ECDHE_RSA 进行身份验证和密钥协商，协商预备主密钥；在密码套件中，身份验证和密码协商是一起理解的（也包含了证书的信息），他们可以是同一个算法。
+ECDHE 和 ECHD 密码套件差不多，但是不包含匿名的密码套件；</li>
+<li>使用 AES_128_GCM 算法和密钥块进行会话保护；因为在数据加密过程中，是需要保证机密性和完整性的，所以需要对称加密算法 + Mac 算法（注意这里的 Mac 没有使用 HMac 算法），亦即实现 AD 或者 AEAD 的加密模式。</li>
+<li>使用 SHA256 算法的 PRF 和 HMAC 算法推导出密钥块。在 TLSv1.2 以前版本采用的 Hash 算法是硬编码，TLSv1.2 及以后的版本取决于 TLS 版本和密码套件，如果密码套件指定的 Mac 算法安全级高于SHA256，则采用 SHA384。</li>
+</ol>
+<p>ECDHE_RSA 密码套件中的证书包含一个 RSA 服务器的公钥（注意 CA 公钥算法是在证书里指定的，不需要在密码套件中指定），对 DH_XXX、ECDH_XXX、DHE_XXX、ECDHE_XXX 套件来说，套件的后半部分对应的公钥不会用来加密或者数字签名（如果要用于数字签名，前提是证书 Key Usage 扩展必须置为 digitalSignature），也不限制 CA 机构签发证书所用的数字签名，所以服务器的公钥可以看作普通的消息，服务器的非对称加密没有存在的必要性。ECDHE_RSA 这些名字的存在仅仅是历史原因。</p>
+<h3 id="22-nbspnbsp身份认证">2.2   身份认证</h3>
+<ul>
+<li><strong>certificate</strong>：一般只是证明服务端的身份，银行大额转账则要求双向认证，这时候就需要用到银行发的 Ukey。</li>
+</ul>
+<p><strong>身份认证</strong>就是密码学中<strong>数字签名</strong>的实际应用例子，由权威的 CA 机构签名背书给服务器发放<strong>数字证书</strong>（类似现实生活中身份证，驾驶证），身份认证就是对数字证书的身份求证，除了 TLS 使用的数字证书，银行 Ukey 里的数字证书都是一样的原理。SSL/TLS 通信流程图结合密码学的数字签名就可以讲清楚身份认证的过程。</p>
+<p><strong>数字证书</strong>解决了服务器身份认证和公钥传输问题，服务器实体并不能自己证明自己，所以需要通过 CA 机构来进行认证，对服务端来说 CA 机构的私钥用来给服务器颁发证书，对客户端来说浏览器集成了 CA 机构的公钥可以验证服务器证书。**理解数字证书就要理解一次对话中需要两对非对称加密：CA 机构的公钥私钥和服务器的公钥私钥，且这两套的算法没有必然的联系。**目前密钥协商已不再使用 RSA 算法，所以服务器的公钥和私钥已经限于身份认证功能了。</p>
+<h3 id="23-nbspnbsp密钥协商">2.3   密钥协商</h3>
+<ul>
+<li><strong>server_key_exchange</strong>: 一般 HTTPS 网站会部署 ECDHE_RSA、DHE_RSA、ECDHE_ECDSA、RSA 这四种密码套件，这些套件中，前三个一定需要发送 server_key_exchange 子消息才有足够的信息进行密钥协商，最后一个不允许服务器发送 server_key_exchange 子消息，因为单靠 RSA 已经足以进行密钥协商（密钥传输），除 RSA 之外 DH_DSS、DH_RAS 都不需要该子消息。
+对 DH_RSA 来说，ServerDhParams 里包含了 dh_p、dh_g、dh_Ys，即 p 大质数、g 生成元、Ys 服务器 DH 公钥。
+对 ECDHE_RSA 来说，ServerECDHParams 里包含了 curve_params、public，即椭圆曲线（一般是命名曲线，需要双方都支持）、ECC 公钥。
+另外该消息会对发送的 DH/ECDH 参数和公钥进行签名，不过这不是重点。</li>
+<li><strong>server_hello_done</strong>: 其实就是一条空消息，表示服务端发送了足够的消息，接下来可以和客户端一起协商出预备主密钥。</li>
+<li><strong>client_key_exchange</strong>s: 收到 server_hello_done 后客户端立刻发送该消息。以 ECDHE_RSA 为例，把客户端 ECDH 公钥（ecdh_Yc）发送给服务端。注意的是，client_key_exchange 一定会发的，而 server_key_exchange 不一定会发，如果理解了密钥协商的要素，也就理解是否需要发送了。</li>
+</ul>
+<p>到此密钥协商过程就算结束，客户端和服务端都计算出了预备主密钥，接下来双方就各自推导出密钥块。密钥块是通过密钥衍生算法计算出来的，而且需要经过两次运算，计算主密钥和密钥块是两个不同的过程。
+首先我们先来解释一下 TLS 采用的密钥衍生算法（KDF）——PRF(scret, label, seed)，其中 scret 是输入值，label 是标识符（对固定的运算有固定的标识符），seed 其实就是 salt（随机数），如果输入值和 salt 一样，则输出也是一样的，为了保证输出结果一致，客户端和服务端持有的 salt 值是相同的，一般是客户端随机数加客户端随机数。《RFC 5246》——5. HMAC and the Pseudorandom Function 部分能更进一步理解 PRF，从下面的描述可以看出，<strong>PRF 就用到了密码套件的 Mac 算法</strong>。</p>
+<pre tabindex="0"><code>5.  HMAC and the Pseudorandom Function
+
+   The TLS record layer uses a keyed Message Authentication Code (MAC)
+   to protect message integrity.  The cipher suites defined in this
+   document use a construction known as HMAC, described in [HMAC], which
+   is based on a hash function.  Other cipher suites MAY define their
+   own MAC constructions, if needed.
+
+   In addition, a construction is required to do expansion of secrets
+   into blocks of data for the purposes of key generation or validation.
+   This pseudorandom function (PRF) takes as input a secret, a seed, and
+   an identifying label and produces an output of arbitrary length.
+
+   In this section, we define one PRF, based on HMAC.  This PRF with the
+   SHA-256 hash function is used for all cipher suites defined in this
+   document and in TLS documents published prior to this document when
+   TLS 1.2 is negotiated.  New cipher suites MUST explicitly specify a
+   PRF and, in general, SHOULD use the TLS PRF with SHA-256 or a
+   stronger standard hash function.
+
+   First, we define a data expansion function, P_hash(secret, data),
+   that uses a single hash function to expand a secret and seed into an
+   arbitrary quantity of output:
+
+
+
+
+
+
+Dierks &amp; Rescorla           Standards Track                    [Page 14]
+ 
+RFC 5246                          TLS                        August 2008
+
+
+      P_hash(secret, seed) = HMAC_hash(secret, A(1) + seed) +
+                             HMAC_hash(secret, A(2) + seed) +
+                             HMAC_hash(secret, A(3) + seed) + ...
+
+   where + indicates concatenation.
+
+   A() is defined as:
+
+      A(0) = seed
+      A(i) = HMAC_hash(secret, A(i-1))
+
+   P_hash can be iterated as many times as necessary to produce the
+   required quantity of data.  For example, if P_SHA256 is being used to
+   create 80 bytes of data, it will have to be iterated three times
+   (through A(3)), creating 96 bytes of output data; the last 16 bytes
+   of the final iteration will then be discarded, leaving 80 bytes of
+   output data.
+
+   TLS&#39;s PRF is created by applying P_hash to the secret as:
+
+      PRF(secret, label, seed) = P_&lt;hash&gt;(secret, label + seed)
+
+   The label is an ASCII string.  It should be included in the exact
+   form it is given without a length byte or trailing null character.
+   For example, the label &#34;slithy toves&#34; would be processed by hashing
+   the following bytes:
+
+      73 6C 69 74 68 79 20 74 6F 76 65 73
+</code></pre><p>（1）计算主密钥：一旦客户端和服务端协商出预备主密钥，就会立刻计算主密钥，在 Change Cipher Spec 协议发送之前，客户端和服务端计算出主密钥就行。通过 PRF 函数将预备主密钥转换为主密钥后，客户端和服务端应该立刻从内存中删除预备主密钥，避免被窃取。计算公式如下：</p>
+<pre tabindex="0"><code> master_secret = PRF(pre_master_secret, &#34;master secret&#34;,
+                 ClientHello.random + ServerHello.random)
+                 [0..47];
+</code></pre><p>其中，客户端和服务端的随机数组合起来就是 seed；主密钥的长度固定是48字节，而预备主密钥的长度取决于密码协商算法，对 RSA 密钥协商其预备主密钥的长度是48字节，对 DH/ECDH 密钥协商其预备主密钥长度取决于 DH/ECDH 公钥。
+（2）计算密钥块： 客户端和服务端计算出主密钥后，立刻计算密钥块（key_block），TLS 记录层协议（实际上是记录层协议上的应用协议）需要使用这些密钥块进行密码学机密性和完整性保护。
+主密钥的长度固定是48字节，而密钥块的个数和长度取决于密钥协商算法。计算如下：</p>
+<pre tabindex="0"><code>key_block = PRF(SecurityParameters.master_secret,
+            &#34;key expansion&#34;,
+            SecurityParameters.server_random +
+            SecurityParameters.client_random);
+</code></pre><h3 id="24-nbspnbsp完成握手">2.4   完成握手</h3>
+<ul>
+<li><strong>Change Cipher Spec</strong> 协议：该协议并不是握手协议的一部分，但是握手过程依赖于该协议，所以 为了避免握手流程理解中断得把它放在握手过程中。它是可以和握手协议的组成一个 TLS 包一起发送的。客户端和服务端计算出预备主密钥、主密钥和密钥块后，接下来通知对端后续的消息都需要 TLS 记录协议加密和完整性保护了，连接状态由待读、待写状态切换为可读、可写状态。该协议只有一个字节</li>
+<li><strong>finished</strong>：在 Wireshark 中显示的是 encrypted_handshake_message。理论上只要发了 Change Cipher Spec 就可以对数据进行加密保护了，但因为握手协议过程中的包都没有加密和完整性保护，为了避免消息篡改，客户端和服务端需要校验对方发送的 Finished 子消息确保握手消息没有被篡改。该消息一定是在 Change Cipher Spec 子消息之后，否则会产生一个致命的错误。一旦客户端和服务端都校验了对方的 Finished 子消息，那么接下来就可以立刻加密保护应用层数据了。</li>
+</ul>
+<h2 id="3-nbspnbsp会话恢复">3   会话恢复</h2>
+<p>上面讲的是完整的握手过程，接下来讲解通过会话恢复实现简短的握手过程。
+会话恢复有两种形式，分别是基于 Session ID 的会话恢复和基于 Session ticker 的会话恢复。</p>
+<h3 id="31-nbspnbsp基于-session-id-的会话恢复">3.1   基于 Session ID 的会话恢复</h3>
+<p>《RFC 5246》文档对这一内容有描述。
+基于 Session ID 的会话恢复是由服务端存储会话信息，TLS 协议只是规定 Session Cache 的存储方式，没有考虑如何实现 Session Cache，对分布式服务来说增加了复杂性，目前 Nginx 官方就没有支持分布式服务器 Session Cache。所以一般不采用。</p>
+<ul>
+<li>
+<p>基于 Session ID 进行完整的握手（会话建立）：Client Hello 的 Session ID 值为空，服务端创建新的 Session ID。建立完成后：
+(1) 客户端：仅保存 Session ID 值在内存中。
+(2) 服务端：将会话信息保存 Session Cache 中，键值就是 Session ID，键值对应的内容就是会话信息。一个完整的会话信息包括：
+session id、证书（对端的，一般为空）、压缩算法（一般不启用）、密码套件、主密钥、会话可恢复标识（表示某个会话是否可恢复）。</p>
+</li>
+<li>
+<p>基于 Session ID 进行简短的握手（会话恢复）：Client Hello 的 Session ID 值不为空。服务端检查是否可以恢复会话，如不能则进行完整的握手协议，同时生成一个新的 Session ID。如能恢复连接，则直接发送 ChangeCipherSpec 和 Finished，而不进行协商（主密钥存在 Session Cache 中）。</p>
+</li>
+</ul>
+<h3 id="32-nbspnbsp基于-sessionticket-的会话恢复">3.2   基于 SessionTicket 的会话恢复</h3>
+<p>详见文档《RFC 5077》——没有服务器端状态的会话恢复，它属于扩展，是 HTTPS 的一个重要知识点。
+服务器将会话信息加密后以 ticket 的方式发送给客户端，服务端本身不存储会话信息，客户端收到 ticket 后存储在内存中，客户端只是存储和传输 ticket，不涉及 ticket 的解密。
+添加了一个 HandshakeType 子消息类型 session_ticket（0x04），如果服务端 ServerHello 消息包含 SessionTicket TLS 扩展，则必须发送该子消息；如果服务端 ServerHello 不包含 SessionTicket TLS 扩展，则不能发送该子消息。</p>
+<ul>
+<li>服务器返回 NewSessionTicket 完整握手的消息流</li>
+</ul>
+<pre tabindex="0"><code>Client                                               Server
+
+         ClientHello
+         (SessionTicket extension) --------&gt;
+                                                         ServerHello
+                                     (empty SessionTicket extension)
+                                                        Certificate*
+                                                  ServerKeyExchange*
+                                                 CertificateRequest*
+                                  &lt;--------          ServerHelloDone
+         Certificate*
+         ClientKeyExchange
+         CertificateVerify*
+         [ChangeCipherSpec]
+         Finished                 --------&gt;
+                                                    NewSessionTicket
+                                                  [ChangeCipherSpec]
+                                  &lt;--------                 Finished
+         Application Data         &lt;-------&gt;         Application Data
+</code></pre><ul>
+<li>使用新 NewSessionTicket 进行简短握手的消息流</li>
+</ul>
+<pre tabindex="0"><code>         Client                                                Server
+         ClientHello
+         (SessionTicket extension)      --------&gt;
+                                                          ServerHello
+                                      (empty SessionTicket extension)
+                                                     NewSessionTicket
+                                                   [ChangeCipherSpec]
+                                       &lt;--------             Finished
+         [ChangeCipherSpec]
+         Finished                      --------&gt;
+         Application Data              &lt;-------&gt;     Application Data
+</code></pre><p>注意，发送 NewSessionTicket 子消息来更新 ticket，ticket 也是有有效期的。</p>
+<h2 id="4-nbspnbsp总结">4   总结</h2>
+<p>TLS 为了更安全必然造成一些损耗，但其的设计上已经做了优化，比如采用对称加密。如果采用 HTTP/2 协议传输，那么带来的性能提升完全可以抵消 TLS 带来的性能损耗。下面这些诀窍可供借鉴。</p>
+<ul>
+<li>保持连接开启尽可能长的时间。TLS 成本最高的地方就是连接时的握手过程。如果连接时间能保持足够长，握手次数就可以减少。</li>
+<li>使用基于 SessionTicket 的会话恢复，允许客户端复用上次的握手直接重连服务器。</li>
+<li>使用内置加解密支持的芯片。</li>
+</ul>
+<p><strong>参考文献</strong>
+[1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版
+[2] 阮一峰. HTTPS 升级指南 <a href="http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html">http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html</a>. 2016年8月19日</p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/devops/" data-toggle="tooltip" data-placement="top" title="DevOps">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/cryptology/" data-toggle="tooltip" data-placement="top" title="密码学">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

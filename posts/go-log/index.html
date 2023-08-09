@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>go log 包 - HOME</title>
+  <meta property="og:title" content="go log 包 - HOME" />
+  <meta name="twitter:title" content="go log 包 - HOME" />
+  <meta name="description" content="1   错误相关的概念
+
+编译错误：build的时候就报错，由于考虑不周或输入错误导致程序异常（Exception），比如数组越界访问，除数为零，堆栈溢出等等。是大意疏忽。
+运行错误：run的时候才报错，由于程序设计思路的错误导致程序异常或难以得到预期的效果。运行错误可以是预期的，也可以是不可预期的，对于可预期的不要用 panic，panic 恐慌机制是意料之外，如果不恢复（recover）就会导致宕机。**宕机（panic）**不是一件很好的事情，可能造成体验停止、服务中断，就像没有人希望在取钱时遇到 ATM 机蓝屏一样。但是，如果在损失发生时，程序没有因为宕机而停止，那么用户将会付出更大的代价，这种代价可以是金钱、时间甚至生命。因此宕机有时是一种合理的止损方法。
+error错误：错误是业务过程的一部分，而异常不是。错误是可预期的结果，error错误机制是意料之中。
+">
+  <meta property="og:description" content="1   错误相关的概念
+
+编译错误：build的时候就报错，由于考虑不周或输入错误导致程序异常（Exception），比如数组越界访问，除数为零，堆栈溢出等等。是大意疏忽。
+运行错误：run的时候才报错，由于程序设计思路的错误导致程序异常或难以得到预期的效果。运行错误可以是预期的，也可以是不可预期的，对于可预期的不要用 panic，panic 恐慌机制是意料之外，如果不恢复（recover）就会导致宕机。**宕机（panic）**不是一件很好的事情，可能造成体验停止、服务中断，就像没有人希望在取钱时遇到 ATM 机蓝屏一样。但是，如果在损失发生时，程序没有因为宕机而停止，那么用户将会付出更大的代价，这种代价可以是金钱、时间甚至生命。因此宕机有时是一种合理的止损方法。
+error错误：错误是业务过程的一部分，而异常不是。错误是可预期的结果，error错误机制是意料之中。
+">
+  <meta name="twitter:description" content="1   错误相关的概念
+
+编译错误：build的时候就报错，由于考虑不周或输入错误导致程序异常（Exception），比如数组越界访问，除数为零，堆栈溢出等等。是大意疏忽。
+运行错误：run的时候才报错，由于程序设计思路的错误导致程序异常或难以得到预期的效果。运行错误可以是预期的，也可以是不可预期的，对于可预期的不要用 panic，panic 恐慌机制是意料之外，如果不恢复（recover）就会导 …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/go-log/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">go log 包</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>August 6, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/golang/">
+            <i class="fas fa-folder"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/golang/">
+            <i class="fas fa-tag"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <h2 id="1-nbspnbsp错误相关的概念">1   错误相关的概念</h2>
+<ul>
+<li><strong>编译错误</strong>：build的时候就报错，由于考虑不周或输入错误导致程序异常（Exception），比如数组越界访问，除数为零，堆栈溢出等等。是大意疏忽。</li>
+<li><strong>运行错误</strong>：run的时候才报错，由于程序设计思路的错误导致程序异常或难以得到预期的效果。运行错误可以是预期的，也可以是不可预期的，对于可预期的不要用 panic，panic 恐慌机制是意料之外，如果不恢复（recover）就会导致宕机。**宕机（panic）**不是一件很好的事情，可能造成体验停止、服务中断，就像没有人希望在取钱时遇到 ATM 机蓝屏一样。但是，如果在损失发生时，程序没有因为宕机而停止，那么用户将会付出更大的代价，这种代价可以是金钱、时间甚至生命。因此宕机有时是一种合理的止损方法。</li>
+<li><strong>error错误</strong>：错误是业务过程的一部分，而异常不是。错误是可预期的结果，error错误机制是意料之中。</li>
+</ul>
+<p>基于上面概念，我们可以把异常归为以下两种分类：</p>
+<ul>
+<li>Bug：不可预期，例如：不可预期的 panic，说不可预期本质上是粗心大意导致的</li>
+<li>已知信息：可预期，error 错误（例如：网络连接断开、磁盘写入失败等）、可预期的 panic（recover 捕获变成 error，或者不捕获直接宕机）。在其它语言里，宕机往往以异常的形式存在。底层抛出异常，上层逻辑通过 try/catch 机制捕获异常，没有被捕获的严重异常会导致宕机，捕获的异常可以被忽略，上代码继续运行。
+Go 没有异常系统，其使用 panic 触发宕机类似于其它语言的抛出异常，那么 recover 的宕机恢复机制就对应 try/catch 机制，能够通过 recover 捕获的原因在 panic() 函数前面已经运行过的 defer 语句依然会在宕机发生时发生作用，可以在 defer 内继续调用 panic，进一步将错误抛出。</li>
+</ul>
+<ol>
+<li>错误转恐慌，比如程序逻辑上尝试请求某个 URL，最多尝试三次，尝试三次的过程中请求失败是错误，尝试完第三次还不成功的话，失败就被提升为恐慌宕机了。</li>
+<li>恐慌转错误，比如 panic 触发的异常被 recover 恢复后，将返回值中 error 类型的变量进行赋值，以便上层函数继续走错误处理流程。</li>
+</ol>
+<p>基本上 goland 能提示的错误都是编译错误，此时如果进行编译，就会得到以下的错误信息
+# github.com/wpxun/client<br>
+.\main.go:45:20: cannot convert nima (type xx) to type string
+在 Goland IDE 中一般会对输出做区分：一般 stdout 用黑色字体，stderr 用红色字体</p>
+<h2 id="2-nbspnbspfmt-包">2   fmt 包</h2>
+<p>打印本质上就是把流写到 writer 对象上，并为了方便调用，提供了一系列函数。比如 Printf 并定制了 format 格式输出：</p>
+<ul>
+<li>
+<p>%p 以地址的形式打印</p>
+<pre tabindex="0"><code>var a int = 123
+var b []int = []int{1,2}
+fmt.Printf(&#34;%p, %p&#34;, a, &amp;a) // 前者不是地址无效，后者是 a 变量的地址
+fmt.Printf(&#34;%p, %p&#34;, b, &amp;b) // 前者为 b 内容的地址，后者为 b 变量的地址
+</code></pre></li>
+<li>
+<p>%v、%#v，打印对象，%v 会去寻找 Stringer 接口，而 %#v 直接打印对象</p>
+<pre tabindex="0"><code>type myStruct struct{
+  name1 int
+  name map[int]string
+}
+func (myStruct) String () string {
+  return &#34;Stringer echo&#34;
+}
+</code></pre></li>
+</ul>
+<p>//打印结构体
+var my myStruct = myStruct{1, map[int]string{1:&ldquo;123&rdquo;, 2:&ldquo;345&rdquo;}}
+fmt.Printf(&quot;%#v，%v&quot;, my, my)</p>
+<pre tabindex="0"><code>## 3   log 包
+log.Logger 结构体核心属性是三个：文件描识符、前缀和标签。默认初始化`var std = New(os.Stderr, &#34;&#34;, LstdFlags)`，就是对三个属性的设置，可以看出默认是错误输出，并已经设置默认的 flags。包的使用方式主要有两种：
+- 使用默认的 std 变量，用于测试
+- 使用自定义的 log.Logger 变量，调用 log.New 初始化，运用于产品
+
+log 公开的函数或 Logger 方法都是调用了 Logger.Output() 方法，有两个参数：
+- calldepth：输出文件名的时候指向的函数栈的深度，仅在 Llongfile or Lshortfile 被设置时才起作用；0 层表示 Logger.Output() 处的 runtime.Caller(calldepth)，1 层表示调用Output那一行，也就是当前行，2 层表示再往上一层，也就是调用输出的函数栈；一般都设置为指向当前调用行或其上一个栈，所以层层调用要算好栈的深度。
+- 字符串，可以使用 fmt.Sprintf 进行格式化后再输入
+
+## 4   经验总结
+
+- 调用方具有更多关于正在运行的程序的上下文，并且可以做出关于如何处理错误的更明智的决定（比如错误发生3次才做处理），**所以谁调用，谁处理；这样的原则有很多，比如 molloc/free集中在同一个函数，谁发起 goroutine，谁就保证该 goroutine 不会泄漏，谁生成了 channel，谁就负责关闭 channel，channel 重复关闭会引发恐慌**。
+- 一般以模块为边界设计 Error，不同边界（或者不同层）采用 wrap 的方式嵌套，将异常进行传递，直到传递到调用方进行处理，这样的好处是各层的异常信息都传递了，并且每一层还可以附加最明了的错误信息，这有两个好处：
+  - 明了的信息，这个明了的信息对用户友好，一般是“直接上层”传递过来的异常的友好说明，而不会再追究“上层以上的层”的错误信息
+  - 完整的错误链，因为嵌套的原因，所以可以把结构体输出却可
+- 设计要异常传递的信息，不要等到最后才去优化，就如同“超时取消”的设计一样，应该在最开始的阶段就设计好
+- 设计需要的信息：区分项目、区分日志类型，日志格式，用标准的语言描述：
+  - 发生了什么
+  - 发生在什么时间、什么位置
+  - 对用户友好的信息
+  - 告诉用户如何获得更多的信息
+</code></pre>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/go-command/" data-toggle="tooltip" data-placement="top" title="go command 命令">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/istio-traffic-management/" data-toggle="tooltip" data-placement="top" title="Istio 流量管理">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

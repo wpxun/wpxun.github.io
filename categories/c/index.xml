@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C on HOME</title>
+    <link>https://wpxun.github.io/categories/c/</link>
+    <description>Recent content in C on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Tue, 27 Aug 2019 21:51:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/categories/c/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>汇编语言</title>
+      <link>https://wpxun.github.io/posts/assembly/</link>
+      <pubDate>Tue, 27 Aug 2019 21:51:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/assembly/</guid>
+      <description>&lt;p&gt;图灵在数理逻辑方面的理论研究，间接地创造了机器指令设计的基本方法，计算机界最高奖项也因此称图灵奖；现代计算机之父冯诺依曼，于1945年提出了“存储程序通用电子计算方案”，提出了指令数据存储思想，并在 1951 年成功研制出了冯诺依曼结构的 IAS 计算机（现在计算机的原型机），奠定了现代计算机的微体系设计和程序结构设计。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>C Socket 编程</title>
+      <link>https://wpxun.github.io/posts/c-socket/</link>
+      <pubDate>Mon, 11 Mar 2019 20:04:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/c-socket/</guid>
+      <description>&lt;p&gt;一切皆文件，I/O 操作无处不在，文件、设备、管道、Socket等都是 I/O 操作。C 语言对文件 I/O 操作分两种，一种是无缓冲的（用户层无缓存区），返回的是文件描述符（int 整型），代表函数是 open、read、write 和 socket 等；另一种是有缓冲的（用户层设计了缓存区），返回是的数据流 Stream（FILE 结构体），代表函数是 fopen、fread、fwrite、putc、getc、fputs、fgets 和 fprintf等；不过 C 标准已经不再支持对文件（这里没有包括 socket）的无缓冲操作。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on HOME</title>
+    <link>https://wpxun.github.io/tags/golang/</link>
+    <description>Recent content in Golang on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Tue, 27 Aug 2019 21:51:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>汇编语言</title>
+      <link>https://wpxun.github.io/posts/assembly/</link>
+      <pubDate>Tue, 27 Aug 2019 21:51:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/assembly/</guid>
+      <description>&lt;p&gt;图灵在数理逻辑方面的理论研究，间接地创造了机器指令设计的基本方法，计算机界最高奖项也因此称图灵奖；现代计算机之父冯诺依曼，于1945年提出了“存储程序通用电子计算方案”，提出了指令数据存储思想，并在 1951 年成功研制出了冯诺依曼结构的 IAS 计算机（现在计算机的原型机），奠定了现代计算机的微体系设计和程序结构设计。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go command 命令</title>
+      <link>https://wpxun.github.io/posts/go-command/</link>
+      <pubDate>Fri, 16 Aug 2019 16:53:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-command/</guid>
+      <description>&lt;p&gt;/usr/local/go/bin 下提供了三个命令 go、gofmt、godoc。主命令 Go 下分二级和三级子命令，本文档将迭代完善，争取列出所有功能点，目前还处于更新状态。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go log 包</title>
+      <link>https://wpxun.github.io/posts/go-log/</link>
+      <pubDate>Tue, 06 Aug 2019 16:44:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-log/</guid>
+      <description>&lt;h2 id=&#34;1-nbspnbsp错误相关的概念&#34;&gt;1   错误相关的概念&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;编译错误&lt;/strong&gt;：build的时候就报错，由于考虑不周或输入错误导致程序异常（Exception），比如数组越界访问，除数为零，堆栈溢出等等。是大意疏忽。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;运行错误&lt;/strong&gt;：run的时候才报错，由于程序设计思路的错误导致程序异常或难以得到预期的效果。运行错误可以是预期的，也可以是不可预期的，对于可预期的不要用 panic，panic 恐慌机制是意料之外，如果不恢复（recover）就会导致宕机。**宕机（panic）**不是一件很好的事情，可能造成体验停止、服务中断，就像没有人希望在取钱时遇到 ATM 机蓝屏一样。但是，如果在损失发生时，程序没有因为宕机而停止，那么用户将会付出更大的代价，这种代价可以是金钱、时间甚至生命。因此宕机有时是一种合理的止损方法。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;error错误&lt;/strong&gt;：错误是业务过程的一部分，而异常不是。错误是可预期的结果，error错误机制是意料之中。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>并发的复杂性</title>
+      <link>https://wpxun.github.io/posts/go-concurrency-difficult/</link>
+      <pubDate>Thu, 14 Mar 2019 11:10:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-concurrency-difficult/</guid>
+      <description>&lt;p&gt;本文谈到的并发是指单程序、单节点并发，区别于并发系统，并发系统的一个更加流行的词是分布式系统，并发系统更有可能是并行的，因为其中的多个程序一般可以同时在不同的硬件环境上运行。分布式系统可以看我另一篇文章&lt;a href=&#34;https://wpxun.github.io/2019/03/17/microservice-architecture-difficult/&#34;&gt;《微服务架构的复杂性》&lt;/a&gt;。
+并发指的是多个任务几乎被同时发起运行，但是在同一时刻这些任务不一定都处于运行状态，这取决于 CPU 核心或者 CPU 数量。并行指的是在同一时刻可以有多个任务真正地同时运行。并行运行的必要条件是多 CPU 核心或者多 CPU 的计算环境。
+在功能开发中，非并发程序往往未能充分利用服务器的性能，为用户提供服务基本都是排队处理。而并发程序有时可以代替集群，其性能提高对整个系统是至关重要的作用，如果我们将单个节点的性能提高 30%，或者甚至超过 100%，那么我们可以节省多少台机器呢？不过同时并发却带来了编程的复杂性。不同程序单元之间的远程过程调用可以参考另一篇文章&lt;a href=&#34;https://wpxun.github.io/2019/03/12/go-network/&#34;&gt;《go 网络编程》&lt;/a&gt;。Go 语言的特点是通过内部调度可以最大限度地利用单机的计算能力。然而在分布式计算方面，它本身其实并没有提供什么现成的东西，还需要使用一些第三方的框架或工具，或者自己编写和搭建。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go I/O 操作</title>
+      <link>https://wpxun.github.io/posts/go-io/</link>
+      <pubDate>Wed, 13 Mar 2019 14:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-io/</guid>
+      <description>&lt;p&gt;理解 I/O 的一些概念问题可以先看另一篇文章&lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;《C Socket 编程》&lt;/a&gt;
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go 网络编程</title>
+      <link>https://wpxun.github.io/posts/go-network/</link>
+      <pubDate>Tue, 12 Mar 2019 09:30:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-network/</guid>
+      <description>&lt;p&gt;本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 &lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;TCP 传输原理&lt;/a&gt;和 &lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;C Socket 编程&lt;/a&gt;，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go context 包</title>
+      <link>https://wpxun.github.io/posts/go-context/</link>
+      <pubDate>Fri, 08 Mar 2019 15:03:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-context/</guid>
+      <description>&lt;p&gt;整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go time 包</title>
+      <link>https://wpxun.github.io/posts/go-time/</link>
+      <pubDate>Fri, 08 Mar 2019 09:39:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-time/</guid>
+      <description>&lt;h3 id=&#34;时间概念&#34;&gt;时间概念&lt;/h3&gt;
+&lt;p&gt;时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。&lt;/li&gt;
+&lt;li&gt;时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。&lt;/li&gt;
+&lt;li&gt;时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。&lt;/li&gt;
+&lt;li&gt;显示格式：这部分没有逻辑问题，纯粹是视图显示。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>go 类型转换</title>
+      <link>https://wpxun.github.io/posts/go-conversions/</link>
+      <pubDate>Sat, 18 Aug 2018 17:46:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-conversions/</guid>
+      <description>&lt;p&gt;Go Conversions 和 类型断言是两种类型转换方式。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

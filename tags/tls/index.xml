@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TLS on HOME</title>
+    <link>https://wpxun.github.io/tags/tls/</link>
+    <description>Recent content in TLS on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Mon, 01 Apr 2019 17:34:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/tls/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTTPS 性能和调试</title>
+      <link>https://wpxun.github.io/posts/https/</link>
+      <pubDate>Mon, 01 Apr 2019 17:34:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/https/</guid>
+      <description>&lt;p&gt;HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;基础部分：TCP/IP，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;《TCP 传输原理》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/21/cryptology/&#34;&gt;《密码学》&lt;/a&gt;和&lt;a href=&#34;https://wpxun.github.io/2019/03/24/tls/&#34;&gt;《SSL/TLS 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;应用部分：HTTP/2，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/31/http2/&#34;&gt;《HTTP/2 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>SSL/TLS 协议</title>
+      <link>https://wpxun.github.io/posts/tls/</link>
+      <pubDate>Sun, 24 Mar 2019 17:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/tls/</guid>
+      <description>&lt;p&gt;SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>密码学</title>
+      <link>https://wpxun.github.io/posts/cryptology/</link>
+      <pubDate>Thu, 21 Mar 2019 17:29:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/cryptology/</guid>
+      <description>&lt;p&gt;近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

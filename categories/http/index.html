@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>HTTP - HOME</title>
+  <meta property="og:title" content="HTTP - HOME" />
+  <meta name="twitter:title" content="HTTP - HOME" />
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/categories/http/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link href="/categories/http/index.xml" rel="alternate" type="application/rss+xml" title="HOME" />
+  <link href="/categories/http/index.xml" rel="feed" type="application/rss+xml" title="HOME" />
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <section class="list term-list">
+      <article class="article">
+        <a href="/posts/https/" class="article-titles">
+          <h2 class="article-title">HTTPS 性能和调试</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>April 1, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/http/">
+              <i class="fas fa-tag"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/tls/">
+              <i class="fas fa-tag"></i>
+              TLS
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E8%B0%83%E8%AF%95/">
+              <i class="fas fa-tag"></i>
+              调试
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：</p>
+<ol>
+<li>基础部分：TCP/IP，可以参阅<a href="/2019/03/10/tcp-protocol/">《TCP 传输原理》</a></li>
+<li>安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅<a href="/2019/03/21/cryptology/">《密码学》</a>和<a href="/2019/03/24/tls/">《SSL/TLS 协议》</a></li>
+<li>应用部分：HTTP/2，可以参阅<a href="/2019/03/31/http2/">《HTTP/2 协议》</a></li>
+</ol>
+        </div>
+        <div class="article-readmore"><a href="/posts/https/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/http2/" class="article-titles">
+          <h2 class="article-title">HTTP/2 协议</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 31, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/http/">
+              <i class="fas fa-tag"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+              <i class="fas fa-tag"></i>
+              协议
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>HTTP/1.1 与 HTTP/2 相隔了大概20年，但是从目前的研究和实验情况来看，我们不可能等上几十年才升级到下一个版本，h2 在逐渐的普及。
+h2 和 h1 的最大差别在于在 <strong>http 层</strong>上增加了<strong>分帧层</strong>；把原来的 http 层的数据拆分成多种帧类型，并在每种类型前加上协议性的帧首部。基于二进制分帧的优点：</p>
+<ol>
+<li>传输使用的编码方式改变（采用帧、流模式），不用创建多个 TCP 连接，单个连接就可以有多个流（处理主页面和所有子元素的请求），能够减少延迟，服务器和浏览器的 socket 负载也大大减少。</li>
+<li>并行处理，乱序发送帧，不再采用 pipeline 阻塞方式</li>
+<li>传输的功能得以扩展（如服务端推送、首部压缩、优先级、流量控制）。</li>
+</ol>
+<p>学习 HTTP/2 最好的文档是 RFC 7540。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/http2/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/tls/" class="article-titles">
+          <h2 class="article-title">SSL/TLS 协议</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 24, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/tls/">
+              <i class="fas fa-tag"></i>
+              TLS
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+              <i class="fas fa-tag"></i>
+              协议
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/tls/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/cryptology/" class="article-titles">
+          <h2 class="article-title">密码学</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 21, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/tls/">
+              <i class="fas fa-tag"></i>
+              TLS
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/">
+              <i class="fas fa-tag"></i>
+              密码学
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/cryptology/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/tcp-protocol/" class="article-titles">
+          <h2 class="article-title">TCP 传输原理</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 10, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/tcp/">
+              <i class="fas fa-tag"></i>
+              TCP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+              <i class="fas fa-tag"></i>
+              协议
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>TCP的主要目的是在一个比较不可靠的相互通信上提供可靠的，安全的逻辑回路或者连接服务。为了实现这个服务，TCP 的设计 体系非常庞大，我对其理解只是冰山一角，此文只是将我学过的重点知识进行汇总。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/tcp-protocol/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+    </section>
+    
+  </div>
+
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-rsslink">
+      <a href="/categories/http/index.xml" type="application/rss+xml" target="_blank" title="RSS">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

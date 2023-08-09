@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Kubernetes 集群安装 - HOME</title>
+  <meta property="og:title" content="Kubernetes 集群安装 - HOME" />
+  <meta name="twitter:title" content="Kubernetes 集群安装 - HOME" />
+  <meta name="description" content="有了 Docker Swarm 基础，再来学习 Kubernetes 会相对容易一些，不过安装 Kubernetes 还是挺繁琐的，对官方文档中需要访问谷歌外网的部分，还需要替换成国内源。如果目的为了学习，还可以使用 minikube 或 Vagrant 快速创建集群。">
+  <meta property="og:description" content="有了 Docker Swarm 基础，再来学习 Kubernetes 会相对容易一些，不过安装 Kubernetes 还是挺繁琐的，对官方文档中需要访问谷歌外网的部分，还需要替换成国内源。如果目的为了学习，还可以使用 minikube 或 Vagrant 快速创建集群。">
+  <meta name="twitter:description" content="有了 Docker Swarm 基础，再来学习 Kubernetes 会相对容易一些，不过安装 Kubernetes 还是挺繁琐的，对官方文档中需要访问谷歌外网的部分，还需要替换成国内源。如果目的为了学习，还可以使用 minikube 或 Vagrant 快速创建集群。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/kubernetes-install/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Kubernetes 集群安装</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 28, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">
+            <i class="fas fa-folder"></i>
+            云原生
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/kubernetes/">
+            <i class="fas fa-tag"></i>
+            Kubernetes
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/docker/">
+            <i class="fas fa-tag"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp环境">1   环境</a></li>
+    <li><a href="#2-nbspnbsp工具准备">2   工具准备</a>
+      <ul>
+        <li><a href="#21-nbspnbspdocker-安装">2.1   Docker 安装</a></li>
+        <li><a href="#22-nbspnbspkube-相关工具">2.2   kube 相关工具</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsp启动集群">3   启动集群</a>
+      <ul>
+        <li><a href="#31-nbspnbsp初始化集群">3.1   初始化集群</a></li>
+        <li><a href="#32-nbspnbsp访问集群">3.2   访问集群</a></li>
+        <li><a href="#34-nbspnbsp选择安装网络插件">3.4   选择安装网络插件</a></li>
+        <li><a href="#35-nbspnbsp查看信息">3.5   查看信息</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-nbspnbsp创建节点">4   创建节点</a></li>
+    <li><a href="#5-nbspnbsp用-minikube-创建集群">5   用 minikube 创建集群</a></li>
+    <li><a href="#6-nbspnbsp用-vagrant-创建集群">6   用 Vagrant 创建集群</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>有了 Docker Swarm 基础，再来学习 Kubernetes 会相对容易一些，不过安装 Kubernetes 还是挺繁琐的，对官方文档中需要访问谷歌外网的部分，还需要替换成国内源。如果目的为了学习，还可以使用 minikube 或 Vagrant 快速创建集群。</p>
+<h2 id="1-nbspnbsp环境">1   环境</h2>
+<p>Swarm 对主机（节点）的要求并不高，但 Kubernetes 会进行预检，一般注意以下几点：</p>
+<ul>
+<li>master 节点需至少 2CPUs 和至少 2GB 内存</li>
+<li>关闭 swap 交换区</li>
+</ul>
+<p>安装环境以官方文档为准 <a href="https://kubernetes.io/docs/setup/independent/install-kubeadm/">install-kubeadm</a>；</p>
+<h2 id="2-nbspnbsp工具准备">2   工具准备</h2>
+<h3 id="21-nbspnbspdocker-安装">2.1   Docker 安装</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum install -y yum-utils <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  device-mapper-persistent-data <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  lvm2
+</span></span><span style="display:flex;"><span>yum-config-manager <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --add-repo <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    https://download.docker.com/linux/centos/docker-ce.repo
+</span></span><span style="display:flex;"><span>yum install -y docker-ce docker-ce-cli containerd.io
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>usermod -aG docker yhdodo19
+</span></span><span style="display:flex;"><span>systemctl start docker
+</span></span><span style="display:flex;"><span>systemctl enable docker
+</span></span><span style="display:flex;"><span>//重新登录
+</span></span><span style="display:flex;"><span>docker version
+</span></span></code></pre></div><h3 id="22-nbspnbspkube-相关工具">2.2   kube 相关工具</h3>
+<p>采用 <a href="https://opsx.alibaba.com/mirror">aliyun 源</a>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat <span style="color:#e6db74">&lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[kubernetes]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">name=Kubernetes
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">enabled=1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">gpgcheck=1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">repo_gpgcheck=1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>setenforce <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;s/^SELINUX=enforcing$/SELINUX=permissive/&#39;</span> /etc/selinux/config
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>yum install -y kubelet kubeadm kubectl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>systemctl enable --now kubelet
+</span></span></code></pre></div><p>此时 kubelet 处于 activating (auto-restart)状态，当运行 kubeadm init 或者 kubeadm join 时才会变成 active (running) 状态。</p>
+<p>注意，必须关闭 selinux，确保容器可访问宿主机文件系统；注意 setenforce 为能设置为[ Enforcing | Permissive | 1 | 0 ]，修改文件可以设置为 disable。
+另外一些 RHEL/CentOS 7 的用户曾经遇到过：由于 iptables 被绕过导致网络请求被错误的路由。您得保证 在您的 sysctl 配置中 net.bridge.bridge-nf-call-iptables 被设为 1。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat <span style="color:#e6db74">&lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">net.bridge.bridge-nf-call-ip6tables = 1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">net.bridge.bridge-nf-call-iptables = 1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>sysctl --system
+</span></span></code></pre></div><h2 id="3-nbspnbsp启动集群">3   启动集群</h2>
+<h3 id="31-nbspnbsp初始化集群">3.1   初始化集群</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">[</span>root@instance-2 ~<span style="color:#f92672">]</span><span style="color:#75715e"># kubeadm init</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>init<span style="color:#f92672">]</span> Using Kubernetes version: v1.14.1
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>preflight<span style="color:#f92672">]</span> Running pre-flight checks
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">[</span>WARNING Firewalld<span style="color:#f92672">]</span>: firewalld is active, please ensure ports <span style="color:#f92672">[</span><span style="color:#ae81ff">6443</span> 10250<span style="color:#f92672">]</span> are open or your cluster may not <span style="color:#66d9ef">function</span> correctly
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">[</span>WARNING IsDockerSystemdCheck<span style="color:#f92672">]</span>: detected <span style="color:#e6db74">&#34;cgroupfs&#34;</span> as the Docker cgroup driver. The recommended driver is <span style="color:#e6db74">&#34;systemd&#34;</span>. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>preflight<span style="color:#f92672">]</span> Pulling images required <span style="color:#66d9ef">for</span> setting up a Kubernetes cluster
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>preflight<span style="color:#f92672">]</span> This might take a minute or two, depending on the speed of your internet connection
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>preflight<span style="color:#f92672">]</span> You can also perform this action in beforehand using <span style="color:#e6db74">&#39;kubeadm config images pull&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubelet-start<span style="color:#f92672">]</span> Writing kubelet environment file with flags to file <span style="color:#e6db74">&#34;/var/lib/kubelet/kubeadm-flags.env&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubelet-start<span style="color:#f92672">]</span> Writing kubelet configuration to file <span style="color:#e6db74">&#34;/var/lib/kubelet/config.yaml&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubelet-start<span style="color:#f92672">]</span> Activating the kubelet service
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Using certificateDir folder <span style="color:#e6db74">&#34;/etc/kubernetes/pki&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;ca&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;apiserver-kubelet-client&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;apiserver&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> apiserver serving cert is signed <span style="color:#66d9ef">for</span> DNS names <span style="color:#f92672">[</span>instance-2 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local<span style="color:#f92672">]</span> and IPs <span style="color:#f92672">[</span>10.96.0.1 10.150.0.2<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;front-proxy-ca&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;front-proxy-client&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;etcd/ca&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;etcd/server&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> etcd/server serving cert is signed <span style="color:#66d9ef">for</span> DNS names <span style="color:#f92672">[</span>instance-2 localhost<span style="color:#f92672">]</span> and IPs <span style="color:#f92672">[</span>10.150.0.2 127.0.0.1 ::1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;etcd/peer&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> etcd/peer serving cert is signed <span style="color:#66d9ef">for</span> DNS names <span style="color:#f92672">[</span>instance-2 localhost<span style="color:#f92672">]</span> and IPs <span style="color:#f92672">[</span>10.150.0.2 127.0.0.1 ::1<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;etcd/healthcheck-client&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;apiserver-etcd-client&#34;</span> certificate and key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>certs<span style="color:#f92672">]</span> Generating <span style="color:#e6db74">&#34;sa&#34;</span> key and public key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Using kubeconfig folder <span style="color:#e6db74">&#34;/etc/kubernetes&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Writing <span style="color:#e6db74">&#34;admin.conf&#34;</span> kubeconfig file
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Writing <span style="color:#e6db74">&#34;kubelet.conf&#34;</span> kubeconfig file
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Writing <span style="color:#e6db74">&#34;controller-manager.conf&#34;</span> kubeconfig file
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Writing <span style="color:#e6db74">&#34;scheduler.conf&#34;</span> kubeconfig file
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>control-plane<span style="color:#f92672">]</span> Using manifest folder <span style="color:#e6db74">&#34;/etc/kubernetes/manifests&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>control-plane<span style="color:#f92672">]</span> Creating static Pod manifest <span style="color:#66d9ef">for</span> <span style="color:#e6db74">&#34;kube-apiserver&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>control-plane<span style="color:#f92672">]</span> Creating static Pod manifest <span style="color:#66d9ef">for</span> <span style="color:#e6db74">&#34;kube-controller-manager&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>control-plane<span style="color:#f92672">]</span> Creating static Pod manifest <span style="color:#66d9ef">for</span> <span style="color:#e6db74">&#34;kube-scheduler&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>etcd<span style="color:#f92672">]</span> Creating static Pod manifest <span style="color:#66d9ef">for</span> local etcd in <span style="color:#e6db74">&#34;/etc/kubernetes/manifests&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>wait-control-plane<span style="color:#f92672">]</span> Waiting <span style="color:#66d9ef">for</span> the kubelet to boot up the control plane as static Pods from directory <span style="color:#e6db74">&#34;/etc/kubernetes/manifests&#34;</span>. This can take up to 4m0s
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>apiclient<span style="color:#f92672">]</span> All control plane components are healthy after 21.002951 seconds
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>upload-config<span style="color:#f92672">]</span> storing the configuration used in ConfigMap <span style="color:#e6db74">&#34;kubeadm-config&#34;</span> in the <span style="color:#e6db74">&#34;kube-system&#34;</span> Namespace
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>kubelet<span style="color:#f92672">]</span> Creating a ConfigMap <span style="color:#e6db74">&#34;kubelet-config-1.14&#34;</span> in namespace kube-system with the configuration <span style="color:#66d9ef">for</span> the kubelets in the cluster
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>upload-certs<span style="color:#f92672">]</span> Skipping phase. Please see --experimental-upload-certs
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>mark-control-plane<span style="color:#f92672">]</span> Marking the node instance-2 as control-plane by adding the label <span style="color:#e6db74">&#34;node-role.kubernetes.io/master=&#39;&#39;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>mark-control-plane<span style="color:#f92672">]</span> Marking the node instance-2 as control-plane by adding the taints <span style="color:#f92672">[</span>node-role.kubernetes.io/master:NoSchedule<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>bootstrap-token<span style="color:#f92672">]</span> Using token: rtbkg0.b6xgzvz2x9xekegi
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>bootstrap-token<span style="color:#f92672">]</span> Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>bootstrap-token<span style="color:#f92672">]</span> configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order <span style="color:#66d9ef">for</span> nodes to get long term certificate credentials
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>bootstrap-token<span style="color:#f92672">]</span> configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>bootstrap-token<span style="color:#f92672">]</span> configured RBAC rules to allow certificate rotation <span style="color:#66d9ef">for</span> all node client certificates in the cluster
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>bootstrap-token<span style="color:#f92672">]</span> creating the <span style="color:#e6db74">&#34;cluster-info&#34;</span> ConfigMap in the <span style="color:#e6db74">&#34;kube-public&#34;</span> namespace
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>addons<span style="color:#f92672">]</span> Applied essential addon: CoreDNS
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>addons<span style="color:#f92672">]</span> Applied essential addon: kube-proxy
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Your Kubernetes control-plane has initialized successfully!
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>To start using your cluster, you need to run the following as a regular user:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  mkdir -p $HOME/.kube
+</span></span><span style="display:flex;"><span>  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+</span></span><span style="display:flex;"><span>  sudo chown <span style="color:#66d9ef">$(</span>id -u<span style="color:#66d9ef">)</span>:<span style="color:#66d9ef">$(</span>id -g<span style="color:#66d9ef">)</span> $HOME/.kube/config
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>You should now deploy a pod network to the cluster.
+</span></span><span style="display:flex;"><span>Run <span style="color:#e6db74">&#34;kubectl apply -f [podnetwork].yaml&#34;</span> with one of the options listed at:
+</span></span><span style="display:flex;"><span>  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Then you can join any number of worker nodes by running the following on each as root:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubeadm join 10.150.0.2:6443 --token rtbkg0.b6xgzvz2x9xekegi <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --discovery-token-ca-cert-hash sha256:b4659d6b5d8e6015a5a31da172225b625336c095760191b51f246bf34b113864
+</span></span></code></pre></div><h3 id="32-nbspnbsp访问集群">3.2   访问集群</h3>
+<p>有了 Kubernetes cluster，那么接下就是访问集群，官方文档<a href="https://k8smeetup.github.io/docs/tasks/administer-cluster/access-cluster-api/">《通过 Kubernetes API 访问集群》</a>列有多种方式，当然都需要 Kubernetes API 的 endpoint(IP 和端口)、token 和证书，以下可以获取到：</p>
+<pre tabindex="0"><code>$ APISERVER=$(kubectl config view | grep server | cut -f 2- -d &#34;:&#34; | tr -d &#34; &#34;)
+$ TOKEN=$(kubectl describe secret $(kubectl get secrets | grep default | cut -f1 -d &#39; &#39;) | grep -E &#39;^token&#39; | cut -f2 -d&#39;:&#39; | tr -d &#39;\t&#39;)
+</code></pre><ul>
+<li>直接访问 REST API，比如 curl、wget 等，<code>curl $APISERVER/api --header &quot;Authorization: Bearer $TOKEN&quot; --insecure</code></li>
+<li>通过编程方式访问 API，比如有 Go、Python 客户端工具</li>
+<li>kubectl command-line tool，通过以下方式配置 Kubernetes API endpoint、token 和证书，且 master 节点和 worker 节点都可以操作集群，如果是 worker 节点，把需要把 /etc/kubernetes/admin.conf 分发到 worker 节点上，然后执行以下操作：</li>
+<li>对普通用户：</li>
+</ul>
+<pre tabindex="0"><code>  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre><ul>
+<li>对 root 用户：
+<code>export KUBECONFIG=/etc/kubernetes/admin.conf</code></li>
+</ul>
+<h3 id="34-nbspnbsp选择安装网络插件">3.4   选择安装网络插件</h3>
+<p>这里选择 weave net，kubectl apply -f [podnetwork].yaml：
+<code>kubectl apply -f &quot;https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&quot;</code></p>
+<h3 id="35-nbspnbsp查看信息">3.5   查看信息</h3>
+<pre tabindex="0"><code>&gt; kubectl get pods --all-namespaces
+NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
+kube-system   coredns-fb8b8dccf-6r95r              1/1     Running   0          113m
+kube-system   coredns-fb8b8dccf-lhmvl              1/1     Running   0          113m
+kube-system   etcd-instance-2                      1/1     Running   0          112m
+kube-system   kube-apiserver-instance-2            1/1     Running   0          112m
+kube-system   kube-controller-manager-instance-2   1/1     Running   0          112m
+kube-system   kube-proxy-pnc9h                     1/1     Running   0          113m
+kube-system   kube-scheduler-instance-2            1/1     Running   0          112m
+kube-system   weave-net-l9hps                      2/2     Running   0          61s
+
+&gt; kubectl get nodes
+NAME         STATUS   ROLES    AGE    VERSION
+instance-2   Ready    master   113m   v1.14.1
+</code></pre><p>一般来说，coredns 是 Kubernetes 集群的关键核心服务，会使用 Deployment 进行自动扩缩容；kube-proxy 和 weave-net 会分别在各节点上运行。</p>
+<h2 id="4-nbspnbsp创建节点">4   创建节点</h2>
+<p>node 的依赖关系就没那么多，没有要求 CPU 和 内存数，没有要求 selinux，不需要选择网络插件，一般也不需要安装 kubectl。
+即只需要 docker 环境、kubelet、kubeadm，其中 kubelet 启动后一样会进入 activating (auto-restart)状态，kubeadm join 后才会转变成 active (running) 状态。</p>
+<pre tabindex="0"><code>[root@instance-4 ~]# kubeadm join 10.150.0.2:6443 --token rtbkg0.b6xgzvz2x9xekegi \
+&gt;     --discovery-token-ca-cert-hash sha256:b4659d6b5d8e6015a5a31da172225b625336c095760191b51f246bf34b113864
+[preflight] Running pre-flight checks
+  [WARNING IsDockerSystemdCheck]: detected &#34;cgroupfs&#34; as the Docker cgroup driver. The recommended driver is &#34;systemd&#34;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+[preflight] Reading configuration from the cluster...
+[preflight] FYI: You can look at this config file with &#39;kubectl -n kube-system get cm kubeadm-config -oyaml&#39;
+[kubelet-start] Downloading configuration for the kubelet from the &#34;kubelet-config-1.14&#34; ConfigMap in the kube-system namespace
+[kubelet-start] Writing kubelet configuration to file &#34;/var/lib/kubelet/config.yaml&#34;
+[kubelet-start] Writing kubelet environment file with flags to file &#34;/var/lib/kubelet/kubeadm-flags.env&#34;
+[kubelet-start] Activating the kubelet service
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
+
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run &#39;kubectl get nodes&#39; on the control-plane to see this node join the cluster.
+</code></pre><h2 id="5-nbspnbsp用-minikube-创建集群">5   用 minikube 创建集群</h2>
+<p>可以参考官方的教程文档 <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/create-cluster/cluster-intro/">Tutorials</a>;
+原理就是：给一个启动一个安装有 Docker 和 minikube CLI 的 Ubuntu 虚拟机，使用 minikube start 就可以安装以上所有步骤。</p>
+<pre tabindex="0"><code>$ minikube start
+o   minikube v0.34.1 on linux (amd64)
+&gt;   Configuring local host environment ...
+&gt;   Creating none VM (CPUs=2, Memory=2048MB, Disk=20000MB) ...
+-   &#34;minikube&#34; IP address is 172.17.0.86
+-   Configuring Docker as the container runtime ...
+-   Preparing Kubernetes environment ...
+@   Downloading kubeadm v1.13.3
+@   Downloading kubelet v1.13.3
+-   Pulling images required by Kubernetes v1.13.3 ...
+-   Launching Kubernetes v1.13.3 using kubeadm ...
+-   Configuring cluster permissions ...
+-   Verifying component health .....
++   kubectl is now configured to use &#34;minikube&#34;
+=   Done! Thank you for using minikube!
+</code></pre><h2 id="6-nbspnbsp用-vagrant-创建集群">6   用 Vagrant 创建集群</h2>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] 龚正. 等. Kubernetes 权威指南. 版次：2017年9月第1版
+[2] Docker Swarm or Kubernetes — Help me decide. <a href="https://stackshare.io/stackups/docker-swarm-vs-kubernetes">https://stackshare.io/stackups/docker-swarm-vs-kubernetes</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/kubernetes-resource/" data-toggle="tooltip" data-placement="top" title="Kubernetes 资源">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/jenkins/" data-toggle="tooltip" data-placement="top" title="Jenkins 持续集成">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

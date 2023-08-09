@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>go context 包 - HOME</title>
+  <meta property="og:title" content="go context 包 - HOME" />
+  <meta name="twitter:title" content="go context 包 - HOME" />
+  <meta name="description" content="整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。">
+  <meta property="og:description" content="整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。">
+  <meta name="twitter:description" content="整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/go-context/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">go context 包</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 8, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/golang/">
+            <i class="fas fa-folder"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/golang/">
+            <i class="fas fa-tag"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/go%E5%8C%85/">
+            <i class="fas fa-tag"></i>
+            Go包
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。</p>
+<h4 id="11-nbspnbspcontext-接口">1.1   Context 接口</h4>
+<pre tabindex="0"><code>type Context interface {
+	// 取消树和过期时间的实现
+	Deadline() (deadline time.Time, ok bool) // 过期时间点
+	Done() &lt;-chan struct{} // 过期或者手动取消时关闭通道
+	Err() error // 可以判断是过期还是手动取消
+	
+
+	// 键值对的实现，valueCtx类型真正实现
+	Value(key interface{}) interface{}
+}
+</code></pre><p>从这点可以看出，Context 库设计的目的：
+(1) 退出通知机制
+(2) 传递数据</p>
+<h4 id="12-nbspnbsp四个重要的类型">1.2   四个重要的类型</h4>
+<ul>
+<li>emptyCtx 类型：无实际作用的 int 型，这是最原始的 Context 接口实现；</li>
+<li>cancelCtx 类型：Context + 取消树（这里的“取消树”是一个完整的名词，“取消树”上的键是 canceler 类型，说明它可能是 cancelCtx，也可能是 timerCtx）；</li>
+<li>timerCtx 类型：cancelCtx + 过期时间；在上下级的超时时间中，下级超时时间一定要比上级早，否则即使用 WithDeadline() 创造出来的也是 cancelCtx，这还是很容易理解的。有一个 timer 属性，是用于提前取消定时，即调用 Stop() 方法；</li>
+<li>valueCtx 类型：Context + 键值对。</li>
+</ul>
+<p>实例化上述四个类型的API函数：</p>
+<ul>
+<li>Background()、TODO()：构造 emptyCtx；</li>
+<li>WithCancel()：构造 cancelCtx；</li>
+<li>WithDeadline()、WithTimeout()：构造 timerCtx；一个是时间点，一个是时间段，时间段会转化为时间点；定时用了 time.AfterFunc 函数，返回值存储在 timer 属性；</li>
+<li>WithValue()：构造valueCtx。</li>
+</ul>
+<p>在实例化中，有两条主线：
+(1) 第一条线是context，上面四个类型是一个衔接一个。后期由 removeChild() 负责找到父节点并从其 children 移除该节点。所以其特点就是向上追溯父节点。
+Background(a框) &gt; WithCancel(b框) &gt; WithTimeout(c框，超时3秒) &gt; WithTimeout(d框，超时6秒) &gt; WithValue(e框)；需要注意一点的是 d 框不是 timerCtx，因为其超时比父晚，所以会直接生成 cancelCtx。
+<img src="https://wpxun.github.io/image/2019/03/context%E9%93%BE.png" alt="context 链">
+(2) 第二条线是 children，只有 cancelCtx 和 timerCtx 能串成链，如果上级不是这两个类型，再继续向上上级找，直到找到才挂靠。由 propagateCancel() 和 parentCancelCtx() 这两个函数负责该逻辑。所以其特点是就向下一级一级取消子节点。</p>
+<h4 id="13-nbspnbsp重要的内部函数">1.3   重要的内部函数</h4>
+<ul>
+<li>cancel()：无论是超时还是手动取消都会调用，DeadlineExceeded 和 Canceled 分别是超时取消和动手取消；
+(1) cancelCtx 的 cancel()：关闭 done 通道，cancel “取消树”上的节点（也就是取消所有子节点），判断要不要从父节点上移除；
+(2) timerCtx 的 cancel()：会先调用 cancelCtx 的 cancel(false, err)，判断要不要从父节点上移除，最后 c.timer.Stop()，这也是建议无论是否设置超时都习惯性调用 defer cancel()，否则 c.timer 计时器到时之前不会被回收。</li>
+<li>propagateCancel()：“取消树”的繁衍，或者是“构造”也可以；</li>
+<li>parentCancelCtx()：propagateCancel()调用时会调用到该函数；从当前节点往上查找到最近的父级 cancelCtx 节点，并作为子节点挂靠在其下面。</li>
+<li>removeChild()：从父节点上移除；cancel 是自上而下的，当前的节点 cancel 了，那么其所有子节点也要 cancel，但父节点按原先的逻辑走；先从父节点上移除，等父节点 cancel 的时候就不用再去 cancel 那个已经 cancel 掉的子节点了。</li>
+</ul>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/tcp-protocol/" data-toggle="tooltip" data-placement="top" title="TCP 传输原理">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/go-time/" data-toggle="tooltip" data-placement="top" title="go time 包">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Vagrant 虚拟机管理 - HOME</title>
+  <meta property="og:title" content="Vagrant 虚拟机管理 - HOME" />
+  <meta name="twitter:title" content="Vagrant 虚拟机管理 - HOME" />
+  <meta name="description" content="个人操作系统并不需要配置化，但随着开发人员的复杂化，每个开发人员都需要同样的主机系统以保证开发环境的可移植性；另外一方面，随着微服务的推广需要多主机节点管理，重复性的指令配置消耗大量时间且容易出错，于是出现了多主机配置化，可以用现在流行的说法“基础设施即代码”，Infrastructure as code (IaC)，例如 docker machine、vagrant，本文将讲解 vagrant 的使用，并安装 Kubernetes 集群进行实战。">
+  <meta property="og:description" content="个人操作系统并不需要配置化，但随着开发人员的复杂化，每个开发人员都需要同样的主机系统以保证开发环境的可移植性；另外一方面，随着微服务的推广需要多主机节点管理，重复性的指令配置消耗大量时间且容易出错，于是出现了多主机配置化，可以用现在流行的说法“基础设施即代码”，Infrastructure as code (IaC)，例如 docker machine、vagrant，本文将讲解 vagrant 的使用，并安装 Kubernetes 集群进行实战。">
+  <meta name="twitter:description" content="个人操作系统并不需要配置化，但随着开发人员的复杂化，每个开发人员都需要同样的主机系统以保证开发环境的可移植性；另外一方面，随着微服务的推广需要多主机节点管理，重复性的指令配置消耗大量时间且容易出错，于是出现了多主机配置化，可以用现在流行的说法“基础设施即代码”，Infrastructure as code (IaC)，例如 docker machine、vagrant，本文将讲解 vagrant  …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/vagrant/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Vagrant 虚拟机管理</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 27, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">
+            <i class="fas fa-folder"></i>
+            云原生
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-categories">
+          <a href="/categories/devops/">
+            <i class="fas fa-folder"></i>
+            DevOps
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/kubernetes/">
+            <i class="fas fa-tag"></i>
+            Kubernetes
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp安装">1   安装</a></li>
+    <li><a href="#2-nbspnbspbox-的管理">2   box 的管理</a></li>
+    <li><a href="#3-nbspnbsp虚拟机管理">3   虚拟机管理</a></li>
+    <li><a href="#4-nbspnbspvagrantfile">4   Vagrantfile</a></li>
+    <li><a href="#5-nbspnbsp打包">5   打包</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>个人操作系统并不需要配置化，但随着开发人员的复杂化，每个开发人员都需要同样的主机系统以保证开发环境的可移植性；另外一方面，随着微服务的推广需要多主机节点管理，重复性的指令配置消耗大量时间且容易出错，于是出现了多主机配置化，可以用现在流行的说法“基础设施即代码”，Infrastructure as code (IaC)，例如 docker machine、vagrant，本文将讲解 vagrant 的使用，并安装 Kubernetes 集群进行实战。</p>
+<h2 id="1-nbspnbsp安装">1   安装</h2>
+<p>目前 vagrant 支持在常见操作系统 Linux, macOS 或 Windows 上安装，支持的虚拟机包括 VMware、VirtualBox 等。
+macOS 分别下载安装即可：</p>
+<ul>
+<li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a>，安装最新 6.0.6 版本</li>
+<li><a href="https://www.vagrantup.com/downloads.html">vagrant</a>，安装最新 2.2.4 版本
+或者直接用 brew 安装：
+brew cask install virtualbox
+brew cask install vagrant</li>
+</ul>
+<p>运行 vagrant version 查看版本信息。</p>
+<h2 id="2-nbspnbspbox-的管理">2   box 的管理</h2>
+<p>box 相当于 Docker 基础镜像操作系统，这些镜像一般比那些 ISO 小，并进行一些设置，比如创建 vagrant（1000） 用户，镜像 <code>.box</code> 作为文件后缀。<a href="https://app.vagrantup.com/boxes/search?provider=virtualbox">官方 Box 源</a>，注意选择 virtualbox 下面的 box。</p>
+<p>box 的操作是以 vagrant box 加子命令，它的操作跟虚拟机是无关的。</p>
+<ul>
+<li>vagrant box list，查看本地上的 box</li>
+<li>vagrant box add，The box descriptor can be the name of a box on HashiCorp&rsquo;s Vagrant Cloud,
+or a URL, or a local .box file, or a local .json file containing
+the catalog metadata，可以用 &ndash;box-version 指定版本，否则下载最新版本</li>
+<li>vagrant box remove，即使有基于该 box 运行的虚拟机也是可以删除的</li>
+</ul>
+<p>下面我们用 <a href="https://vagrantcloud.com/centos/7">centos/7</a> 进行演示：</p>
+<pre tabindex="0"><code>&gt; vagrant box add centos/7
+==&gt; box: Loading metadata for box &#39;centos/7&#39;
+    box: URL: https://vagrantcloud.com/centos/7
+This box can work with multiple providers! The providers that it
+can work with are listed below. Please review the list and choose
+the provider you will be working with.
+
+1) hyperv
+2) libvirt
+3) virtualbox
+4) vmware_desktop
+
+Enter your choice: 3
+==&gt; box: Adding box &#39;centos/7&#39; (v1902.01) for provider: virtualbox
+    box: Downloading: https://vagrantcloud.com/centos/boxes/7/versions/1902.01/providers/virtualbox.box
+    box: Download redirected to host: cloud.centos.org
+==&gt; box: Successfully added box &#39;centos/7&#39; (v1902.01) for &#39;virtualbox&#39;!
+
+&gt; vagrant box list
+centos/7 (virtualbox, 1902.01)
+</code></pre><h2 id="3-nbspnbsp虚拟机管理">3   虚拟机管理</h2>
+<p>虚拟机管理相当于 Docker 的容器管理，是 box 镜像的运行时。</p>
+<p>虚拟机的操作是以 vagrant 直接加子命令，<strong>以下命令基本都可以指定某一个 [name|id] 虚拟机运行操作，可以通过 vagrant COMMAND -h 查看</strong></p>
+<ul>
+<li>vagrant init，初始化，会创建一个 Vagrantfile，如果已经有配置文件就无需初始化</li>
+<li>vagrant up，无界面启动(VBoxHeadless)虚拟机</li>
+<li>启动时会把当前目录(Vagrantfile 所在目录) COPY（不是挂载）到虚拟机 /vagrant，显示 Rsyncing folder: /Users/ada/vagtest/ =&gt; /vagrant，</li>
+<li>该命令会创建 .vagrant 隐藏目录</li>
+<li>vagrant up &ndash;provision 强制运行 provision，适用于创建虚拟机路途失败但虚拟机已经创建而 provision 还没完全运行的情况</li>
+<li>vagrant up [name|id] 可以指定启动某一个虚拟机</li>
+<li>vagrant ssh，连接到虚拟机</li>
+<li>端口转发：默认配置端口转发<code>config.vm.network &quot;forwarded_port&quot;, guest: 22, host: 2222</code>，启动时显示 22 (guest) =&gt; 宿主机的 2222 (host) (adapter 1，即网卡1)，SSH address: 127.0.0.1:2222。登录时通过类似 <code>ssh vagrant@127.0.0.1 -p 2222</code> 进行连接（当然还需要 SSH 密钥信息才能登录，通常直接用 vagrant ssh 登录）。另外我们查看 VirtualBox 虚拟机设备/网络/网卡1/高级/端口转发，可以看到已经配置的 2222 到 22 的端口转发规则，且每次 up 都会重新设置端口转发规则。</li>
+<li>ssh 密钥：可以用 <code>--debug</code> 参数打印执行信息，可以看到连接需要的 ssh 密钥 private_key 所在的位置，然后就可以直接用 ssh 命令连接 <code>scp  -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-node01/virtualbox/private_key  /Users/ada/.ssh/github/*  vagrant@192.168.56.114:/home/vagrant/.ssh</code></li>
+<li>vagrant ssh [name|id] 可以指定连接某一个虚拟机</li>
+<li>vagrant reload，重启，一般在修改 Vagrantfile 后重启</li>
+<li>vagrant halt，关机</li>
+<li>vagrant destroy，删除虚拟机</li>
+<li>vagrant provision，等同于 vagrant up &ndash;provision</li>
+<li>vagrant suspend，挂起（保存虚拟机状态）</li>
+<li>vagrant resume，对挂起状态(suspend)进行恢复，而不是像 up 一样的全新启动</li>
+<li>vagrant status，查看状态</li>
+</ul>
+<pre tabindex="0"><code>&gt; mkdir vagtest
+&gt; cd vagtest
+
+&gt; vagrant init centos/7
+&gt; vagrant up
+&gt;  ls
+Vagrantfile
+&gt; vagrant ssh
+Last login: Mon May  6 01:59:53 2019 from 10.0.2.2
+[vagrant@localhost ~]$
+&gt; sudo -i
+[root@localhost ~]#
+</code></pre><p>从上面可以看出，与宿主机通信路由是 10.0.2.2，也可以在虚拟机查看 <code>ip route show</code>，注意要把 /etc/resolv.conf 的 DNS IP 设置为与宿主机通信路由 IP</p>
+<h2 id="4-nbspnbspvagrantfile">4   Vagrantfile</h2>
+<p>上面的虚拟机管理还是基于单机的管理，只能将其文件化才能 box 打包和多虚拟机管理。</p>
+<p><code>vagrant init centos/7 --box-version 1902.01</code>，默认创建的 Vagrantfile：</p>
+<pre tabindex="0"><code>Vagrant.configure(&#34;2&#34;) do |config|
+  config.vm.box = &#34;centos/7&#34;
+  config.vm.box_version = &#34;1902.01&#34;
+end
+</code></pre><ul>
+<li>端口转发：<code>config.vm.network &quot;forwarded_port&quot;, guest: 22, host: 2222</code>，也就是 Docker 发布端口</li>
+<li>目录共享：有多种方式，基本用法 <code>config.vm.synced_folder &quot;src/&quot;, &quot;/srv/website&quot;</code>，对开发共享代码非常有用，其它还有 NFS(not work on Windows)、SMB（Windows or macOS）等</li>
+</ul>
+<h2 id="5-nbspnbsp打包">5   打包</h2>
+<p>必须先关闭虚拟机，然后运行打包
+<code>vagrant package --output xxx.box</code></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] 官方文档 <a href="https://www.vagrantup.com/docs/index.html">https://www.vagrantup.com/docs/index.html</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/jenkins/" data-toggle="tooltip" data-placement="top" title="Jenkins 持续集成">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/docker-stack/" data-toggle="tooltip" data-placement="top" title="Docker Stack 多服务">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

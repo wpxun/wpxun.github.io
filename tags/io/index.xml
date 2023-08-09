@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>io on HOME</title>
+    <link>https://wpxun.github.io/tags/io/</link>
+    <description>Recent content in io on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Wed, 13 Mar 2019 14:55:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>go I/O 操作</title>
+      <link>https://wpxun.github.io/posts/go-io/</link>
+      <pubDate>Wed, 13 Mar 2019 14:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-io/</guid>
+      <description>&lt;p&gt;理解 I/O 的一些概念问题可以先看另一篇文章&lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;《C Socket 编程》&lt;/a&gt;
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>C Socket 编程</title>
+      <link>https://wpxun.github.io/posts/c-socket/</link>
+      <pubDate>Mon, 11 Mar 2019 20:04:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/c-socket/</guid>
+      <description>&lt;p&gt;一切皆文件，I/O 操作无处不在，文件、设备、管道、Socket等都是 I/O 操作。C 语言对文件 I/O 操作分两种，一种是无缓冲的（用户层无缓存区），返回的是文件描述符（int 整型），代表函数是 open、read、write 和 socket 等；另一种是有缓冲的（用户层设计了缓存区），返回是的数据流 Stream（FILE 结构体），代表函数是 fopen、fread、fwrite、putc、getc、fputs、fgets 和 fprintf等；不过 C 标准已经不再支持对文件（这里没有包括 socket）的无缓冲操作。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

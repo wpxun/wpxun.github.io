@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>调试 on HOME</title>
+    <link>https://wpxun.github.io/tags/%E8%B0%83%E8%AF%95/</link>
+    <description>Recent content in 调试 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Mon, 01 Apr 2019 17:34:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/%E8%B0%83%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTTPS 性能和调试</title>
+      <link>https://wpxun.github.io/posts/https/</link>
+      <pubDate>Mon, 01 Apr 2019 17:34:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/https/</guid>
+      <description>&lt;p&gt;HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;基础部分：TCP/IP，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;《TCP 传输原理》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/21/cryptology/&#34;&gt;《密码学》&lt;/a&gt;和&lt;a href=&#34;https://wpxun.github.io/2019/03/24/tls/&#34;&gt;《SSL/TLS 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;应用部分：HTTP/2，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/31/http2/&#34;&gt;《HTTP/2 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

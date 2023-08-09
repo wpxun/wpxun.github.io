@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Kubernetes 资源 - HOME</title>
+  <meta property="og:title" content="Kubernetes 资源 - HOME" />
+  <meta name="twitter:title" content="Kubernetes 资源 - HOME" />
+  <meta name="description" content="本文重点理解 Kubernetes 资源的作用，并用一个简单的例子进行演示。">
+  <meta property="og:description" content="本文重点理解 Kubernetes 资源的作用，并用一个简单的例子进行演示。">
+  <meta name="twitter:description" content="本文重点理解 Kubernetes 资源的作用，并用一个简单的例子进行演示。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/kubernetes-resource/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Kubernetes 资源</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>May 7, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">
+            <i class="fas fa-folder"></i>
+            云原生
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/kubernetes/">
+            <i class="fas fa-tag"></i>
+            Kubernetes
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/docker/">
+            <i class="fas fa-tag"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp版本组和资源">1   版本、组和资源</a>
+      <ul>
+        <li><a href="#11-nbspnbsp版本">1.1   版本</a></li>
+        <li><a href="#12-nbspnbsp组">1.2   组</a></li>
+        <li><a href="#13-nbspnbsp资源">1.3   资源</a></li>
+        <li><a href="#14-nbspnbsp通过-api-调用分析">1.4   通过 API 调用分析</a></li>
+        <li><a href="#15-nbspnbsp基于不同版本或不同组创建同一资源">1.5   基于不同版本或不同组创建同一资源</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-nbspnbsp深入理解资源">2   深入理解资源</a>
+      <ul>
+        <li><a href="#21-nbspnbsppod">2.1   Pod</a></li>
+        <li><a href="#22-nbspnbsprelicaset">2.2   RelicaSet</a></li>
+        <li><a href="#23-nbspnbspdeployment">2.3   Deployment</a></li>
+        <li><a href="#24-nbspnbspservice">2.4   Service</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsp标签和标签选择器">3   标签和标签选择器</a></li>
+    <li><a href="#4-nbspnbsp一个简单的例子">4   一个简单的例子</a>
+      <ul>
+        <li><a href="#41-nbspnbsp准备-manifest-文件">4.1   准备 Manifest 文件</a></li>
+        <li><a href="#42-nbspnbsp管理资源">4.2   管理资源</a></li>
+        <li><a href="#43-nbspnbsp验证服务">4.3   验证服务</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-nbspnbsp常用的命令">5   常用的命令</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>本文重点理解 Kubernetes 资源的作用，并用一个简单的例子进行演示。</p>
+<h2 id="1-nbspnbsp版本组和资源">1   版本、组和资源</h2>
+<h3 id="11-nbspnbsp版本">1.1   版本</h3>
+<p>版本是 Kubernetes <a href="https://kubernetes.io/zh/docs/concepts/overview/kubernetes-api/">管理资源的一种策略</a>，这种策略的目的是为了更好地进化与调整 API，从而间接地升级资源。选择在API级别进行版本化，而不是在资源或字段级别进行版本化，以确保API提供清晰，一致的系统资源和行为视图，并控制对已废止的API和/或实验性API的访问。 JSON和Protobuf序列化模式遵循架构更改的相同准则。为了使删除字段或者重构资源表示更加容易，Kubernetes 支持多个API版本。每一个版本都在不同API路径下，例如 /api/v1 或者 /apis/extensions/v1beta1。
+同一组的优先规则：v2 &gt; v1 &gt; v1beta2 &gt; v1beta1 &gt; v2alpha1 &gt; v1alpha1，目前来说 v2 版本基本都还处于 alpha 阶段。
+相关文档：</p>
+<ul>
+<li><a href="https://kubernetes.io/zh/docs/concepts/overview/kubernetes-api/">Overview of the API for Kubernetes</a></li>
+<li><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/">Kubernetes API Versions 1.14</a></li>
+<li>也可以通过 <code>kubectl api-versions</code> 查看</li>
+</ul>
+<h3 id="12-nbspnbsp组">1.2   组</h3>
+<p>为了更容易地扩展Kubernetes API，我们实现了API组。 API组在REST路径和序列化对象的 apiVersion 字段中指定。目前有几个API组正在使用中：</p>
+<ol>
+<li>核心组（通常被称为遗留组）位于REST路径 /api/v1 并使用 apiVersion：v1。</li>
+<li>指定的组位于REST路径 /apis/$GROUP_NAME/$VERSION，并使用 apiVersion：$GROUP_NAME/$VERSION（例如 apiVersion：batch/v1）。 在Kubernetes API参考中可以看到支持的API组的完整列表。</li>
+</ol>
+<h3 id="13-nbspnbsp资源">1.3   资源</h3>
+<p>首先预览下 Kubernetes 的整个资源对象框架：
+{% img <a href="https://wpxun.github.io/image/2019/05/kubernetes.png">https://wpxun.github.io/image/2019/05/kubernetes.png</a> 600 %}
+最底层是容器引擎如 Docker 或 rkt，然后是基于容器引擎创建的容器，其次 Pod 是 Kubernetes 的基础，其它资源都是 Pod 更高层次的封装，以此提供管理的便捷性及满足各种应用需求。所有支持的资源可通过 <code>kubectl api-resources</code> 查看。</p>
+<p>资源（Resource）是一个 API 集合的抽象，自定义一种新资源就等于是对 Kubernetes API 的扩展，定义之后可以使用 kubectl 直接操作，这是 Kubernetes 扩展性的一个体现。</p>
+<h3 id="14-nbspnbsp通过-api-调用分析">1.4   通过 API 调用分析</h3>
+<p>我们通过  curl -k &ndash;header &ldquo;Authorization: Bearer [value]&rdquo; https://192.168.1.11:6443 方式查看相关的信息</p>
+<ul>
+<li>/version：查看 Kubernetes 版本</li>
+<li>/api：查看核心组，其实它并没有组名，且只有 v1 一个版本</li>
+<li>/apis：查看 apis 下的组列表（APIGroupList），每个组可以有多个版本，如 apps/v1、apps/v1beta2、apps/v1beta1，但要注意，一个资源理论上只属于一个组，但因为历史迁移的原因，可以还会遗留在旧的组里，比如 deployment 资源就同时属于 apps/v1、apps/v1beta2、apps/v1beta1、extensions/v1beta1，即是同时属于 apps 和 extensions 两个组，当然这种情况下应该用 apps/v1 这个组和版本。</li>
+<li>/apis/apps/v1：查看这个组版本里的资源列表(APIResourceList)，及其所用的动词等信息</li>
+<li>/apis/apps/v1/deployments：查看创建的 deployments 列表（DeploymentList），相当于 <code>kubectl get deploy --all-namespaces --output=yaml</code>、<code>kubectl describe deploy nginx-deploy</code> 命令，注意需要创建一个 ClusterRoleBinding 才有权访问</li>
+<li>/apis | grep &lsquo;istio.io&rsquo;，查看 istio 创建的 CRD（Custom Resource Definitions）</li>
+</ul>
+<h3 id="15-nbspnbsp基于不同版本或不同组创建同一资源">1.5   基于不同版本或不同组创建同一资源</h3>
+<p>基于多个版本创建的 kind: Deployment 资源：
+apiVersion: apps/v1</p>
+<blockquote>
+<p>kubectl create -f nginx-deploy.yaml
+deployment.apps/nginx-deployment created</p>
+</blockquote>
+<p>apiVersion: apps/v1beta2</p>
+<blockquote>
+<p>kubectl create -f nginx-deploy.yaml
+deployment.apps/nginx-zhijun created</p>
+</blockquote>
+<p>apiVersion: extensions/v1beta1</p>
+<blockquote>
+<p>kubectl create -f nginx-deploy.yaml
+deployment.extensions/nginx-shangyue created</p>
+</blockquote>
+<p>以资源来说并没有区别。</p>
+<h2 id="2-nbspnbsp深入理解资源">2   深入理解资源</h2>
+<p>有了以上的基础，我们再来剖析一些重要的资源</p>
+<h3 id="21-nbspnbsppod">2.1   Pod</h3>
+<p>Pod 是最基本、最小的部署单元，由一个或一组容器组成，所有这些容器共享存储资源，共享唯一 IP 地址以及包含如何运行容器的信息。</p>
+<h3 id="22-nbspnbsprelicaset">2.2   RelicaSet</h3>
+<p>Pod 被设计为最小的部署单元，但是由于 Pod 不具备自愈能力，所以不建议单独使用 Pod。为此，Kubernetes 通过提供更高层级的 Controller，使用 Controller 创建和管理多个 Pod 副本，并提供集群级别的自愈能力。Kubernetes 提供多种 Controller 以满足不同需求，ReplicaSet 就是其中一种，与其类似的 Replication Controller 因无法支持基于集合操作的 selector，故推荐使用 ReplicaSet。</p>
+<p>使用命令 kubectl run 创建</p>
+<h3 id="23-nbspnbspdeployment">2.3   Deployment</h3>
+<p>Deployment Controller 为 Pod 和 ReplicaSet 提供声明式更新，可以定义期望状态，副本数，速率，应用场景：</p>
+<ul>
+<li>定义 Deployment 创建的 Pod 和 ReplicaSet，开始会自动创建一个 ReplicaSet 用于自愈 Pod 的能力</li>
+<li>滚动升级和回滚</li>
+<li>扩容和缩容</li>
+<li>暂停和继续 Deployment</li>
+</ul>
+<p>创建方式：</p>
+<ul>
+<li>用命令 kubectl run 快速创建</li>
+<li>定义 Manifest 文件</li>
+</ul>
+<h3 id="24-nbspnbspservice">2.4   Service</h3>
+<p>Service 解决了 Pod、ReplicaSet 和 Deployment 没有解决的服务发现和负载等问题，因为 Pod 是没有状态的，可以被自动创建和销毁的，其不稳定性导致不能用来提供对外的服务。为了解决这些问题，Kubernetes 引入了一个新的对象 Service。它为运行相同服务的一系列 Pod 提供一个静态 IP 地址 ClusterIP 和端口，该 ClusterIP 和端口作为访问后端 Pod 的唯一不变入口。当然，也可以创建没有 ClusterIP 的服务，该服务称为 Headless Service，但发现 Headless Service 需要自己实现。
+Service 通过 selector 与后端 Pod 进行关联，无论后端 Pod 怎么变化，Service 均会感知后端变化。</p>
+<p>创建方式：</p>
+<ul>
+<li>用命令 kubectl expose 快速创建</li>
+<li>定义 Manifest 文件</li>
+</ul>
+<p>Service 定义中的关键字段是 ports 和 selector。selector 定义部分设置的是后端 Pod 所拥有的 label；ports 有几个端口数据：</p>
+<ul>
+<li>port：要暴露到 Service 的端口，以便通过 Service 的虚拟机 IP 地址和虚拟端口号访问到他们</li>
+<li>targetPort：Service 关联的 Pod 的端口，如果没指定则会用 port 值；clusterIP=None 时会被忽略</li>
+<li>nodePort：要暴露到宿主机的端口，需要指定 Service.spec.type=NodePort，将 Pod 或 Service 的端口号映射到宿主机，以使得客户端应用能够通过物理机访问容器应用。</li>
+</ul>
+<p>从以上内容可以看出，targetPort(Pod) &lt;-&gt; port(Service) &lt;-&gt; nodePort(Node) 或者 containerPort(Pod) &lt;-&gt; hostPort(Node)，前者为 Services，后者为 Pods。</p>
+<h2 id="3-nbspnbsp标签和标签选择器">3   标签和标签选择器</h2>
+<p>Events:
+Type    Reason            Age               From                   Message</p>
+<hr>
+<p>Normal  SuccessfulCreate  19m               replicaset-controller  Created pod: nginx-rs-wpxun-gzqhs
+Normal  SuccessfulCreate  19m               replicaset-controller  Created pod: nginx-rs-wpxun-7d9sx
+Normal  SuccessfulCreate  19m               replicaset-controller  Created pod: nginx-rs-wpxun-nwrxq
+Normal  SuccessfulDelete  2s (x9 over 14m)  replicaset-controller  Deleted pod: nginx3</p>
+<p>Events:
+Type    Reason             Age                From                   Message</p>
+<hr>
+<p>Normal  ScalingReplicaSet  10m (x7 over 69m)  deployment-controller  Scaled up replica set nginx-deploy-57cd6466f7 to 5
+Normal  ScalingReplicaSet  3m54s              deployment-controller  Scaled up replica set nginx-deploy-6f699d5b64 to 5
+Normal  ScalingReplicaSet  2m38s              deployment-controller  Scaled down replica set nginx-deploy-6f699d5b64 to 0
+Normal  ScalingReplicaSet  33s                deployment-controller  Scaled down replica set nginx-rs-wpxun to 0</p>
+<p>Events记录的是对子资源的操作，包括创建、删除、收缩等，手动创建的 po 如果
+Deployment 的 SELECTOR 和 ReplicaSet 的 LABELS 关联，不会删除失联的 ReplicaSet，
+ReplicaSet 的 SELECTOR 和 Pod 的 LABELS 关联，直接创建（非 rs 或 deploy 自动创建）的 Pod 会被收编，会对 Pod 进行增删，不过在 kubectl describe po rs_name 并不会显示那些收编的 Pod，只会显示由 rs_name 自动创建的 Pod
+SELECTOR 逗号表示 AND，必须满足 SELECTOR 的条件才能关联；
+Pod 的 NodeSelector 表示在哪个节点部署，如果找不到节点，则 Pod 处于 Pending 状态</p>
+<h2 id="4-nbspnbsp一个简单的例子">4   一个简单的例子</h2>
+<p>本实例和 <a href="/2019/04/26/docker-stack/">Docker Stack 多服务</a>采用类似的服务程序，不过增加了一个 RPC 服务。</p>
+<ul>
+<li>goapi：前端页面服务，代码位于 <a href="https://github.com/wpxun/blog/tree/master/gorpcweb">wpxun/blog/tree/master/gorpcweb</a>，镜像已经推送到 <a href="https://cloud.docker.com/repository/docker/wpxun/gorpcweb">DockerHub</a></li>
+<li>gorpcsvc：提供了一个服务给 gorpcweb 进行基于 HTTP 的 RPC 函数调用，代码位于 <a href="https://github.com/wpxun/blog/tree/master/gorpcsvc">wpxun/blog/tree/master/gorpcsvc</a>，镜像已经推送到 <a href="https://cloud.docker.com/repository/docker/wpxun/gorpcsvc">DockerHub</a></li>
+<li>redis：提供给 gorpcweb 存储，计数用，使用官方镜像</li>
+</ul>
+<h3 id="41-nbspnbsp准备-manifest-文件">4.1   准备 Manifest 文件</h3>
+<p>每个服务都需要 deploy 和 service 资源配置文件，<a href="https://github.com/wpxun/blog/blob/master/gorpcweb/gorpc-kube.yaml">gorpc-kube.yaml</a> 放在 github 项目上，文件结构纲目：</p>
+<ul>
+<li>
+<p>redis: 缓存访问人数
+Deployment, redis:5.0.4-alpine3.9
+Service, 6379</p>
+</li>
+<li>
+<p>gorpcsvc: 提供给 goweb 的 rpc 数学函数
+Deployment, wpxun/gorpcsvc:v1
+Service, 1234</p>
+</li>
+<li>
+<p>goapi: 对外提供 api
+Deployment, wpxun/gorpcweb:v1, name: goweb-deploy-v1
+Deployment, wpxun/gorpcweb:v1, name: goweb-deploy-v2
+Service, type: NodePort, name: http, port: 81, targetPort: 80, nodePort: 30001
+Deployment, wpxun/gorpcweb:v2, name: goweb-deploy-v3
+Deployment, wpxun/gorpcweb:v2, name: goweb-deploy-v4
+Service, type: NodePort, name: http, port: 82, targetPort: 8087, nodePort: 30002</p>
+</li>
+</ul>
+<h3 id="42-nbspnbsp管理资源">4.2   管理资源</h3>
+<pre tabindex="0"><code>kubectl create -f gorpc-kube.yaml
+kubectl delete -f gorpc-kube.yaml
+kubectl apply -f gorpc-kube.yaml
+</code></pre><p>创建好资源后查看资源情况：</p>
+<pre tabindex="0"><code>kubectl get deploy -o wide --show-labels
+kubectl get rs -o wide --show-labels
+kubectl get po -o wide --show-labels
+kubectl get svc -o wide --show-labels
+</code></pre><h3 id="43-nbspnbsp验证服务">4.3   验证服务</h3>
+<p>端口转换：targetPort(80) &lt;-&gt; port(81) &lt;-&gt; nodePort(30001)</p>
+<ul>
+<li>在 Pod 内</li>
+<li>curl http://goapi:81/index ，goweb-service即为服务名，只能在 Pod 内解析</li>
+<li>在集群节点中，注意不能用 localhost</li>
+<li>curl http://10.44.0.57/index ，直接访问某一个 pod，IP:80</li>
+<li>curl http://10.111.15.152:81/index ，访问服务，IP:81</li>
+<li>curl http://192.168.1.11:30001/index ，访问宿主机，IP:30001，这里的 IP 是 eth1 IP(仅主机网络)</li>
+<li>curl http://10.0.2.15:30001/index ，访问宿主机，IP:30001，这里的 IP 是 eth0 IP（NAT）</li>
+<li>在集群外，因为我是用 virtulbox</li>
+<li>如果主机和虚拟机网络互通则可以直接像在集群中访问一样，curl http://192.168.1.11:30001/index ，IP:30001，这里的 IP 是 eth1 IP，是仅主机（Host-Only）网络</li>
+<li>还可以做端口映射</li>
+</ul>
+<h2 id="5-nbspnbsp常用的命令">5   常用的命令</h2>
+<p>kubectl get componentstatuses，查看 Kubernetes 系统服务是否正常运行。
+kubectl get deploy -o wide &ndash;show-labels
+kubectl get rs -o wide &ndash;show-labels
+kubectl get po -o wide  -n kube-system &ndash;show-labels
+kubectl explain Deployment.spec &ndash;api-version=apps/v1, 资源字段解释
+kubectl exec -it curlapp-74bc6c5496-gqxxb -c curl /bin/sh, 选择pod，选择容器名</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] 龚正. 等. Kubernetes 权威指南. 版次：2017年9月第1版
+[2] Docker Swarm or Kubernetes — Help me decide. <a href="https://stackshare.io/stackups/docker-swarm-vs-kubernetes">https://stackshare.io/stackups/docker-swarm-vs-kubernetes</a>
+[3] <a href="https://zwischenzugs.com/2019/03/25/aws-vs-k8s-is-the-new-windows-vs-linux/">https://zwischenzugs.com/2019/03/25/aws-vs-k8s-is-the-new-windows-vs-linux/</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/hello-world/" data-toggle="tooltip" data-placement="top" title="日记——从现实世界看计算机世界（2）">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/kubernetes-install/" data-toggle="tooltip" data-placement="top" title="Kubernetes 集群安装">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

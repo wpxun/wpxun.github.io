@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on HOME</title>
+    <link>https://wpxun.github.io/tags/docker/</link>
+    <description>Recent content in Docker on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Fri, 21 Jun 2019 12:22:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kubernetes 网络</title>
+      <link>https://wpxun.github.io/posts/kubernetes-network/</link>
+      <pubDate>Fri, 21 Jun 2019 12:22:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-network/</guid>
+      <description>&lt;p&gt;微服务是多进程、多服务部署，无法通过 IPC 进程内调用，必然通过网络调用，这将带来很多问题：不可靠、有带宽、协议设计。无论是 TCP、HTTP、RPC，无论是东西流量还是南北流量，涉及限流、熔断、域名及路径上下文，都需要 Kubernetes 或者第三方产品给出解决方案。网络是 Kubernetes 的难点之一。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 资源</title>
+      <link>https://wpxun.github.io/posts/kubernetes-resource/</link>
+      <pubDate>Tue, 07 May 2019 13:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-resource/</guid>
+      <description>&lt;p&gt;本文重点理解 Kubernetes 资源的作用，并用一个简单的例子进行演示。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 集群安装</title>
+      <link>https://wpxun.github.io/posts/kubernetes-install/</link>
+      <pubDate>Sun, 28 Apr 2019 16:06:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-install/</guid>
+      <description>&lt;p&gt;有了 Docker Swarm 基础，再来学习 Kubernetes 会相对容易一些，不过安装 Kubernetes 还是挺繁琐的，对官方文档中需要访问谷歌外网的部分，还需要替换成国内源。如果目的为了学习，还可以使用 minikube 或 Vagrant 快速创建集群。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Docker Stack 多服务</title>
+      <link>https://wpxun.github.io/posts/docker-stack/</link>
+      <pubDate>Fri, 26 Apr 2019 17:58:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-stack/</guid>
+      <description>&lt;p&gt;我们从简到繁看一下 Docker 的学习路线：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;docker run：Single Engine(者称 Single-Host，单 Docker 节点)下单服务运行&lt;/li&gt;
+&lt;li&gt;docker-compose：Single Engine(或者称 Single-Host，单 Docker 节点)下多服务编排&lt;/li&gt;
+&lt;li&gt;docker swarm：Multi-Host(多 Docker 节点，集群)下单服务编排&lt;/li&gt;
+&lt;li&gt;docker stack：Multi-Host(多 Docker 节点，集群)下多服务编排&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可以看到 docker stack 其实就是 docker-compose 多应用和 docker swarm 规模化两者的结合。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Docker Swarm 集群</title>
+      <link>https://wpxun.github.io/posts/docker-swarm-mode/</link>
+      <pubDate>Tue, 16 Apr 2019 17:38:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-swarm-mode/</guid>
+      <description>&lt;p&gt;概括来说，Swarm 有两个核心组件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;企业级的 Docker 安全集群&lt;/li&gt;
+&lt;li&gt;微服务应用编排引擎&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Dockerfile 应用容器化及 Compose 部署应用</title>
+      <link>https://wpxun.github.io/posts/docker-single-engine-mode/</link>
+      <pubDate>Mon, 15 Apr 2019 17:00:14 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-single-engine-mode/</guid>
+      <description>&lt;p&gt;将应用整合到容器中并且运行起来的这个过程，或者把应用打包成为一个镜像的过程，称为&lt;strong&gt;容器化&lt;/strong&gt;，有时也叫作“Docker 化”。容器化核心就是创建镜像，创建镜像有两种方式，一种是 commit 容器，还有一种是使用 Dockerfile 快速创建自定义镜像。&lt;/p&gt;
+&lt;p&gt;docker compose 能够在 Docker 节点上，以**单引擎模式(Single-Engine Mode)**进行多容器应用的部署和管理。它区别于 Swarm 和 Kubernetes 可以进行多引擎多容器应用部署(在 docker 中叫 swarm mode，Compose does not use swarm mode to deploy services to multiple nodes in a swarm)。compose 和 Kubernetes 其适用范围不同，所以不适合作对比。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Docker Engine</title>
+      <link>https://wpxun.github.io/posts/docker-engine/</link>
+      <pubDate>Sat, 13 Apr 2019 17:00:14 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-engine/</guid>
+      <description>&lt;p&gt;目前，以容器技术为代表的应用形态和以虚拟化为代表的系统形态完美融合于 OpenStack 生态圈之上，Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统(基于容器技术的分布式架构)，Kubernetes 底层支持两种容器技术 Docker 的 containerd 和 CoreOS 的 rkt。
+Docker 主要以 linux 内核的 namespace 和 cgroup 等特性为基础，保障进程或者进程组处于一个隔离、受限、安全的环境之中。Docker 用 Go 实现，并在容器技术之中有风靡之势。自 2007 年 cgroups 合并至 linux 内核 2.6.24 版本，2008 年 LXC 诞生，2009 年 Go 发布，2013 年 Docker 开源，2015 年 Kubernetes 发布。到 2018 年已经有不少企业应用于生产环境；当然不免有唱衰的 &lt;a href=&#34;https://technodrone.blogspot.com/2019/02/goodbye-docker-and-thanks-for-all-fish.html&#34;&gt;再见 docker&lt;/a&gt;。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

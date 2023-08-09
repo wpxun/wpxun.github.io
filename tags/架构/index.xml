@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>架构 on HOME</title>
+    <link>https://wpxun.github.io/tags/%E6%9E%B6%E6%9E%84/</link>
+    <description>Recent content in 架构 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Mon, 20 May 2019 15:55:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>微服务架构</title>
+      <link>https://wpxun.github.io/posts/microservice-architecture-difficult/</link>
+      <pubDate>Mon, 20 May 2019 15:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/microservice-architecture-difficult/</guid>
+      <description>&lt;p&gt;这是一个架构概念爆发的时代，是架构本身的复杂度已经开始超越业务逻辑本身的时代，同时也是越来越接近 DevOps 工作方式的时代。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

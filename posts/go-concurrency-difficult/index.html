@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>并发的复杂性 - HOME</title>
+  <meta property="og:title" content="并发的复杂性 - HOME" />
+  <meta name="twitter:title" content="并发的复杂性 - HOME" />
+  <meta name="description" content="本文谈到的并发是指单程序、单节点并发，区别于并发系统，并发系统的一个更加流行的词是分布式系统，并发系统更有可能是并行的，因为其中的多个程序一般可以同时在不同的硬件环境上运行。分布式系统可以看我另一篇文章《微服务架构的复杂性》。
+并发指的是多个任务几乎被同时发起运行，但是在同一时刻这些任务不一定都处于运行状态，这取决于 CPU 核心或者 CPU 数量。并行指的是在同一时刻可以有多个任务真正地同时运行。并行运行的必要条件是多 CPU 核心或者多 CPU 的计算环境。
+在功能开发中，非并发程序往往未能充分利用服务器的性能，为用户提供服务基本都是排队处理。而并发程序有时可以代替集群，其性能提高对整个系统是至关重要的作用，如果我们将单个节点的性能提高 30%，或者甚至超过 100%，那么我们可以节省多少台机器呢？不过同时并发却带来了编程的复杂性。不同程序单元之间的远程过程调用可以参考另一篇文章《go 网络编程》。Go 语言的特点是通过内部调度可以最大限度地利用单机的计算能力。然而在分布式计算方面，它本身其实并没有提供什么现成的东西，还需要使用一些第三方的框架或工具，或者自己编写和搭建。">
+  <meta property="og:description" content="本文谈到的并发是指单程序、单节点并发，区别于并发系统，并发系统的一个更加流行的词是分布式系统，并发系统更有可能是并行的，因为其中的多个程序一般可以同时在不同的硬件环境上运行。分布式系统可以看我另一篇文章《微服务架构的复杂性》。
+并发指的是多个任务几乎被同时发起运行，但是在同一时刻这些任务不一定都处于运行状态，这取决于 CPU 核心或者 CPU 数量。并行指的是在同一时刻可以有多个任务真正地同时运行。并行运行的必要条件是多 CPU 核心或者多 CPU 的计算环境。
+在功能开发中，非并发程序往往未能充分利用服务器的性能，为用户提供服务基本都是排队处理。而并发程序有时可以代替集群，其性能提高对整个系统是至关重要的作用，如果我们将单个节点的性能提高 30%，或者甚至超过 100%，那么我们可以节省多少台机器呢？不过同时并发却带来了编程的复杂性。不同程序单元之间的远程过程调用可以参考另一篇文章《go 网络编程》。Go 语言的特点是通过内部调度可以最大限度地利用单机的计算能力。然而在分布式计算方面，它本身其实并没有提供什么现成的东西，还需要使用一些第三方的框架或工具，或者自己编写和搭建。">
+  <meta name="twitter:description" content="本文谈到的并发是指单程序、单节点并发，区别于并发系统，并发系统的一个更加流行的词是分布式系统，并发系统更有可能是并行的，因为其中的多个程序一般可以同时在不同的硬件环境上运行。分布式系统可以看我另一篇文章《微服务架构的复杂性》。
+并发指的是多个任务几乎被同时发起运行，但是在同一时刻这些任务不一定都处于运行状态，这取决于 CPU 核心或者 CPU 数量。并行指的是在同一时刻可以有多个任务真正地同时运 …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/go-concurrency-difficult/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">并发的复杂性</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 14, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/golang/">
+            <i class="fas fa-folder"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/golang/">
+            <i class="fas fa-tag"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%B9%B6%E5%8F%91/">
+            <i class="fas fa-tag"></i>
+            并发
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>本文谈到的并发是指单程序、单节点并发，区别于并发系统，并发系统的一个更加流行的词是分布式系统，并发系统更有可能是并行的，因为其中的多个程序一般可以同时在不同的硬件环境上运行。分布式系统可以看我另一篇文章<a href="/2019/03/17/microservice-architecture-difficult/">《微服务架构的复杂性》</a>。
+并发指的是多个任务几乎被同时发起运行，但是在同一时刻这些任务不一定都处于运行状态，这取决于 CPU 核心或者 CPU 数量。并行指的是在同一时刻可以有多个任务真正地同时运行。并行运行的必要条件是多 CPU 核心或者多 CPU 的计算环境。
+在功能开发中，非并发程序往往未能充分利用服务器的性能，为用户提供服务基本都是排队处理。而并发程序有时可以代替集群，其性能提高对整个系统是至关重要的作用，如果我们将单个节点的性能提高 30%，或者甚至超过 100%，那么我们可以节省多少台机器呢？不过同时并发却带来了编程的复杂性。不同程序单元之间的远程过程调用可以参考另一篇文章<a href="/2019/03/12/go-network/">《go 网络编程》</a>。Go 语言的特点是通过内部调度可以最大限度地利用单机的计算能力。然而在分布式计算方面，它本身其实并没有提供什么现成的东西，还需要使用一些第三方的框架或工具，或者自己编写和搭建。</p>
+<h2 id="1-nbspnbsp为什么并发很难">1   为什么并发很难？</h2>
+<p>并发的困难在于通信，通信有两个要保证：</p>
+<ul>
+<li>数据竞争：临界区
+主要原因是临界区引起的，任何空间，只要被同时访问，都可能发生问题。洗手间就是现实世界中的临界区，互斥量就是洗手间的使用规则。
+(1) 进去时锁上门，出来时再解锁门；
+(2) 其它人需要在门外等待；
+(3) 等待的人可能很多，需要排队进入。
+需要根据不同程序酌情考虑究竟是扩大还是缩小临界区，临界区大了其它被阻塞线程等待时间较长，临界区小了频繁调用互斥量也是缺点。</li>
+<li>顺序竞争：即使保证了同步问题，也不一定就保证了顺序执行的问题，所以这个问题也要重视，不过这个问题容易解决，所以不展开谈。</li>
+</ul>
+<p>本文主要讲解线程间并发，但这里也简单的列举进程间的通信方式：</p>
+<ul>
+<li>管道、消息队列</li>
+<li>信号：它是唯一异步的 IPC 方法，我们可以通过 kill 给进程发送信号，进程采用 notice 异步监听信号。有50几种信号，不同系统有细微差别，但总体上是一致的。对 Go 要提醒一点的是运行时要 build 成执行文件直接运行，不要用 go run 间接（包装）运行，否则发送的信号可能被外层程序截获。
+<ul>
+<li>可以直接 kill -s sigkill 58148 或 kill -n 9 58148 方式发送信号</li>
+<li>ctrl-c 发送 SIGINT 信号给前台进程组中的所有进程。常用于终止正在运行的程序。</li>
+<li>ctrl-z 发送 SIGTSTP 信号给前台进程组中的所有进程，常用于挂起一个进程。</li>
+<li>ctrl-\  发送 SIGQUIT</li>
+<li>ctrl-d 不是发送信号，而是表示一个特殊的二进制值，表示 EOF。</li>
+<li>SIGKILL 和 SIGSTOP 两种信息不能自行处理</li>
+</ul>
+</li>
+<li>共享内存：虚拟内存和物理内存的原理</li>
+<li>socket、Streams：不同主机之间就只能选择这类通信</li>
+</ul>
+<h2 id="2-nbspnbsp原子性">2   原子性</h2>
+<p>如果某个东西是原子的，隐含的意思就是它在并发环境中是安全的。
+谈论原子性必然要谈“上下文（context）”这个词，上下文的概念很多，有函数层级的上下文（函数栈），有程序界限的上下文（php和redis），有用户程序和系统程序或CPU的上下文（程序的运算和内核的运算），原子性可能在某个上下文中有些东西是原子性的，而在另一个上下文中却不是。在考虑原子性时，经常第一件需要做的事就是定义上下文或范围然后再考虑这操作是否是原子性的。一切都应该遵循这个原则。
+比如 go 中 i++ 是由三步组成的，是不可分割的，但是可中断的。</p>
+<ul>
+<li>检索 i 的值</li>
+<li>增加 i 的值</li>
+<li>存储 i 的值
+在非并发程序中，或者并发程序中但没有把 i 暴露给其它 goroutine，那么它是原子性的。
+redis的原子性是指位于redis服务器上下文中的原子性。当然多个原子性一起并不会产生更大的原子性。以前写php程序，对redis某个值加1，用incr操作是原子性的，用检索、增加、存储三部走对单个php-fpm也是原子性的，但对多个php-fpm就不是原子性的。
+要实现并发安全，必须是变量在所有上下文中都是原子性的。</li>
+</ul>
+<h2 id="3-nbspnbsp互斥量-mutex">3   互斥量 Mutex</h2>
+<h3 id="31-nbspnbspc-语言的互斥量函数">3.1   C 语言的互斥量函数：</h3>
+<p>pthread_mutex_t mutex;
+<code>int pthread_mutex_init(pthread_mutex_t * mutex, const pthread_mutexattr_t * attr); 成功时返回 0，失败时返回其他值。</code>
+<code>int pthread_mutex_destroy(pthread_mutex_t * mutex); 成功时返回 0，失败时返回其他值。</code>
+<code>int pthread_mutex_lock(pthread_mutex_t * mutex); 成功时返回 0，失败时返回其他值。</code>
+<code>int pthread_mutex_unlock(pthread_mutex_t * mutex); 成功时返回 0，失败时返回其他值。</code></p>
+<h2 id="4-nbspnbsp条件变量-conditions">4   条件变量 Conditions</h2>
+<p>是对互斥量的补充，因为互斥量只有两种状态。条件变量进入阻塞，等待通知。</p>
+<h2 id="5-nbspnbsp信号量-semaphore">5   信号量 Semaphore</h2>
+<p>信号量和互斥量很相似，只是用 0 和 1 （二进制信号量）控制，信号量不能为负数，否则便阻塞。
+sem_t sem;
+<code>int sem_init(sem_t * sem, int pshared, unsigned int value); 成功时返回 0，失败时返回其他值。</code>value 为初始信号量。
+<code>int sem_destroy(sem_t * sem); 成功时返回 0，失败时返回其他值。</code>
+<code>int sem_wait(sem_t * sem); 成功时返回 0，失败时返回其他值。</code>相当于 lock，信号量 value 值 -1。
+<code>int sem_post(sem_t * sem); 成功时返回 0，失败时返回其他值。</code>相当于 unlock，信号量 value 值 +1。</p>
+<h2 id="6-nbspnbsp并发模式">6   并发模式</h2>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/cryptology/" data-toggle="tooltip" data-placement="top" title="密码学">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/go-io/" data-toggle="tooltip" data-placement="top" title="go I/O 操作">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

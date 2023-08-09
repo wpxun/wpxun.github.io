@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>容器 on HOME</title>
+    <link>https://wpxun.github.io/tags/%E5%AE%B9%E5%99%A8/</link>
+    <description>Recent content in 容器 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Fri, 26 Apr 2019 17:58:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/%E5%AE%B9%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker Stack 多服务</title>
+      <link>https://wpxun.github.io/posts/docker-stack/</link>
+      <pubDate>Fri, 26 Apr 2019 17:58:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-stack/</guid>
+      <description>&lt;p&gt;我们从简到繁看一下 Docker 的学习路线：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;docker run：Single Engine(者称 Single-Host，单 Docker 节点)下单服务运行&lt;/li&gt;
+&lt;li&gt;docker-compose：Single Engine(或者称 Single-Host，单 Docker 节点)下多服务编排&lt;/li&gt;
+&lt;li&gt;docker swarm：Multi-Host(多 Docker 节点，集群)下单服务编排&lt;/li&gt;
+&lt;li&gt;docker stack：Multi-Host(多 Docker 节点，集群)下多服务编排&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可以看到 docker stack 其实就是 docker-compose 多应用和 docker swarm 规模化两者的结合。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Docker Swarm 集群</title>
+      <link>https://wpxun.github.io/posts/docker-swarm-mode/</link>
+      <pubDate>Tue, 16 Apr 2019 17:38:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-swarm-mode/</guid>
+      <description>&lt;p&gt;概括来说，Swarm 有两个核心组件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;企业级的 Docker 安全集群&lt;/li&gt;
+&lt;li&gt;微服务应用编排引擎&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Dockerfile 应用容器化及 Compose 部署应用</title>
+      <link>https://wpxun.github.io/posts/docker-single-engine-mode/</link>
+      <pubDate>Mon, 15 Apr 2019 17:00:14 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-single-engine-mode/</guid>
+      <description>&lt;p&gt;将应用整合到容器中并且运行起来的这个过程，或者把应用打包成为一个镜像的过程，称为&lt;strong&gt;容器化&lt;/strong&gt;，有时也叫作“Docker 化”。容器化核心就是创建镜像，创建镜像有两种方式，一种是 commit 容器，还有一种是使用 Dockerfile 快速创建自定义镜像。&lt;/p&gt;
+&lt;p&gt;docker compose 能够在 Docker 节点上，以**单引擎模式(Single-Engine Mode)**进行多容器应用的部署和管理。它区别于 Swarm 和 Kubernetes 可以进行多引擎多容器应用部署(在 docker 中叫 swarm mode，Compose does not use swarm mode to deploy services to multiple nodes in a swarm)。compose 和 Kubernetes 其适用范围不同，所以不适合作对比。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

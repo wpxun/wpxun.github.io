@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HTTP on HOME</title>
+    <link>https://wpxun.github.io/tags/http/</link>
+    <description>Recent content in HTTP on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Mon, 01 Apr 2019 17:34:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/http/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTTPS 性能和调试</title>
+      <link>https://wpxun.github.io/posts/https/</link>
+      <pubDate>Mon, 01 Apr 2019 17:34:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/https/</guid>
+      <description>&lt;p&gt;HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;基础部分：TCP/IP，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;《TCP 传输原理》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/21/cryptology/&#34;&gt;《密码学》&lt;/a&gt;和&lt;a href=&#34;https://wpxun.github.io/2019/03/24/tls/&#34;&gt;《SSL/TLS 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;应用部分：HTTP/2，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/31/http2/&#34;&gt;《HTTP/2 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>HTTP/2 协议</title>
+      <link>https://wpxun.github.io/posts/http2/</link>
+      <pubDate>Sun, 31 Mar 2019 14:39:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/http2/</guid>
+      <description>&lt;p&gt;HTTP/1.1 与 HTTP/2 相隔了大概20年，但是从目前的研究和实验情况来看，我们不可能等上几十年才升级到下一个版本，h2 在逐渐的普及。
+h2 和 h1 的最大差别在于在 &lt;strong&gt;http 层&lt;/strong&gt;上增加了&lt;strong&gt;分帧层&lt;/strong&gt;；把原来的 http 层的数据拆分成多种帧类型，并在每种类型前加上协议性的帧首部。基于二进制分帧的优点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;传输使用的编码方式改变（采用帧、流模式），不用创建多个 TCP 连接，单个连接就可以有多个流（处理主页面和所有子元素的请求），能够减少延迟，服务器和浏览器的 socket 负载也大大减少。&lt;/li&gt;
+&lt;li&gt;并行处理，乱序发送帧，不再采用 pipeline 阻塞方式&lt;/li&gt;
+&lt;li&gt;传输的功能得以扩展（如服务端推送、首部压缩、优先级、流量控制）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;学习 HTTP/2 最好的文档是 RFC 7540。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go 网络编程</title>
+      <link>https://wpxun.github.io/posts/go-network/</link>
+      <pubDate>Tue, 12 Mar 2019 09:30:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-network/</guid>
+      <description>&lt;p&gt;本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 &lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;TCP 传输原理&lt;/a&gt;和 &lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;C Socket 编程&lt;/a&gt;，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

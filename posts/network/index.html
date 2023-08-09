@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>网络杂谈 - HOME</title>
+  <meta property="og:title" content="网络杂谈 - HOME" />
+  <meta name="twitter:title" content="网络杂谈 - HOME" />
+  <meta name="description" content="摘要：在局域网需要靠物理地址发送给对应的主机，而到广域网是用的 IP 地址进行报文转发。IP 是点到点，负责发送给对应的主机，而 TCP 是端到端，负责发送给对应的应用程序。">
+  <meta property="og:description" content="摘要：在局域网需要靠物理地址发送给对应的主机，而到广域网是用的 IP 地址进行报文转发。IP 是点到点，负责发送给对应的主机，而 TCP 是端到端，负责发送给对应的应用程序。">
+  <meta name="twitter:description" content="摘要：在局域网需要靠物理地址发送给对应的主机，而到广域网是用的 IP 地址进行报文转发。IP 是点到点，负责发送给对应的主机，而 TCP 是端到端，负责发送给对应的应用程序。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/network/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">网络杂谈</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 11, 2019</time></li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E7%BD%91%E7%BB%9C/">
+            <i class="fas fa-tag"></i>
+            网络
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>摘要：在局域网需要靠物理地址发送给对应的主机，而到广域网是用的 IP 地址进行报文转发。IP 是点到点，负责发送给对应的主机，而 TCP 是端到端，负责发送给对应的应用程序。</p>
+<h2 id="1-nbspnbsposi-网络模型">1   OSI 网络模型</h2>
+<p><img src="https://wpxun.github.io/image/2019/04/OSI.gif" alt="OSI 7层网络模型"></p>
+<p>一些英文缩写简称容易混淆，比如 MAC 有物理层的物理地址、数据链路层的介质访问控制、密码学的消息验证码、macOS苹果操作系统等，为了避免歧义，尽量要指明。</p>
+<ol>
+<li>数据链路层 物理地址
+每个网卡都有全球唯一的物理地址，路由器向同一个局域网的所有主机发送收到的数据包，本地的网卡比较一下包里指明的物理地址和自己的物理地址是否一致，如果一致则接收，否则丢弃。所以可以在局域网监听发给其它人的数据包，当然也有一些反监听手段。
+物理地址由 6 字节表示，其中前三个字节由 IEEE 分配给厂商，后三个字节由厂商自己定。比如 XiaomiCo_9f:cb:9e (d8:ce:3a:9f:cb:9e)、Apple_b3:e2:83 (f4:5c:89:b3:e2:83)，厂商分配的物理地址段可以到 <a href="https://standards.ieee.org/products-services/regauth/index.html">IEEE-SA - Registration Authority</a> 查询。
+物理地址前三字节是 IEEE 分配，但最终也是厂商决定，甚至用户在接入后可以自行篡改，所以很难全球唯一，但只要保证在局域网内唯一就可以了，设备在接入局域网的时候路由会检测，并把物理地址和内网 IP 进行绑定。
+总之，由各个端点向上汇报唯一标识是不行的，得由一个中心机构向下分配唯一标识才能保证真正的唯一性。而外网 IP 就是由上往下分配的。</li>
+</ol>
+<p>物理地址只应用于 Ethernet II（以太网 IEEE 802.3）层，它是一种局域网技术（以太网就是使用最广泛的局域网技术）。交换机等二层设备都是局域网内设备，交换机把端口与所连接适配器的物理地址关联起来（MAC 表），实现定点传输，其它适配器就不必查看网络上传输的全部帧。</p>
+<ol start="2">
+<li>
+<p>网络层 ARP
+ARP（IP -&gt; 物理地址） 和 RARP（物理地址 -&gt; IP） 是地址解析协议，用于内网 IP 和物理地址的相互转换。ARP 是向局域网广播查询方式，RARP 是用查表方式。
+可以通过 arp -an 查看计算机上的 arp 表。</p>
+</li>
+<li>
+<p>网络层 traceroute
+它可以追踪路由路径，原理是向目的主机发送 UDP 报文，目的主机返回 ICMP 报文，第 N 跳的 TTL 会设置为 N，每经过一个路由，TTL 就会减 1，当减到 0 时就不再继续转发直接丢弃并返回 ICMP 错误报文（code = 0，表示 TTL 达下限）。比如第一跳设置 TTL 为 1，由于它是 1，所以下一个路由器收到这个报文后，不会再继续转发了，会给源主机发送 ICMP 出错报文，就可以知道第一个路由的 IP 地址，同理，设置 TTL 为 2，就可以知道第二个路由的 IP 地址，依次类推。另外 traceroute 每一跳固定发三个 UDP 报文，三个 ICMP 返回的 IP 可能相同，也可能不同，若某个报文没有返回则输出 *。
+另外，返回的 ICMP 也会设置 TTL，一般 64 跳的是 Linux、MacOS 系统，255 跳的是 Unix 系统，128 跳的是 Windows 系统。</p>
+</li>
+</ol>
+<p><img src="https://wpxun.github.io/image/2019/04/traceroute.png" alt="深圳联通到北京联通 百度官网经过的路由">
+<a href="https://wpxun.github.io/image/2019/04/traceroute.pcapng">traceroute 抓包</a></p>
+<p>TTL（time to live）是报文的生存时间，单位是秒（处理时间不到一秒算一秒，以现在的计算数度可以认为一秒等于一跳）,用于防止回环，位于 IP 报文的第 9 个字节，8bit，TTL的最大值是255，TTL的一个推荐值是 64；DNS TTL 是一条域名解析记录在DNS服务器上缓存时间。本质上都是表示存活时间。IPv6 首部采用了跳数限制，不再使用 TTL。</p>
+<ol start="4">
+<li>
+<p>网络层 ping
+ping 是向目的 IP 发送 ICMP 报文，目的主机返回 ICMP 报文，打印列里有 ttl，就是返回时 TTL 减去经过的路由数剩下值，比如 49，那发出时 TTL 应该是 64，经过 15 跳（经过 15 个路由器）；比如 217，那发出时 TTL 应该是 255，经过 38 跳。</p>
+</li>
+<li>
+<p>网络地址转换 NAT
+如果 DHCP 服务器为客户端提供了一个 IP 地址，那么这个地址可能不是一个“公共的”、在 Internet 上唯一的 IP 地址。只要路由器自己具有在 Internet 上有效的 IP 地址，那么路由器就可以成为网络客户端的代理，从客户端接收请求，向 Internet 地址空间转发这个请求，进而接收来自于 Internet 地址空间的响应。许多路由器/DHCP 设备都可以提供 NAT 服务。NAT 设备从私有地址（10.0.0.0、172.16.0.0、192.168.0.0）来分配 IP 地址。这些地址一般意义上是不可路由的，只能通过地址转换来达到 NAT 客户端计算机。</p>
+</li>
+</ol>
+<p>跨网关需要默认网关转发（主机和路由器都有路由表），所以需要默认网关的物理地址。通过子网掩码计算是否属于不同的网关。对于本地网段上的主机来说，路由器的IP地址一般都是默认网关的地址。
+对于转发，要区分路由和 NAT：</p>
+<ul>
+<li>NAT 地址转换，要区别接收和发送：1. 发送时目的 IP 不变，源 IP 改变；2. 接收时源 IP 不变，目的 IP 改变；</li>
+<li>路由，则目的 IP 和源 IP 都不会改变。
+当然 MAC 地址都是会改变的。</li>
+</ul>
+<h2 id="2-nbspnbsp物理设备">2   物理设备</h2>
+<p>一个设备工作在哪一层，关键看它工作时利用哪一层的数据头部信息。网桥工作时，是以介质访问控制（MAC） 头部来决定转发端口的，因此显然它是数据链路层的设备。具体说:</p>
+<ul>
+<li>物理层：网卡、网线、集线器、中继器、调制解调器</li>
+<li>数据链路层：网桥、交换机</li>
+<li>网络层：路由器</li>
+<li>网关工作在第四层传输层及其以上</li>
+</ul>
+<p>常见设备如：</p>
+<ul>
+<li>集线器是物理层设备,采用广播的形式来传输信息。</li>
+<li>交换机就是用来进行报文交换的机器。多为链路层设备(二层交换机)，能够进行地址学习，采用存储转发的形式来交换报文。</li>
+<li>路由器的一个作用是连通不同的网络，另一个作用是选择信息传送的线路。选择通畅快捷的近路，能大大提高通信速度，减轻网络系统通信负荷，节约网络系统资源，提高网络系统畅通率。</li>
+</ul>
+<ol>
+<li>
+<p>交换机和路由器的区别
+交换机拥有一条很高带宽的背部总线和内部交换矩阵。交换机的所有的端口都挂接在这条总线上，控制电路收到数据包以后，处理端口会查找内存中的地址对照表以确定目的MAC（网卡的硬件地址）的NIC（网卡）挂接在哪个端口上，通过内部交换矩阵迅速将数据包传送到目的端口，目的MAC若不存在则广播到所有的端口，接收端口回应后交换机会“学习”新的地址，并把它添加入内部MAC地址表中。
+使用交换机也可以把网络“分段”，通过对照MAC地址表，交换机只允许必要的网络流量通过交换机。通过交换机的过滤和转发，可以有效的隔离广播风暴，减少误包和错包的出现，避免共享冲突。
+交换机在同一时刻可进行多个端口对之间的数据传输。每一端口都可视为独立的网段，连接在其上的网络设备独自享有全部的带宽，无须同其他设备竞争使用。当节点A向节点D发送数据时，节点B可同时向节点C发送数据，而且这两个传输都享有网络的全部带宽，都有着自己的虚拟连接。假使这里使用的是10Mbps的以太网交换机，那么该交换机这时的总流通量就等于2×10Mbps＝20Mbps，而使用10Mbps的共享式HUB时，一个HUB的总流通量也不会超出10Mbps。
+总之，交换机是一种基于MAC地址识别，能完成封装转发数据包功能的网络设备。交换机可以“学习”MAC地址，并把其存放在内部地址表中，通过在数据帧的始发者和目标接收者之间建立临时的交换路径，使数据帧直接由源地址到达目的地址。
+从过滤网络流量的角度来看，路由器的作用与交换机和网桥非常相似。但是与工作在网络物理层，从物理上划分网段的交换机不同，路由器使用专门的软件协议从逻辑上对整个网络进行划分。例如，一台支持IP协议的路由器可以把网络划分成多个子网段，只有指向特殊IP地址的网络流量才可以通过路由器。对于每一个接收到的数据包，路由器都会重新计算其校验值，并写入新的物理地址。因此，使用路由器转发和过滤数据的速度往往要比只查看数据包物理地址的交换机慢。但是，对于那些结构复杂的网络，使用路由器可以提高网络的整体效率。路由器的另外一个明显优势就是可以自动过滤网络广播。</p>
+</li>
+<li>
+<p>集线器与路由器在功能上有什么不同?
+首先说HUB,也就是集线器。它的作用可以简单的理解为将一些机器连接起来组成一个局域网。而交换机（又名交换式集线器）作用与集线器大体相同。但是两者在性能上有区别：集线器采用的式共享带宽的工作方式，而交换机是独享带宽。这样在机器很多或数据量很大时，两者将会有比较明显的。而路由器与以上两者有明显区别，它的作用在于连接不同的网段并且找到网络中数据传输最合适的路径。路由器是产生于交换机之后，就像交换机产生于集线器之后，所以路由器与交换机也有一定联系，不是完全独立的两种设备。路由器主要克服了交换机不能路由转发数据包的不足。
+总的来说，路由器与交换机的主要区别体现在以下几个方面：</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>工作层次不同
+最初的的交换机是工作在数据链路层，而路由器一开始就设计工作在网络层。由于交换机工作在数据链路层，所以它的工作原理比较简单，而路由器工作在网络层，可以得到更多的协议信息，路由器可以做出更加智能的转发决策。</p>
+</li>
+<li>
+<p>数据转发所依据的对象不同
+交换机是利用物理地址或者说MAC地址来确定转发数据的目的地址。而路由器则是利用IP地址来确定数据转发的地址。IP地址是在软件中实现的，描述的是设备所在的网络。MAC地址通常是硬件自带的，由网卡生产商来分配的，而且已经固化到了网卡中去，一般来说是不可更改的。而IP地址则通常由网络管理员或系统自动分配。</p>
+</li>
+<li>
+<p>传统的交换机只能分割冲突域，不能分割广播域；而路由器可以分割广播域
+由交换机连接的网段仍属于同一个广播域，广播数据包会在交换机连接的所有网段上传播，在某些情况下会导致通信拥挤和安全漏洞。连接到路由器上的网段会被分配成不同的广播域，广播数据不会穿过路由器。虽然第三层以上交换机具有VLAN功能，也可以分割广播域，但是各子广播域之间是不能通信交流的，它们之间的交流仍然需要路由器。</p>
+</li>
+<li>
+<p>路由器提供了防火墙的服务
+路由器仅仅转发特定地址的数据包，不传送不支持路由协议的数据包传送和未知目标网络数据包的传送，从而可以防止广播风暴。</p>
+</li>
+</ul>
+<h2 id="3-nbspnbsp网络测试">3   网络测试</h2>
+<p>安装 telnet、telnet-server、xinetd，可以查看是否已经安装，有<code>@</code>前缀表示已经安装：</p>
+<pre tabindex="0"><code>&gt; yum list | grep -E &#34;xinetd|telnet&#34;
+telnet.x86_64                           1:0.17-64.el7                  @base
+telnet-server.x86_64                    1:0.17-64.el7                  @base
+xinetd.x86_64                           2:2.3.15-13.el7                @base
+</code></pre><p>systemctl enable telnet.socket
+systemctl start telnet.socket
+systemctl enable xinetd
+systemctl start xinetd</p>
+<p>less /etc/services | grep telnet</p>
+<p>firewall-cmd &ndash;add-service=telnet &ndash;zone=public &ndash;permanent</p>
+<p><a href="https://sharadchhetri.com/2014/12/08/install-telnet-server-on-centos-7-rhel-7/">https://sharadchhetri.com/2014/12/08/install-telnet-server-on-centos-7-rhel-7/</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/before-work/" data-toggle="tooltip" data-placement="top" title="日记——几点思考（1）">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/https/" data-toggle="tooltip" data-placement="top" title="HTTPS 性能和调试">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

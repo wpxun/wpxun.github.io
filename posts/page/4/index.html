@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Posts - HOME</title>
+  <meta property="og:title" content="Posts - HOME" />
+  <meta name="twitter:title" content="Posts - HOME" />
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="HOME" />
+  <link href="/posts/index.xml" rel="feed" type="application/rss+xml" title="HOME" />
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="breadcrumb">
+    Posts
+  </div>
+  <div class="main" role="main">
+    <section class="list section-list">
+      <article class="article">
+        <a href="/posts/go-time/" class="article-titles">
+          <h2 class="article-title">go time 包</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 8, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/go%E5%8C%85/">
+              <i class="fas fa-tag"></i>
+              Go包
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <h3 id="时间概念">时间概念</h3>
+<p>时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。</p>
+<ul>
+<li>时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。</li>
+<li>时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。</li>
+<li>时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。</li>
+<li>显示格式：这部分没有逻辑问题，纯粹是视图显示。</li>
+</ul>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-time/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-conversions/" class="article-titles">
+          <h2 class="article-title">go 类型转换</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>August 18, 2018</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>Go Conversions 和 类型断言是两种类型转换方式。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-conversions/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/joomla-magento/" class="article-titles">
+          <h2 class="article-title">Joomla &#43; Magento 官网加商城</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 20, 2017</time></li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%B7%A5%E5%85%B7/">
+              <i class="fas fa-tag"></i>
+              工具
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>今天利用 docker 服务器来搭建 Joomla 公司官网和 Magento 商城。它们都是采用了 php 语言写的应用，所以直接用我相关的文章来配置服务器即可：<a href="http://blog.jemper.cn/2017/02/08/docker-and-dockerfile/">docker 入门与 docker-compose 编配工具</a>。
+说点题外话，如果现在还有小公司在开发什么商城或者官网类型的应用，赶紧放弃，投入到 Joomla 和 Magento 的怀抱吧。这两个已经很成熟，也是开源的，要开发也可以参考这两者或者基于它们去开发，省时省力，也利于成功。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/joomla-magento/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/git-source/" class="article-titles">
+          <h2 class="article-title">git 源码安装</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>February 10, 2017</time></li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%B7%A5%E5%85%B7/">
+              <i class="fas fa-tag"></i>
+              工具
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>用习惯了windows下高版本2.11.0的git，再到centos7自带的1.8.5版本觉得操作还是不方便，所以今天就把它升级到最新版。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/git-source/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/blog/" class="article-titles">
+          <h2 class="article-title">博客实践</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>February 8, 2017</time></li>
+        </ul>
+        <div class="article-content">
+          2019-12-21 更新到 Hugo，抛弃复杂的 hexo，hexo 依赖 node 和各种 node_module，比如集成 CNAME 这一简单的功能都是靠模块来实现。而 hugo 得益于 Go，直接 go get 生成 hugo 执行文件即可，日常操作和 hexo 基本一样： hugo server、hugo 两个命令，常用参数 -D 表示集成草稿。如果要自动部署到 github，写一个 sh 脚本即可。另外静态文件方面在根目录下有 static，直接放在里面即可：
+-rw-r--r-- 1 ada staff 14 12 21 16:08 CNAME -rw-r--r--@ 1 ada staff 10497 12 21 16:09 avatar.jpg -rw-r--r-- 1 ada staff 10 12 21 16:08 baidu_verify_MOITAeX9md.html -rw-r--r--@ 1 ada staff 1150 12 21 16:09 favicon.ico -rw-r--r-- 1 ada staff 53 12 21 16:08 googleba39dd1bfa288749.
+        </div>
+        <div class="article-readmore"><a href="/posts/blog/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+    </section>
+    
+    <ul class="pagination pagination-default">
+      <li class="page-item">
+        <a href="/posts/" aria-label="First" class="page-link" role="button"><span aria-hidden="true">&laquo;&laquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/page/3/" aria-label="Previous" class="page-link" role="button"><span aria-hidden="true">&laquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/" aria-label="Page 1" class="page-link" role="button">1</a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/page/2/" aria-label="Page 2" class="page-link" role="button">2</a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/page/3/" aria-label="Page 3" class="page-link" role="button">3</a>
+      </li>
+      <li class="page-item active">
+        <a aria-current="page" aria-label="Page 4" class="page-link" role="button">4</a>
+      </li>
+      <li class="page-item disabled">
+        <a aria-disabled="true" aria-label="Next" class="page-link" role="button" tabindex="-1"><span aria-hidden="true">&raquo;</span></a>
+      </li>
+      <li class="page-item disabled">
+        <a aria-disabled="true" aria-label="Last" class="page-link" role="button" tabindex="-1"><span aria-hidden="true">&raquo;&raquo;</span></a>
+      </li>
+    </ul>
+  </div>
+
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-rsslink">
+      <a href="/posts/index.xml" type="application/rss+xml" target="_blank" title="RSS">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

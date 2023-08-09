@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>C Socket 编程 - HOME</title>
+  <meta property="og:title" content="C Socket 编程 - HOME" />
+  <meta name="twitter:title" content="C Socket 编程 - HOME" />
+  <meta name="description" content="一切皆文件，I/O 操作无处不在，文件、设备、管道、Socket等都是 I/O 操作。C 语言对文件 I/O 操作分两种，一种是无缓冲的（用户层无缓存区），返回的是文件描述符（int 整型），代表函数是 open、read、write 和 socket 等；另一种是有缓冲的（用户层设计了缓存区），返回是的数据流 Stream（FILE 结构体），代表函数是 fopen、fread、fwrite、putc、getc、fputs、fgets 和 fprintf等；不过 C 标准已经不再支持对文件（这里没有包括 socket）的无缓冲操作。">
+  <meta property="og:description" content="一切皆文件，I/O 操作无处不在，文件、设备、管道、Socket等都是 I/O 操作。C 语言对文件 I/O 操作分两种，一种是无缓冲的（用户层无缓存区），返回的是文件描述符（int 整型），代表函数是 open、read、write 和 socket 等；另一种是有缓冲的（用户层设计了缓存区），返回是的数据流 Stream（FILE 结构体），代表函数是 fopen、fread、fwrite、putc、getc、fputs、fgets 和 fprintf等；不过 C 标准已经不再支持对文件（这里没有包括 socket）的无缓冲操作。">
+  <meta name="twitter:description" content="一切皆文件，I/O 操作无处不在，文件、设备、管道、Socket等都是 I/O 操作。C 语言对文件 I/O 操作分两种，一种是无缓冲的（用户层无缓存区），返回的是文件描述符（int 整型），代表函数是 open、read、write 和 socket 等；另一种是有缓冲的（用户层设计了缓存区），返回是的数据流 Stream（FILE 结构体）， …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/c-socket/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">C Socket 编程</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 11, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/c/">
+            <i class="fas fa-folder"></i>
+            C
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/c/">
+            <i class="fas fa-tag"></i>
+            C
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/socket/">
+            <i class="fas fa-tag"></i>
+            Socket
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E7%BC%96%E7%A8%8B/">
+            <i class="fas fa-tag"></i>
+            编程
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/io/">
+            <i class="fas fa-tag"></i>
+            io
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp套接字">1   套接字</a></li>
+    <li><a href="#2-nbspnbspsocket-编程">2   Socket 编程</a>
+      <ul>
+        <li><a href="#21-nbspnbsptcp">2.1   TCP</a></li>
+        <li><a href="#22-nbspnbspudp">2.2   UDP</a></li>
+        <li><a href="#23-nbspnbsplinux-文件操作">2.3   linux 文件操作</a></li>
+        <li><a href="#24-nbspnbspsocket-选项">2.4   Socket 选项</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsp并发服务器">3   并发服务器</a>
+      <ul>
+        <li><a href="#31-nbspnbsp多进程">3.1   多进程</a></li>
+        <li><a href="#32-nbspnbsp多线程">3.2   多线程</a></li>
+        <li><a href="#33-nbspnbspio-复用">3.3   I/O 复用</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-nbspnbsp字节流处理">4   字节流处理</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>一切皆文件，I/O 操作无处不在，文件、设备、管道、Socket等都是 I/O 操作。C 语言对文件 I/O 操作分两种，一种是无缓冲的（用户层无缓存区），返回的是文件描述符（int 整型），代表函数是 open、read、write 和 socket 等；另一种是有缓冲的（用户层设计了缓存区），返回是的数据流 Stream（FILE 结构体），代表函数是 fopen、fread、fwrite、putc、getc、fputs、fgets 和 fprintf等；不过 C 标准已经不再支持对文件（这里没有包括 socket）的无缓冲操作。</p>
+<p>“文件句柄”是 windows 中的术语，因为在 windows 中 socket 和文件是不一样的；而 Linux 不区分文件与 socket, 所以用“文件描述符”术语，其中0、1、2就是我们熟悉的标准输入、标准输出和标准错误，自定义的描述符从 3 开始由小到大顺序编号。
+以下是在 linux 的输出：</p>
+<pre tabindex="0"><code>&gt; lsof -p 4501
+COMMAND  PID     USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
+a.out   4501 feixin10  cwd    DIR    8,1      101    52704 /home/feixin10
+a.out   4501 feixin10  rtd    DIR    8,1      224       96 /
+a.out   4501 feixin10  txt    REG    8,1    13384   609203 /home/feixin10/a.out
+a.out   4501 feixin10  mem    REG    8,1  2151672 25190121 /usr/lib64/libc-2.17.so
+a.out   4501 feixin10  mem    REG    8,1   163400 25166793 /usr/lib64/ld-2.17.so
+a.out   4501 feixin10    0u   CHR  136,0      0t0        3 /dev/pts/0
+a.out   4501 feixin10    1u   CHR  136,0      0t0        3 /dev/pts/0
+a.out   4501 feixin10    2u   CHR  136,0      0t0        3 /dev/pts/0
+a.out   4501 feixin10    3u  IPv4  34600      0t0      TCP *:8090 (LISTEN)
+a.out   4501 feixin10    4u  IPv4  34601      0t0      TCP docker-1.c.suishou-01.internal:8090-&gt;112.97.60.187:20530 (ESTABLISHED)
+</code></pre><h2 id="1-nbspnbsp套接字">1   套接字</h2>
+<p>服务端和客户端都需要通过 socket() 函数建立套接字，了解套接字的结构可以通过下面的命令，*（macOS） 或者 0.0.0.0（Linux） 表示任意 IP：</p>
+<pre tabindex="0"><code>macOS &gt; netstat -an | grep tcp4
+Proto Recv-Q Send-Q  Local Address          Foreign Address        (state)
+tcp4  628000      0  127.0.0.1.8090         127.0.0.1.54044        ESTABLISHED
+tcp4       0  10000  127.0.0.1.54044        127.0.0.1.8090         ESTABLISHED
+tcp4       0      0  *.8090                 *.*                    LISTEN
+
+Linux &gt; netstat -an | grep tcp4
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN
+tcp6       0      0 :::22                   :::*                    LISTEN
+tcp        0      0 0.0.0.0:8090            0.0.0.0:*               LISTEN
+tcp        0      0 10.170.0.4:22           112.97.60.187:20524     ESTABLISHED
+tcp        0      0 10.170.0.4:22           112.97.60.187:20526     ESTABLISHED
+tcp   176656      0 10.170.0.4:8090         112.97.60.187:20530     ESTABLISHED
+</code></pre><p>上面前三行输出内容中，LISTEN 是服务器监听 socket，第一个 ESTABLISHED 是服务器的连接 socket，第二是 ESTABLISHED 是客户端的连接 socket。根据上面列的信息，其实就可以知道套接字结构的主要属性：
+{% img <a href="https://wpxun.github.io/image/2019/03/%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BB%93%E6%9E%84.png">https://wpxun.github.io/image/2019/03/%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BB%93%E6%9E%84.png</a> 300 %}
+套接字结构</p>
+<p>接收（Recv-Q）和发送（Send-Q）的缓冲区大小由系统默认设置，也可以调用 setsockopt() getsockopt() 进行设置，两个缓冲区都是 FIFO（先进先出），主动关闭套接字后该套接字将只能 read，不能 send。
+数据流虽然是数据报形式发送，到存放到缓冲区后就没有数据报概念了，因此只能读取到没有数据为止，不能假设写到连接一端的数据大小与从连接另一端读取的数据大小之间存在任何一致性，换句话说，在发送端通过调用一次 send() 传入的数据可以通过在另一端调用 recv() 多次来获取；而调用 recv() 一次可能返回调用 send() 多次所传入的数据。
+Local Address 和 Foreign Address 也没什么虽然特别说的。
+state 这个却需要深入理解，这部分可以参考<a href="/2019/03/10/tcp-protocol/">《TCP 传输原理》</a>一文。</p>
+<p>需要注意的是，一个连接的 socket 往往不是直接对外的，而是经路由（网络层）进行内外网转换：
+<img src="https://wpxun.github.io/image/2019/03/socket_connect.png" alt="socket 连接"></p>
+<h2 id="2-nbspnbspsocket-编程">2   Socket 编程</h2>
+<h3 id="21-nbspnbsptcp">2.1   TCP</h3>
+<h4 id="211-nbspnbsp服务端">2.1.1   服务端</h4>
+<p>接下来我们来看几个核心的函数，需要注意返回值。我以打电话来勾勒其轮廓。</p>
+<ul>
+<li>电话机：<code>int socket(int domain, int type, int protocal); 成功时返回文件描述符，失败时返回 -1</code>。从参数上看，就可以知道，domain 是选择网络层协议（IPv4、IPv6 等），type 和 protocol 是选择传输层协议（TCP、UDP 等），所以就知道 TCP/IP 这两个是整个网络协议集合里面<strong>最重要的要素，即“协议”</strong>，选择了这两个，其它的协议也就随之确定了，比如选择了 TCP 就会有窗口协议等。</li>
+<li>分配自己的电话号码：<code>int bind(int sockfd, struct sockaddr *myaddr, socklen_t addrlen); 成功时返回 0，失败时返回 -1。</code>主要是设置端口，IP 地址一般自动获取。这一步是 socket <strong>另外两个要素，IP 地址和端口</strong>。</li>
+<li>等待别人来电：<code>int listen(int sockfd, int backlog); 成功时返回0，失败时返回 -1。</code>backlog 指定监听套接字的完成连接队列的最大长度。
+(1)未完成连接队列：未完成 3 次握手，如果完成连接队列已满，将忽略客户机新发来的 SYN，而不发 RST，原因参考《TCP 传输原理》；
+(2)完成连接队列：已完成 3 次握手，但未被应用程序的 accept 接受；</li>
+<li>别人打来电话，接听：<code>int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen); 成功时返回文件描述符，失败时返回 -1。</code>这一步生成了新的 socket，这个新的 socket 状态马上变成 ESTABLISHED，而参数里的 sockfd 还是原来的 socket，继续保持监听。</li>
+</ul>
+<h4 id="212-nbspnbsp客户端">2.1.2   客户端</h4>
+<p>还是以打电话来比喻。</p>
+<ul>
+<li>电话机：<code>int socket(int domain, int type, int protocal);</code> 这个和上面没任何区别。</li>
+<li>打电话：<code>int connect(int sockfd, struct sockaddr *serv_addr, socklen_t addrlen); 成功是返回 0，失败时返回 -1。</code>客户端不用设置自己的密码。</li>
+</ul>
+<h4 id="213-nbspnbsp数据传输">2.1.3   数据传输</h4>
+<ul>
+<li><code>ssize_t send(int sockfd, const void *buf, size_t nbytes, int flags); 成功返回发送字节数，失败返回 -1，并置相应的 errno；</code>注意要对返回的字节数进行验证。nbytes：要传输的数据字节数，flags：传输数据时指定的可选项信息。</li>
+<li><code>ssize_t recv(ind sockfd, const void *buf, size_t nbytes, int flags); 成功返回接收字节数，失败返回 -1，如果通信对端正常关闭，则返回 0；</code>nbytes：要传输的数据字节数，flags：接收数据时指定的可选项信息。</li>
+</ul>
+<p>这两个比 write 和 read 多了 flags 选项。可选项可查阅资料。</p>
+<p>{% img <a href="https://wpxun.github.io/image/2019/03/TCP%E5%A5%97%E6%8E%A5%E5%AD%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png">https://wpxun.github.io/image/2019/03/TCP%E5%A5%97%E6%8E%A5%E5%AD%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png</a> 300 %}
+TCP 套接字的工作流程</p>
+<p>参考 C 语言代码实现：
+<a href="https://wpxun.github.io/image/2019/03/main_tcp_server.c">TCP 服务端 C 语言实现</a>
+<a href="https://wpxun.github.io/image/2019/03/main_tcp_client.c">TCP 客户端 C 语言实现</a></p>
+<h3 id="22-nbspnbspudp">2.2   UDP</h3>
+<p>UDP 不需要连接，bind socket 可以参照 TCP 部分。</p>
+<h4 id="221-nbspnbsp数据传输">2.2.1   数据传输</h4>
+<ul>
+<li><code>ssize_t sendto(int socket, void *restrict buffer, size_t length, int flags, const struct sockaddr * dest_addr, socklen_t dest_len); 成功返回发送的字节数，失败返回 -1；</code></li>
+<li><code>ssize_t recvfrom(int socket, const void *message, size_t length, int flags, struct sockaddr *restrict address, socklen_t *restrict address_len); 成功返回发送的字节数，失败返回 -1；并置相应的 errno；</code></li>
+</ul>
+<p>{% img <a href="https://wpxun.github.io/image/2019/03/UDP%E5%A5%97%E6%8E%A5%E5%AD%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png">https://wpxun.github.io/image/2019/03/UDP%E5%A5%97%E6%8E%A5%E5%AD%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png</a> 300 %}
+UDP 套接字的工作流程</p>
+<p>参考 C 语言代码实现：
+<a href="https://wpxun.github.io/image/2019/03/main_udp_server.c">UDP 服务端 C 语言实现</a>
+<a href="https://wpxun.github.io/image/2019/03/main_udp_client.c">UDP 客户端 C 语言实现</a></p>
+<h3 id="23-nbspnbsplinux-文件操作">2.3   linux 文件操作</h3>
+<ul>
+<li><code>ssize_t write(int fd, const void * buf, size_t nbytes); 成功返回写入的字节数，失败时返回 -1；</code>nbytes：要传输的数据字节数。</li>
+<li><code>ssize_t read(int fd, void * buf, size_t nbytes); 成功时返回接收到的字节数（但遇到文件结尾则返回0），失败时返回 -1。</code>nbytes：要接收数据的最大字节数。</li>
+</ul>
+<p>以 _t 为后缀的数据类型都是元数据类型，在 sys/types.h 头文件中一般由 typedef 声明定义，算是给大家熟悉的基本数据类型起别名。原因是系统和计算机位数从 16、32 到 64 位升级，为让内置函数的操作和存储能力也同步提升，同时避免在开发者层面上对应改动，内置函数和开发者都使用 size_t（unsigned int）、ssize_t（signed size_t 或 signed int）类型，这样随着系统的提升，只要修改并编译 size_t、ssize_t 的声明即可，整体上内置函数提供更大的数值存储，而这一些对开发者而言是不需要任何改动的。</p>
+<h3 id="24-nbspnbspsocket-选项">2.4   Socket 选项</h3>
+<ul>
+<li><code>int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen); 成功返回 0，失败返回 -1，并给 errno 设置对应的错误值。</code>
+<ul>
+<li>SO_SNDBUF：设置发送缓冲区的大小，2048 &lt;= val &lt;= 256*(sizeof(struct sk_buff)+256)。该操作将 sock.sk.sk_sndbuf 设置为 2*val，防止因大数据量的发送突然导致缓冲区溢出；</li>
+<li>SO_RCVBUF：设置接收缓存区的大小，256 &lt;= val &lt;= 256*(sizeof(struct sk_buff)+256)。该操作将 sock.sk.sk_rcvbuf 设置为 val；</li>
+<li>SO_REUSEADDR：当 Server 端重启或者崩溃的时候，它就是主动关闭的一方，会进入 TIME_WAIT 状态，导致服务器不能立刻重启，该选项就是为了解决这个问题的，在调用 bind 前设置就可以了。</li>
+<li>SO_KEEPALIVE：keep-alive</li>
+</ul>
+</li>
+<li><code>int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t optlen); 成功返回 0，失败返回 -1，并给 errno 设置对应的错误值。</code></li>
+</ul>
+<h2 id="3-nbspnbsp并发服务器">3   并发服务器</h2>
+<p>简单的循环服务器同一时刻只可以响应一个客户端的请求，只到一个客户端请求结束才开始接受下一个客户，并不实用，接下来讲几种并发模型。</p>
+<h3 id="31-nbspnbsp多进程">3.1   多进程</h3>
+<p>缺点是需要IPC通信和分时使用 CPU 产生的上下文切换（不同进程切换导致相关信息移出或者移入内存或 CPU 寄存器）开销。</p>
+<h3 id="32-nbspnbsp多线程">3.2   多线程</h3>
+<p>解决了多进程两个问题，但带来了同步问题，不过现在同步问题已经很多的解决方案，特别是 Go 更是在解决同步这一问题下足了功夫。
+<code>int pthread_create(pthread_t * restrict thread, const pthread_attr_t * restrict attr, void * (* start_routine)(void *), void * restrict arg); 成功时返回 0，失败时返回其它值。</code>
+<code>int pthread_join(pthread_t thread, void ** status); 成功时返回 0，失败时返回其它值。</code>让调用函数的线程进入阻塞状态。
+<code>int pthread_detach(pthread_t thread); 成功时返回 0，失败时返回其他值。</code>调用该函数不会引起阻塞，可以通过该函数引导销毁线程创建的内存空间。</p>
+<h3 id="33-nbspnbspio-复用">3.3   I/O 复用</h3>
+<p>不要过于依赖该模型，该方案并不适用于所有情况，应当根据目标服务器的特点采用不同实现方法。
+复用：为了提高物理设备的效率，用最少的物理要素传递最多数据时使用的技术。有“时（time）分复用技术”和“频（frequency）分复用技术”。
+select() 函数是最具代表性的实现复用服务器的方法，它将多个文件描述符集中到一起统一监视。
+<code>int select(int maxfd, fd_set * readset, fd_set * writeset, fd_set * exceptset, const struct timeval * timeout); 发生错误时返回 -1，超时返回时返回 0；因发生关注的事件返回时，返回大于 0 的值，该值是发生事件的文件描述符数。</code>
+(1) 文件描述符监视范围 maxfd = 最大的文件描述符值 + 1，加 1 是因为文件描述符的值从 0 开始。
+(2) 对 fd_set 位变量的注册或者更改值的操作由宏完成，除了下面的宏，还有 FD_ISSET(int fd, fd_set *fdset) 用于验证 select 函数的调用结果。
+<img src="https://wpxun.github.io/image/2019/03/select%E5%AE%8F.png" alt="fd_set位 宏操作">
+(3) select 函数调用后，fd_set 位值仍为 1 的位置上的文件描述符即是发生了变化的，监听但是没有变化的位会从 1 改变为 0，正因为 readset、writeset、exceptset 这三个集合在调用 select 函数后会发生变化，因此为了记住初始化，必须先复制保存起来以便后续继续监听；包括超时时间也需要先复制初始值，因为调用 select 后会更新为剩余时间。</p>
+<h2 id="4-nbspnbsp字节流处理">4   字节流处理</h2>
+<p>TCP 协议底层操作的只是字节流，那么对应用程序而言，我们必须依据自己的应用定制私有的协议。如同设计新的应用层协议，常见的应用层协议如 RPC、HTTP/1.1、HTTP/2 都是协议化来规划数据包的大小和属性。
+以 HTTP/2 为例进行分析：
+<img src="https://wpxun.github.io/image/2019/03/http2_segment.png" alt="基于 TCP 的 HTTP/2 帧">
+缓冲区 TCP 报文段数据是指去掉 TCP 首部后的数据字节流，数据字节流是连续的，没有边界的，承载的是 HTTP/2 帧数据片段，且一个 TCP 报文段数据和一个 HTTP/2 帧是没有对应关系的，可能一个 TCP 报文段数据包含多个 HTTP/2 帧，也可能多个 TCP 报文段数据承载一个 HTTP/2 帧。如果把 TCP 报文段数据整体来看，就是多个 HTTP/2 帧首尾相连。因为帧是协议化的，所以 HTTP/2 才能够识别帧，并取出负载数据，并按流 ID 组成各个请求响应。
+总之，TCP 层接收到数据去掉首部信息后才放入缓冲区，所以缓冲区仅仅是应用层的数据，应用层协议最重要的就是把字节流协议化，以便能从字节流中识别出来数据。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] 程国钢.等. Linux C 编程从基础到实践
+[2] 尹圣雨（韩）. TCP/IP网络编程. 版次：2014年7月第1版
+[3] 吕雪峰.等. 嵌入式 Linux 软件开发——从入门到精通. 版次：2014年9月第1版</p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/go-network/" data-toggle="tooltip" data-placement="top" title="go 网络编程">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/tcp-protocol/" data-toggle="tooltip" data-placement="top" title="TCP 传输原理">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

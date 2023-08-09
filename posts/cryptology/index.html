@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>密码学 - HOME</title>
+  <meta property="og:title" content="密码学 - HOME" />
+  <meta name="twitter:title" content="密码学 - HOME" />
+  <meta name="description" content="近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。">
+  <meta property="og:description" content="近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。">
+  <meta name="twitter:description" content="近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/cryptology/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">密码学</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 21, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/http/">
+            <i class="fas fa-folder"></i>
+            HTTP
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/tls/">
+            <i class="fas fa-tag"></i>
+            TLS
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/">
+            <i class="fas fa-tag"></i>
+            密码学
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp基础算法">1   基础算法</a>
+      <ul>
+        <li><a href="#11-nbspnbsp随机数生成器算法">1.1   随机数生成器算法</a></li>
+        <li><a href="#12-nbspnbsphash-算法">1.2   Hash 算法</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-nbspnbsp简单加密算法">2   简单加密算法</a>
+      <ul>
+        <li><a href="#21-nbspnbsp对称加密">2.1   对称加密</a></li>
+        <li><a href="#22-nbspnbsp非对称加密">2.2   非对称加密</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsp组合加密算法">3   组合加密算法</a>
+      <ul>
+        <li><a href="#31-nbspnbsp消息验证码message-authentication-code-mac">3.1   消息验证码(Message Authentication Code, Mac)</a></li>
+        <li><a href="#32-nbspnbsp加密和验证模式">3.2   加密和验证模式</a></li>
+        <li><a href="#33-nbspnbsp数字签名">3.3   数字签名</a></li>
+        <li><a href="#34-nbspnbsp密钥协商算法key-exchange">3.4   密钥协商算法（Key Exchange）</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-nbspnbspopenssl-库或命令工具">4   OpenSSL 库或命令工具</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。</p>
+<p>密码学四个目标：</p>
+<ol>
+<li>机密性（隐私性）：对称加密算法和非对称加密算法都能够保证机密性，另外机密性并不能保证完整性；</li>
+<li>完整性：数据完整且不能被篡改；消息验证码算法（MAC）保证完整性，MAC 值 = mac(消息，密钥)；另外完整性并不一定需要机密性，要看数据敏感度；</li>
+<li>身份验证：数字签名，也就是用私钥加密数据（一般是加密比较短的 hash 消息摘要）；</li>
+<li>不可抵赖性：也是由数字签名实现；</li>
+</ol>
+<p>以下将分三部分简单归纳：基础算法、简单加密算法和组合加密算法。不过本文只讲解交互过程，不讲解具体实现。
+需要强调的是，似乎每隔几个月，服务器和 HTTPS 就会曝出新的漏洞，针对这些漏洞及攻击摒弃老旧的加密算法，RC4、DES、MD5 等都已经强制丢弃。所以有些算法其实并不实用，但可了解其原理。</p>
+<h2 id="1-nbspnbsp基础算法">1   基础算法</h2>
+<p>随机数生成器和密码学 Hash 算法都是密码学中的基础算法，很多其它的密码学算法选择这两个算法作为加密基元。</p>
+<h3 id="11-nbspnbsp随机数生成器算法">1.1   随机数生成器算法</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>生成类型</th>
+<th>特性</th>
+<th>内部状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>真正的随机数生成器</td>
+<td>硬件生成</td>
+<td>效率高、随机性、不可预测性、不可重现性</td>
+<td>从物理设备获取，时间、温度、声音等熵源</td>
+</tr>
+<tr>
+<td>伪随机数生成器</td>
+<td>软件生成</td>
+<td>效率高、随机性</td>
+<td>种子（seed）</td>
+</tr>
+<tr>
+<td>密码学伪随机数生成器</td>
+<td>软件生成</td>
+<td>效率高、随机性、不可预测性</td>
+<td>用于密码学，是真正随机数生成器的一种</td>
+</tr>
+</tbody>
+</table>
+<p>随机数生成器内部会维护一个状态，如果每次熵和种子是一样的，生成的随机数也是相同的，所以熵和种子对于随机数生成器非常重要。
+密码学应用中很多场景会涉及随机数，不同的用途有不同的称呼，常见如下表：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>密钥</td>
+<td>对称加密算法、公开密钥算法、Mac算法，密钥本质上是一个随机数</td>
+</tr>
+<tr>
+<td>初始化向量（IV）</td>
+<td>块密码算法中很多迭代模式会使用IV</td>
+</tr>
+<tr>
+<td>nonce</td>
+<td>块密码算法中的CTR模式、AEAD加密模式也会用到nonce</td>
+</tr>
+<tr>
+<td>salt</td>
+<td>基于口令的加密算法会用到，通过salt生成一个密钥</td>
+</tr>
+</tbody>
+</table>
+<p>其中密钥的作用如下表：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对称加密算法密钥</td>
+<td>加密解密</td>
+<td>密钥不能泄露</td>
+</tr>
+<tr>
+<td>非对称加密算法密钥</td>
+<td>加密解密</td>
+<td>公钥可以公开，私钥不能泄露</td>
+</tr>
+<tr>
+<td>Mac 算法的密钥</td>
+<td>消息加密和验证</td>
+<td>密钥不能泄露</td>
+</tr>
+<tr>
+<td>数字签名算法的密钥</td>
+<td>身份验证</td>
+<td>公钥可以公开，私钥不能泄露</td>
+</tr>
+<tr>
+<td>会话密钥</td>
+<td>加密解密</td>
+<td>密钥不能泄露，该密钥一般配合对称加密算法进行加密解密</td>
+</tr>
+<tr>
+<td>基于口令的密钥</td>
+<td>进行权限校验，加密解密等</td>
+<td>口令不能泄露</td>
+</tr>
+</tbody>
+</table>
+<p>生成密钥一般用两种方式：</p>
+<ol>
+<li>基于伪随机生成器生成密钥；</li>
+<li>基于口令的加密（PEB）算法生成密钥，即使用同样的口令就能生成同样的密钥。</li>
+</ol>
+<h3 id="12-nbspnbsphash-算法">1.2   Hash 算法</h3>
+<p>是一种从任意文件中创造小的数字「指纹」的方法，因为 Hash 是单向性的，所以不是加密算法了。基于 Hash 算法产生的其它密码学算法有很多：Mac 消息验证码、伪随机数生成器、数字签名、块密码加密算法等。需要注意的是密码学 Hash 算法和普通 Hash 算法不是同一个概念，普通 Hash 算法实现的 Hash 表与检验和（checksum）不能用于密码学。
+密码学 Hash 算法，有 MD5（128） 算法 和 SHA 族类，SHA 族类有 SHA-1（160）、SHA-2（SHA-256、SHA-512、SHA-224、SHA-384）、SHA-3（SHA3-256、SHA3-512、SHA3-224、SHA3-384） 三类算法（数字二进制数，除以4为16进制数），基于碰撞考虑建议用 SHA-2 类。</p>
+<p>Hash 算法一般还用于文件比较和密码口令，密码口令为了防止攻击者对常用密码字典破解；推荐使用 密码衍生算法（KDF），利用盐值（随机数）增大密钥的搜索空间，简单的理解就是通过某些值可以生成任意长度的一个（多个）密钥，常见的有 PBKDF2、bcrypt、scrypt，还有 TLS 使用的 PRF 函数等。</p>
+<h2 id="2-nbspnbsp简单加密算法">2   简单加密算法</h2>
+<h3 id="21-nbspnbsp对称加密">2.1   对称加密</h3>
+<p>在日常开发中是最常用的保证数据机密性的方式；在 HTTP 中因为非对称加密计算量大，所以频繁数据传输采用了&quot;对话密钥&quot;进行对称加密。对称加密中密钥由双方保管。
+对称加密算法有很多，如一次性密码本（XOR运算）、流密码算法（RC4_128、CHACHA20）、块密码算法（AES_256_CBC、3DES_EDE_CBC）、AEAD算法（AES_GCM（目前主流的AEAD）、AES_CCM、CHACHA20_Poly1305（谷歌提出的AEAD）），AEAD加密模式由于同时完成了机密性和完整性保护，在安全性上更有保障，服务器应该优先支持相关的密码套件。</p>
+<h3 id="22-nbspnbsp非对称加密">2.2   非对称加密</h3>
+<p>也叫公开密钥算法，因为计算量大，日常开发不会用来保证数据机密性，而是基于网络传输信息不安全事实，采用非对称加密进行身份认证。非对称加密的私钥由谁生成就由谁保管；对服务器来说，私钥是服务器生成的，由服务器保密，公钥给用户；对 github.com 来说，私钥由用户生成的，由用户保密，公钥上传配置到 github.com。</p>
+<p>公开密钥算法最重要和最广泛使用的算法就是 RSA 算法，它是 Ron Rivest、Adi Shamir、Leonard Adleman 三人创建的。 **RSA 算法是一个多用途的算法，可以进行加密解密、密钥协商、数字签名；**基础原理都是一样的：公钥加密私钥解密，私钥加密公钥解密。</p>
+<ul>
+<li>加密解密：双向加密，如果不考虑性能，双方可以用各自的密钥对实现双向加密。</li>
+<li>密钥协商：单向加密，即公钥加密密钥发给对方，对方用私钥解密得到密钥，实现对称加密。目前已经被淘汰。</li>
+<li>数字签名：也是单向，不过和密钥协商相反，是用私钥加密数据（签名值），把签名值和数据发给对方，对方用公钥解密难签名。数字证书是数字签名一种例子，只是用 CA 机构的私钥给服务器的公钥这个数据进行签名而已。一言蔽之：数字签名是为了证明身份，不是为了加密数据。</li>
+</ul>
+<p>RSA 原理 n = p*q, 其中p、q是大质数, φ(n) = (p-1)(q-1); 公钥 e、n: 1 &lt; e &lt; f(n), e 和 f(n) 互质; 私钥 d、n: e*d mod f(n) = 1.
+签名：m^e mod n = c（密文）
+解密：c^d mod n = m（明文）
+安全性：传播 n、e、c; 要解密需要 n、d、c, 由 e 要推导出d, 必须先由n推导到p、q, 大因数分解很难.
+基于算法是可以知道 RSA 如果加密的明文 m &gt; n，就会有二义性，所以是不适合用来加密明文的，只用来加密密钥（比 n 小）。</p>
+<h2 id="3-nbspnbsp组合加密算法">3   组合加密算法</h2>
+<p>组合基础算法和简单加密算法实现密码学的“机密性”、“完整性”、“身份验证”和“不可抵赖性”中的一个或者多个的算法；比如消息验证码需要组合 Hash 算法和加密算法、TLS 协议握手需要协商出密码套件。</p>
+<h3 id="31-nbspnbsp消息验证码message-authentication-code-mac">3.1   消息验证码(Message Authentication Code, Mac)</h3>
+<p><strong>实现了完整性。</strong>
+消息验证码适用于不需要对数据进行加密，只需要保证数据完整性的情形，当然也可以变通，既对数据进行加密同时也保证完整性。HTTP 应用最多的 Mac 算法是 HMAC 算法（使用 Hash 算法作为基元，更具体算法比如 HMAC-SHA256 算法使用了 SHA256 作为加密基元），还有 TLS 的 AEAD 使用了 GHASH 算法（也是一种 Mac 算法）、CMAC。Mac 不能进行身份验证，原因就在于消息发送方和接收方拥有同样的密钥，所以双方都可以抵赖。
+MAC 采用一个消息和密钥作为输入，并且产生一个 MAC 标记作为输出。这个标记和消息一起，可以被任何拥有相同密钥的成员校验。
+这类算法的变种很多，原理的步骤如下：
+（1）把消息先进行 Hash 运算，也就是使用 Hash 算法得到消息的摘要值；
+（2）双方都有相同的密钥，通过这个密钥对消息摘要值进行 MAC 运算，得到“MAC 值”；把消息和“MAC 值”传给对方；
+（3）接收方用相同的密钥对“MAC 值”进行解密得到消息摘要，对消息进行 Hash 运算得到消息摘要；
+（4）比较消息摘要；</p>
+<h3 id="32-nbspnbsp加密和验证模式">3.2   加密和验证模式</h3>
+<p>**实现了机密性和完整性。**对称加密算法可以保证消息的机密性，Mac 算法可以保证消息的完整性，将两者结合起来，就可以保证消息同时具备机密性和完整性。</p>
+<h4 id="321-nbspnbspad-加密模式">3.2.1   AD 加密模式</h4>
+<p>使用者结合对称加密算法和 Mac 算法，提供机密性和完整性的模式也叫 AE 加密模式（暂且理解 AE、AD 是一样的意思吧 ），主要有三种方式，只是加密算法和 Mac 算法顺序问题，总体上和消息验证码很相似，只是用同一个密钥对消息也进行加密。</p>
+<ul>
+<li>Encrypt-and-Mac</li>
+<li>Mac-then-Encrypt</li>
+<li>Encrypt-then-Mac（建议）
+先对消息进行加密得到密文，然后对密文再计算 Mac 值，最终将密文和 Mac 值组合一起发送给接收方。
+<img src="https://wpxun.github.io/image/2019/03/AD_Encryption.png" alt="Encrypt-then-Mac"></li>
+</ul>
+<h4 id="322-nbspnbspaead-加密模式">3.2.2   AEAD 加密模式</h4>
+<p>AEAD 是 AE 加密模式的一种变体，是在<strong>底层组合了加密算法和 Mac 算法</strong>，能够同时保证数据机密性和完整性，减轻了使用者的负担，与 AD 相比，AD 是使用者自己实现，AEAD 是底层实现（里面使用了结构，包含了密文和 用于 Mac 校验的属性）。主要有三种方式。</p>
+<ul>
+<li>CCM 模式，HTTPS 中使用得少，底层采用的是 Mac-then-Encrypt。</li>
+<li>GCM 模式，流行的 AEAD 模式，采用了 GHASH 算法（一种 Mac 算法）进行 Mac 运算，不需要 Mac 密钥，使用块密码 AES 算法进行加密运算，在效率和性能上都很出色。</li>
+<li>ChaCha20-Poly1305, 使用了 ChaCha20 流密码算法进行加密运算，使用 Poly1305 算法进行 Mac 运算。</li>
+</ul>
+<p>注意，AEAD 的 Mac 算法是不用 Mac 密钥的，而是用 additional_data 属性来校验数据完整性的。
+<img src="https://wpxun.github.io/image/2019/03/AEAD%E6%A8%A1%E5%BC%8F%E9%80%BB%E8%BE%91%E5%9B%BE.png" alt="AEAD 模式逻辑图"></p>
+<h3 id="33-nbspnbsp数字签名">3.3   数字签名</h3>
+<p><strong>实现了完整性和身份认证。</strong>
+数字签名和消息验证码流程一样都不要求机密性，不同的地方仅仅在于数字签名用了非对称加密，而消息验证码用了对称加密，因此数字签名实现了防抵赖机制。数字签名具有以下特点：</p>
+<ul>
+<li>防篡改：数据不会被修改，“MAC”算法也有这个特点；</li>
+<li>防抵赖：消息签署者不能抵赖。MAC 因为用了双方共同拥有的密钥所以没有这个特点，而数字签名双方拥有不同的密钥（公钥和私钥）所以能防抵赖；</li>
+<li>防伪造：发送的消息不能够伪造，MAC 算法也有这个特点；</li>
+</ul>
+<p>目前使用较多的数字签名有 RSA、DSA、ECDSA 等。数字签名算法建议对消息摘要值进行签名，因为摘要值的长度是固定的，运算的时候速度会比较快。</p>
+<h3 id="34-nbspnbsp密钥协商算法key-exchange">3.4   密钥协商算法（Key Exchange）</h3>
+<p>**协商出预备主密钥。**客户端和服务端协商出预备主密钥，则协商结束（可以理解为主密钥和密钥块也可随时生成）；接下来就是通过密钥衍生算法（KDF）由预备主密钥推导出密钥块，KDF 有如 PBKDF2，但 PBKDF2 函数运算较慢，在 TLS 协议中没有可行性，TLS 使用一种称为 PseudoRandom Function(PRF)的函数进行密钥块推导，该算法和 HMac 一样使用 Hash 算法作为加密基元。主密钥和密钥块是 TLS 部分的内容，因此推导过程在<a href="/2019/03/24/tls/">《SSL/TLS 协议》</a>一文中介绍。</p>
+<p>密钥的存储和传输分为静态密钥和动态密钥，在网络通信应用中，密钥的管理和分配是个难题，尤其是生成一个动态密钥更难，而密钥协商算法就可以解决密钥分配、存储和传输等问题。动态密钥存储在进程中，一旦客户端和服务端的连接关闭就会消失。</p>
+<h4 id="341-nbspnbsprsa-密钥协商算法">3.4.1   RSA 密钥协商算法</h4>
+<p>客户端生成一个随机值，也就是会话密钥，并用 RSA 密钥的公钥进行加密并发给服务端，服务端用私钥解密得到会话密钥，到此双方完成连接，采用对称加密算法和会话密钥加密解密数据。服务器的公钥和私钥正是用于密钥协商过程中，只需要用到一次，后面的对话都不再会用到私钥了。
+不足之处：
+（1）获取会话密钥过程其实并不能称为协商，完全是由客户端决定的，称为密钥传输更合适。攻击者不会云破解 RSA 加密算法的私钥，直接暴力破解会话密钥就能反解出明文。
+（2）不能提供前向安全性。即长期使用的主密钥泄漏会导致过去的会话密钥泄漏。</p>
+<h4 id="342-nbspnbspdh-密钥协商算法">3.4.2   DH 密钥协商算法</h4>
+<p>DH（Diffie-Hellman）算法在进行密钥协商的时候，通信双方的任何一方无法独自计算出一个会话密钥，通信双方各自保留一部分关键信息。
+在使用 DH 算法之前，先要生成一些公共参数，这个参数是公开的，一般由服务端生成，然后发给对方。
+参数有两个，分别是 p 和 g，p 是一个很大的质数，g 表示为一个生成器，值很小；服务端通过 p 和 g 参数，生成一个 DH 密钥对 priv_key(b，b是一个随机数) 和 pub_key(Ys) =（g^b）mod p，私钥需要保密；p、g 和 pub_key 发给客户端，客户端也生成一个 DH 密钥对 priv_key(a，a是随机数)和 pub_key(Yc) = (g^a) mod p，并把 pub_key 也发送给服务端。服务端根据 Yc 和 b 计算 Z = (Yc^b) mod p，客户端根据 Ys 和 a 计算 Z = (Ys^a) mod p。Z 即预备主密钥，到此协商完成。
+可以看到 DH 和 RSA 算法一样属于离散对数和因式分解问题。而 DH 协商中不需要用到服务器的私钥，服务器私钥的功能被削弱到用来身份认证，因此 DH 密钥协商不存在 RSA 密钥传输存在的问题。目前密码套件都是用 DH/ECDH 套件，所以服务器的密钥对已经被弱化了。</p>
+<p>在 TLS 中，密码协商都是依赖 client key exchange 和 server key exchange 两个子消息来传递的。</p>
+<p>DHE 和 ECDHE 密码套件实际上分别称为临时 DH 密码套件和临时 ECDH 密码套件，所谓临时（ephemeral）表示客户端和服务端每次生成的 DH 密钥和 ECC（椭圆曲线）密钥都是动态密钥。</p>
+<ol>
+<li>静态 DH 算法（DH 算法）
+静态 DH 算法，p 和 g 两个参数永远是固定的，而且服务器的公钥（Ys）也是固定的。和 RSA 密钥协商算法一样，一旦服务器对应的 DH 私钥泄露，就不能提供前向安全性。静态 DH 算法的好处就是避免在初始化连接时服务器频繁生成参数 p 和 g，因为该过程是非常消耗 CPU 运算的。</li>
+<li>临时 DH 算法（DHE 算法）
+在每次初始化连接的时候，服务器都会重新生成 DH 密钥对，DH 密钥对仅仅保存在内存中，不像 RSA 那样私钥是保存在磁盘中的，攻击者即使从内存中破解了私钥，也仅仅影响本次通信，因为每次初始化的时候密钥对是动态变化的。更安全的是，协商出会话密钥后，a 和 b 两个私钥可以丢弃，进一步提升了安全性。</li>
+</ol>
+<p>只要理解DHE密钥交换原理，那么理解ECDHE密钥交换并不难。ECDHE的运算是把DHE中模幂运算替换成了点乘运算，速度更快，可逆更难。</p>
+<ul>
+<li>客户端随机生成随机值Ra，计算Pa(x, y) = Ra x Q(x, y)，Q(x, y)为全世界公认的某个椭圆曲线算法的基点。将Pa(x, y)发送至服务器。</li>
+<li>服务器随机生成随机值Rb，计算Pb(x,y) - Rb x Q(x, y)。将Pb(x, y)发送至客户端。</li>
+<li>客户端计算Sa(x, y) = Ra x Pb(x, y)；服务器计算Sb(x, y) = Rb x Pa(x, y)</li>
+<li>算法保证了Sa = Sb = S，提取其中的S的x向量作为 Premaster Key（预备主密钥）。</li>
+</ul>
+<p>客户端和服务端进行协商算法的时候，服务器使用 Server Key Exchange 子消息传递相关的参数（DH 参数和 ECC 命名曲线）和服务器的公钥；客户端收到服务器发送的相关参数后，需要使用这些参数生成客户端的公钥（DH 公钥和 ECDH 公钥），客户端和服务端结合双方的密钥才能协商出一致的预备主密钥。</p>
+<h2 id="4-nbspnbspopenssl-库或命令工具">4   OpenSSL 库或命令工具</h2>
+<p>程序开发、证书生成都需要使用实现了各种密码学算法的 openssl 库或命令工具，目前 openssl 已经被大部分系统替换成 LibreSSL（PHP 大部分内置的密码学函数也是基于底层的 LibreSSL 库），只是工具名还是习惯地称 openssl。
+常见系统如 OpenBSD 自 5.6 起，macOS 自 10.11 El Capitan 起，Alpine Linux 自 3.5.0 起。在 macOS 上测试如下：</p>
+<pre tabindex="0"><code>adadeMBP:~ ada$ openssl version
+LibreSSL 2.6.5
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版
+[2] Mrpre. SSL中的RSA、DHE、ECDHE、ECDH流程与区别 <a href="https://blog.csdn.net/mrpre/article/details/78025940">https://blog.csdn.net/mrpre/article/details/78025940</a>. 2017年09月19日
+[3] TLS Perfect Forward Secrecy 之 DH/ECDHE <a href="https://blog.nlogn.cn/pfs-ecdhe/">https://blog.nlogn.cn/pfs-ecdhe/</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/tls/" data-toggle="tooltip" data-placement="top" title="SSL/TLS 协议">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/go-concurrency-difficult/" data-toggle="tooltip" data-placement="top" title="并发的复杂性">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

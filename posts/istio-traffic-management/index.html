@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Istio 流量管理 - HOME</title>
+  <meta property="og:title" content="Istio 流量管理 - HOME" />
+  <meta name="twitter:title" content="Istio 流量管理 - HOME" />
+  <meta name="description" content="流量管理是 istio 最核心的问题，涉及 v1alpha3 中的配置资源，包括Gateway、VirtualSerice、DestinationRule 等。本文主要是基于 Istio 基础一文已经部署的实例来进行讲解。">
+  <meta property="og:description" content="流量管理是 istio 最核心的问题，涉及 v1alpha3 中的配置资源，包括Gateway、VirtualSerice、DestinationRule 等。本文主要是基于 Istio 基础一文已经部署的实例来进行讲解。">
+  <meta name="twitter:description" content="流量管理是 istio 最核心的问题，涉及 v1alpha3 中的配置资源，包括Gateway、VirtualSerice、DestinationRule 等。本文主要是基于 Istio 基础一文已经部署的实例来进行讲解。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/istio-traffic-management/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Istio 流量管理</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>June 26, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">
+            <i class="fas fa-folder"></i>
+            云原生
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/kubernetes/">
+            <i class="fas fa-tag"></i>
+            Kubernetes
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/service-mesh/">
+            <i class="fas fa-tag"></i>
+            Service Mesh
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp概述">1   概述</a></li>
+    <li><a href="#2-nbspnbspgateway">2   Gateway</a></li>
+    <li><a href="#3-nbspnbspvirtualservice">3   VirtualService</a>
+      <ul>
+        <li><a href="#31-nbspnbsp理解">3.1   理解</a></li>
+        <li><a href="#32-nbspnbsp实例">3.2   实例</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-nbspnbspdestinationrule">4   DestinationRule</a></li>
+    <li><a href="#5-nbspnbsp总结">5   总结</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>流量管理是 istio 最核心的问题，涉及 v1alpha3 中的配置资源，包括Gateway、VirtualSerice、DestinationRule 等。本文主要是基于 <a href="/2019/05/30/istio/">Istio 基础</a>一文已经部署的实例来进行讲解。</p>
+<h2 id="1-nbspnbsp概述">1   概述</h2>
+<p>对于入口流量管理，您可能会问： 为什么不直接使用 Kubernetes Ingress API ？ 原因是 Ingress API 无法表达 Istio 的路由需求。 Ingress 试图在不同的 HTTP 代理之间取一个公共的交集，因此只能支持最基本的 HTTP 路由，最终导致需要将代理的其他高级功能放入到注解（annotation）中，而注解的方式在多个代理之间是不兼容的，无法移植。</p>
+<p>Istio Gateway 通过将 L4-L6 配置与L7配置分离的方式克服了 Ingress 的这些缺点。 Gateway 只用于配置 L4-L6 功能（例如，对外公开的端口，TLS 配置），所有主流的L7代理均以统一的方式实现了这些功能。 然后，通过在 Gateway 上绑定 VirtualService 的方式，可以使用标准的 Istio 规则来控制进入 Gateway 的 HTTP 和 TCP 流量。</p>
+<p>所谓四层负载均衡就是使用IP加端口的方式进行路由转发；七层负载均衡一般是基于请求URL地址的方式进行代理转发。同理，还有基于MAC地址信息(虚拟MAC地址到真实MAC地址)进行转发的二层负载均衡和基于IP地址(虚拟IP到真实IP)的三层负载均衡。</p>
+<p>四层负载均衡具体实现方式为：通过报文中的IP地址和端口，再加上负载均衡设备所采用的负载均衡算法，最终确定选择后端哪台下游服务器。以TCP为例，客户端向负载均衡发送SYN请求建立第一次连接，通过配置的负载均衡算法选择一台后端服务器，并且将报文中的IP地址信息修改为后台服务器的IP地址信息，因此TCP三次握手连接是与后端服务器直接建立起来的。</p>
+<p>七层服务均衡在应用层选择服务器，只能先与负载均衡设备进行TCP连接，然后负载均衡设备再与后端服务器建立另外一条TCP连接通道。因此，七层设备在网络性能损耗会更多一些。</p>
+<p>从安全视角上：
+四层负载均衡与服务器直接建立起TCP连接，很容易遭受SYN Flood攻击。SYN Flood是一种广为人知的DDoS（分布式拒绝服务攻击）的方式之一，这是一种利用TCP协议缺陷，发送大量伪造的TCP连接请求，从而使得被攻击方资源耗尽的攻击方式。从技术实现原理上可以看出，四层负载均衡很容易将垃圾流量转发至后台服务器，而七层设备则可以过滤这些恶意并清洗这些流量，但要求设备本身具备很强的抗DDOS流量的能力。</p>
+<h2 id="2-nbspnbspgateway">2   Gateway</h2>
+<p>典型的网格将具有一个或多个负载均衡器（我们称之为网关），它们从外部网络终止TLS并允许流量进入网格。逻辑上相当于网格边缘的一个负载均衡器，用于接收和处理网格边缘出站和入站的网络连接，其中包括 TCP/TLS 等相关的配置内容。有两类网关</p>
+<ol>
+<li>内部虚拟 Mesh 网关：代表网格内部的所有 Sidecar，换句话说：所有网格内部服务之间的互相通信，都是通过这个网关进行的。承载了所有 Kubernetes Service 的流量，只要是注射了 Istio 的服务均可。</li>
+<li>自定义 Gateway 网关：如果要对外提供服务，就需要定义 Gateway 对象，并在 VirtualService 的 gateways 字段中进行赋值。流经用 selector(一般直接用 istio: ingressgateway) 指定的 Pods 流量，也就是只能通过 ingressgateway 服务 IP 访问的流量（这里是最终通过该 IP 访问的，可以设置域名，只要最终通过该 IP 即可）</li>
+</ol>
+<ul>
+<li><strong>selector</strong>：Istio Gateway 告诉 k8s 的 istio-ingressgateway pods 可以打开哪些主机和端口，它这是通过使用Kubernetes创造的标签选择器( label selector)模式来实现，以指定由哪些 Gateway Pods 来负责这个 Gateway 对象的运行。该网关要应用到的指定的 pods 上，通过 <code>kubectl get po -n istio-system --show-labels</code> 可以查看到 istio-ingressgateway-前缀的 pod 具有 app=istio-ingressgateway,chart=gateways,heritage=Tiller,istio=ingressgateway,pod-template-hash=5d8d989c76,release=istio 标签。</li>
+<li><strong>servers</strong>：通过 <code>kubectl get svc -n istio-system -o wide</code>，可以看到 istio-ingressgateway 是一个 LoadBalancer 类型（默认），映射了很多服务端口在宿主机比如： 15020:31966/TCP,80:31380/TCP,443:31390/TCP，以 80:31380/TCP 为例，宿主机:31380 -&gt; 通过 kube-prox -&gt; istio-ingressgateway CLUSTER-IP:80，它选择 app=istio-ingressgateway,istio=ingressgateway,release=istio，也就是选择到了 istio-ingressgateway-前缀的 pod</li>
+<li><strong>port</strong>: 用来指定 istio-ingressgateway service 的某个端口开放给该 Gateway 资源
+<ul>
+<li><strong>number</strong>: 这个就是服务的端口号，比如选择了 443，因为 443:31390/TCP，那么就可以在宿主机用 31390 访问到此服务</li>
+<li><strong>name</strong>: http</li>
+<li><strong>protocol</strong>: HTTP</li>
+</ul>
+</li>
+<li><strong>hosts</strong>: 数组，可以包含 <code>*</code></li>
+</ul>
+<h2 id="3-nbspnbspvirtualservice">3   VirtualService</h2>
+<h3 id="31-nbspnbsp理解">3.1   理解</h3>
+<p>所有流量无论从哪里进来，从 Gateway 网关进来，从 Service 资源进来，都由 VirtualService 提供服务，VirtualService 通过 DestinationRule 转发到实际的 Service 里的的 Pod（Pod 标签匹配的 DestinationRule 设置的 subset 标签）。可以看出，流量进来后，不再直接把 Kubernetes service 放在前面，而是把 istio 的 VirtualService 放在前线提供服务。</p>
+<ul>
+<li>hosts: 数组，表示对哪些域名起作用，如果是 Gateway 网络进来的，需要指定 Gateway 服务端口号，不需要指定 pods 的服务端口号，如果不是 Gateway 进来的，需要指定 pods 所对应的服务端口号。</li>
+<li>gateways: 把它绑定到某些网关下，如果没有指定，默认情况会绑定到 mesh 网关；<strong>一旦在 gateways 中填写了 mesh 之外的对象名称，就要继续对内部通信进行流量控制，并必须显式地将内置的 mesh 对象名称也加入列表中</strong>，但是注意，如果使用了 wildcard host * is not allowed for virtual services bound to the mesh gateway，而自定义网关没有此限制。</li>
+<li>http: 指定7层网络，它不能指定服务的端口
+<ul>
+<li>match：http 层的匹配规则，比如 uri、headers、scheme、method、authority、端口、来源标签和 gateway 等，匹配方式有 exact、prefix 和 regex。</li>
+<li>route：
+<ul>
+<li>destination：通过服务名用于筛选服务，通过版本或者端口号进行一点缩小目标
+<ul>
+<li>host：指定的服务名</li>
+<li>port：
+<ul>
+<li>number：Endpoint Pod 端口</li>
+</ul>
+</li>
+<li>subset：指向 DestinationRule 配置</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>redirect：重定向，发生在客户端</li>
+<li>rewrite：重写，rewrite 和 redirect 不能共存，它们不同之处在于，在 rewrite 方法的 match 一节必须包含对目标的定义</li>
+</ul>
+</li>
+<li>tcp: 指定4层网络，它可以指定服务的端口</li>
+</ul>
+<p>VirtualService 是基于7层流量的，对指定的 hosts 有效；当然提供服务可以是 http、tcp 等</p>
+<h3 id="32-nbspnbsp实例">3.2   实例</h3>
+<p>我们以下面的为例进行解释：</p>
+<pre tabindex="0"><code>[yhdodo19@instance-1 ~]$ kubectl get svc
+NAME          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+goapi         NodePort    10.97.35.169     &lt;none&gt;        81:30001/TCP   30h
+goapisec      NodePort    10.111.145.131   &lt;none&gt;        82:30002/TCP   30h
+
+[yhdodo19@instance-1 ~]$ kubectl get svc -n istio-system
+NAME                     TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                                           
+istio-ingressgateway     LoadBalancer   10.99.215.11     &lt;pending&gt;     15020:31966/TCP,80:31380/TCP,443:31390/TCP,31400:31400/TCP,15029:32293/TCP,15030:30857/TCP,15031:30499/TCP,15032:31537/TCP,15443:32082/TCP
+</code></pre><p>服务的映射关系可以直接替换访问，比如 10.99.217.250:443 等同于 10.142.0.3:31390、127.0.0.1:31390，可以直接替换</p>
+<p>Gateway example-gateway 的 hosts 配置如下：</p>
+<pre tabindex="0"><code>    hosts:
+      - &#34;*&#34;
+</code></pre><p>以该 Gateway 配置，以两种情况的 VirtualService 的理解它们之间的关系。</p>
+<h4 id="321-nbspnbsp配置一">3.2.1   配置一</h4>
+<p>VirtualService 的 hosts 配置如下：</p>
+<pre tabindex="0"><code> hosts:
+  - goapi.default.svc.cluster.local
+  - goapisec.default.svc.cluster.local
+  - kube.jemper.cn
+ gateways:
+  - example-gateway
+  - mesh
+</code></pre><p>并准备以下命令语句：</p>
+<pre tabindex="0"><code>for i in `seq 10`; do curl http://10.106.118.207:81/index; done
+for i in `seq 10`; do curl http://10.101.139.70:82/sec/index; done
+for i in `seq 10`; do curl http://goapi:81/index; done
+for i in `seq 10`; do curl http://goapisec:82/sec/index; done
+for i in `seq 10`; do curl http://10.99.217.250:443/index -H &#39;host: kube.jemper.cn&#39;; done
+for i in `seq 10`; do curl http://10.99.217.250:443/sec/index -H &#39;host: kube.jemper.cn&#39;; done
+</code></pre><ul>
+<li>如果在网格外执行，前两个命令可以执行但没有匹配到 VirtualService；中间两个命令返回 “Could not resolve host”，后两个可以执行并匹配到 VirtualService。</li>
+<li>如果在网格内执行，都可以执行，且都能匹配到 VirtualService，其中前两个 IP 地址访问时会经由某一控制解析为域名。</li>
+</ul>
+<p>因此可以看出，Kubernetes Service 的 IP 在网格内被导向了域名，而域名因为在 VirtualService 配置所以受到其控制，所以体现出网格内外不一致的表现；而网格外不会被导向域名，所以不受其控制。</p>
+<h4 id="321-nbspnbsp配置二">3.2.1   配置二</h4>
+<p>VirtualService 的 hosts 配置如下：</p>
+<pre tabindex="0"><code> hosts:
+  - “*”
+ gateways:
+  - example-gateway
+</code></pre><p>并准备以下命令语句：</p>
+<pre tabindex="0"><code>for i in `seq 10`; do curl http://10.106.118.207:81/index; done
+for i in `seq 10`; do curl http://10.101.139.70:82/sec/index; done
+for i in `seq 10`; do curl http://goapi:81/index; done
+for i in `seq 10`; do curl http://goapisec:82/sec/index; done
+for i in `seq 10`; do curl http://10.99.217.250:443/index; done
+for i in `seq 10`; do curl http://10.99.217.250:443/sec/index; done
+</code></pre><ul>
+<li>因为没有 mesh 网关，没有通过 example-gateway 网关的流量都不会匹配 VirtualService。所以前面四个命令网格内外都匹配不到 VirtualService。</li>
+<li>对后两个命令，在网格内外都能匹配到 VirtualService。</li>
+</ul>
+<h2 id="4-nbspnbspdestinationrule">4   DestinationRule</h2>
+<p>DestinationRule 是为 VirtualService 服务的，可以细分 Kubernetes Service 的 pods，以便一个 VirtualService 对应 Service 的多个版本。建议为每个网格都设置明确的目标访问规则。</p>
+<ul>
+<li>host：注意这里不是数组，是字符串，只能对单个 host 起作用，这里就是 Kubernetes Service 的域名了</li>
+<li>subsets：这里是对上面 Kubernetes Service 的选择。</li>
+<li>trafficPolicy：流量策略。在 DestinationRule 和 Subsets 两级中都可以定义 trafficPolicy，在 Subset 中设置的级别更高。</li>
+</ul>
+<h2 id="5-nbspnbsp总结">5   总结</h2>
+<ol>
+<li>Gateway： Istio Gateway是负责打开k8s上相关Istio的pods上的端口并接收主机的流量，是接收流量与路由之间的关键链接。L4-L6层配置，比如 TLS。Gateway 指向 Pods</li>
+<li>VirtualService： Istio VirtualService是“附加”到 Gateway 上的，并负责定义 Gateway 应实现的路由。可以将多个VirtualServices连接到Gateway，但不适用于同一个域。L7层配置，比如 CorsPolicy、HTTPRewrite、HTTPRedirect、HTTPMatchRequest 等。VirtualService 指向注射了 istio 的 Kubernetes Service。</li>
+<li>DestinationRule 依赖于 Kubernetes 的 Service 和其关联的 pods，并服务于 VirtualService。由此可以，istio 对 pods 要求必须关联 Service，而无论其是否开放端口，DestinationRule 的 host 是依赖于 Kubernetes Service。</li>
+<li>Gateway 的 hosts 是决定因素，VirtualService 的 hosts 是依赖于前者的。对于 Kubernetes 服务其 host 可以简写或全写比如：goapi、goapi.default.svc.cluster.local，建议写全。但访问的方式就更多了，比如 goapi、goapi.default、goapi.default.svc.cluster.local 都可以。</li>
+</ol>
+<p>kubectl -n istio-system edit deployment istio-ingressgateway</p>
+<p>kubectl -n istio-system edit svc istio-ingressgateway</p>
+<p>kubectl apply -f <a href="https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml">https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml</a></p>
+<p>kubectl get pods &ndash;all-namespaces -l app.kubernetes.io/name=ingress-nginx &ndash;watch
+kubectl get pods -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx -o jsonpath=&rsquo;{.items[0].metadata.name}'</p>
+<p>kubectl exec -it nginx-ingress-controller-5694ccb578-w6wn5 -n ingress-nginx &ndash; /nginx-ingress-controller &ndash;version</p>
+<p>curl -v http://34.74.171.148 -H &lsquo;host: kube.jemper.cn&rsquo;
+curl -v http://35.227.70.245 -H &lsquo;host: kube.jemper.cn&rsquo;
+curl -v http://35.237.188.250 -H &lsquo;host: kube.jemper.cn&rsquo;</p>
+<p>for i in <code>seq 10</code>; do curl http://35.237.188.250:30001/index; done
+for i in <code>seq 10</code>; do curl http://10.109.74.93:81/index; done
+for i in <code>seq 10</code>; do curl http://10.99.215.11/index -H &lsquo;host: kube.jemper.cn&rsquo;; done</p>
+<p>curl -v http://35.237.188.250:30001/index
+curl -v http://10.109.74.93:81/index
+curl http://10.99.215.11:443/sec/index -H &lsquo;host: kube.jemper.cn&rsquo;
+curl http://10.99.215.11:443/index -H &lsquo;host: kube.jemper.cn&rsquo;
+curl http://10.142.0.2:31390/sec/index -H &lsquo;host: kube.jemper.cn&rsquo;
+curl http://10.99.215.11/index -H &lsquo;host: kube.jemper.cn&rsquo;
+for i in <code>seq 10</code>; do curl http://10.99.215.11:443/index -H &lsquo;host: kube.jemper.cn&rsquo;; done
+for i in <code>seq 10</code>; do curl http://10.99.215.11:443/sec/index -H &lsquo;host: kube.jemper.cn&rsquo;; done</p>
+<p>kubectl explain DestinationRule.spec &ndash;api-version=networking.istio.io/v1alpha3</p>
+<p>scp -r -i /home/feixin10/.ssh/dodo   /home/feixin10  <a href="mailto:yhdodo19@35.196.205.161">yhdodo19@35.196.205.161</a>:/home/yhdodo19</p>
+<p>for i in <code>seq 10</code>; do curl http://35.237.188.250:30001/index; done
+for i in <code>seq 10</code>; do curl http://35.237.188.250:30002/sec/index; done</p>
+<p>for i in <code>seq 10</code>; do curl http://10.97.35.169:81/index; done
+for i in <code>seq 10</code>; do curl http://10.111.145.131:82/sec/index; done</p>
+<p>for i in <code>seq 10</code>; do curl http://goapi:81/index; done
+for i in <code>seq 10</code>; do curl http://goapisec:82/sec/index; done</p>
+<p>sudo tcpdump port 8080 -n
+sudo tcpdump -i eth0 src host 10.2.200.11 or dst host 10.2.200.11</p>
+<p>sudo tcpdump -i eth0 -s 80 -w /tmp/tcpdump.cap</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] Istio v1aplha3 路由 API 介绍. <a href="https://istio.io/zh/blog/2018/v1alpha3-routing/">https://istio.io/zh/blog/2018/v1alpha3-routing/</a>
+[2] Traffic Management. <a href="https://istio.io/docs/reference/config/networking/">https://istio.io/docs/reference/config/networking/</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/go-log/" data-toggle="tooltip" data-placement="top" title="go log 包">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/kubernetes-network/" data-toggle="tooltip" data-placement="top" title="Kubernetes 网络">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

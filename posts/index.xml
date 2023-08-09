@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on HOME</title>
+    <link>https://wpxun.github.io/posts/</link>
+    <description>Recent content in Posts on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Tue, 27 Aug 2019 21:51:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>汇编语言</title>
+      <link>https://wpxun.github.io/posts/assembly/</link>
+      <pubDate>Tue, 27 Aug 2019 21:51:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/assembly/</guid>
+      <description>&lt;p&gt;图灵在数理逻辑方面的理论研究，间接地创造了机器指令设计的基本方法，计算机界最高奖项也因此称图灵奖；现代计算机之父冯诺依曼，于1945年提出了“存储程序通用电子计算方案”，提出了指令数据存储思想，并在 1951 年成功研制出了冯诺依曼结构的 IAS 计算机（现在计算机的原型机），奠定了现代计算机的微体系设计和程序结构设计。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go command 命令</title>
+      <link>https://wpxun.github.io/posts/go-command/</link>
+      <pubDate>Fri, 16 Aug 2019 16:53:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-command/</guid>
+      <description>&lt;p&gt;/usr/local/go/bin 下提供了三个命令 go、gofmt、godoc。主命令 Go 下分二级和三级子命令，本文档将迭代完善，争取列出所有功能点，目前还处于更新状态。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go log 包</title>
+      <link>https://wpxun.github.io/posts/go-log/</link>
+      <pubDate>Tue, 06 Aug 2019 16:44:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-log/</guid>
+      <description>&lt;h2 id=&#34;1-nbspnbsp错误相关的概念&#34;&gt;1   错误相关的概念&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;编译错误&lt;/strong&gt;：build的时候就报错，由于考虑不周或输入错误导致程序异常（Exception），比如数组越界访问，除数为零，堆栈溢出等等。是大意疏忽。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;运行错误&lt;/strong&gt;：run的时候才报错，由于程序设计思路的错误导致程序异常或难以得到预期的效果。运行错误可以是预期的，也可以是不可预期的，对于可预期的不要用 panic，panic 恐慌机制是意料之外，如果不恢复（recover）就会导致宕机。**宕机（panic）**不是一件很好的事情，可能造成体验停止、服务中断，就像没有人希望在取钱时遇到 ATM 机蓝屏一样。但是，如果在损失发生时，程序没有因为宕机而停止，那么用户将会付出更大的代价，这种代价可以是金钱、时间甚至生命。因此宕机有时是一种合理的止损方法。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;error错误&lt;/strong&gt;：错误是业务过程的一部分，而异常不是。错误是可预期的结果，error错误机制是意料之中。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Istio 流量管理</title>
+      <link>https://wpxun.github.io/posts/istio-traffic-management/</link>
+      <pubDate>Wed, 26 Jun 2019 17:00:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/istio-traffic-management/</guid>
+      <description>&lt;p&gt;流量管理是 istio 最核心的问题，涉及 v1alpha3 中的配置资源，包括Gateway、VirtualSerice、DestinationRule 等。本文主要是基于 &lt;a href=&#34;https://wpxun.github.io/2019/05/30/istio/&#34;&gt;Istio 基础&lt;/a&gt;一文已经部署的实例来进行讲解。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 网络</title>
+      <link>https://wpxun.github.io/posts/kubernetes-network/</link>
+      <pubDate>Fri, 21 Jun 2019 12:22:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-network/</guid>
+      <description>&lt;p&gt;微服务是多进程、多服务部署，无法通过 IPC 进程内调用，必然通过网络调用，这将带来很多问题：不可靠、有带宽、协议设计。无论是 TCP、HTTP、RPC，无论是东西流量还是南北流量，涉及限流、熔断、域名及路径上下文，都需要 Kubernetes 或者第三方产品给出解决方案。网络是 Kubernetes 的难点之一。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Istio Prometheus</title>
+      <link>https://wpxun.github.io/posts/istio-prometheus/</link>
+      <pubDate>Thu, 30 May 2019 00:33:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/istio-prometheus/</guid>
+      <description>&lt;p&gt;我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Istio 基础</title>
+      <link>https://wpxun.github.io/posts/istio/</link>
+      <pubDate>Thu, 30 May 2019 00:33:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/istio/</guid>
+      <description>&lt;p&gt;我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>微服务架构</title>
+      <link>https://wpxun.github.io/posts/microservice-architecture-difficult/</link>
+      <pubDate>Mon, 20 May 2019 15:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/microservice-architecture-difficult/</guid>
+      <description>&lt;p&gt;这是一个架构概念爆发的时代，是架构本身的复杂度已经开始超越业务逻辑本身的时代，同时也是越来越接近 DevOps 工作方式的时代。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>日记——从现实世界看计算机世界（2）</title>
+      <link>https://wpxun.github.io/posts/hello-world/</link>
+      <pubDate>Mon, 13 May 2019 18:16:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/hello-world/</guid>
+      <description>&lt;p&gt;最近在思考计算机的发展方向，它们跟现实世界的关系是紧密的、有迹可循的，架构设计过程中理应从社会活动中得到启示。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 资源</title>
+      <link>https://wpxun.github.io/posts/kubernetes-resource/</link>
+      <pubDate>Tue, 07 May 2019 13:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-resource/</guid>
+      <description>&lt;p&gt;本文重点理解 Kubernetes 资源的作用，并用一个简单的例子进行演示。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 集群安装</title>
+      <link>https://wpxun.github.io/posts/kubernetes-install/</link>
+      <pubDate>Sun, 28 Apr 2019 16:06:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-install/</guid>
+      <description>&lt;p&gt;有了 Docker Swarm 基础，再来学习 Kubernetes 会相对容易一些，不过安装 Kubernetes 还是挺繁琐的，对官方文档中需要访问谷歌外网的部分，还需要替换成国内源。如果目的为了学习，还可以使用 minikube 或 Vagrant 快速创建集群。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Jenkins 持续集成</title>
+      <link>https://wpxun.github.io/posts/jenkins/</link>
+      <pubDate>Sun, 28 Apr 2019 11:59:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/jenkins/</guid>
+      <description>&lt;p&gt;今天看到《Jenkins2 权威指南》出来了，马上买了一本，DevOps 相关的书籍更新太快了，这包括 Docker、Jenkins，新特性快速推出，旧版本必然快速淘汰，可以看一下 &lt;a href=&#34;http://mirrors.jenkins.io/war-stable/&#34;&gt;Jenkins 的版本&lt;/a&gt;，Jenkins 1.x 相关书籍已经严重滞后了。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Vagrant 虚拟机管理</title>
+      <link>https://wpxun.github.io/posts/vagrant/</link>
+      <pubDate>Sat, 27 Apr 2019 10:04:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/vagrant/</guid>
+      <description>&lt;p&gt;个人操作系统并不需要配置化，但随着开发人员的复杂化，每个开发人员都需要同样的主机系统以保证开发环境的可移植性；另外一方面，随着微服务的推广需要多主机节点管理，重复性的指令配置消耗大量时间且容易出错，于是出现了多主机配置化，可以用现在流行的说法“基础设施即代码”，Infrastructure as code (IaC)，例如 docker machine、vagrant，本文将讲解 vagrant 的使用，并安装 Kubernetes 集群进行实战。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Docker Stack 多服务</title>
+      <link>https://wpxun.github.io/posts/docker-stack/</link>
+      <pubDate>Fri, 26 Apr 2019 17:58:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-stack/</guid>
+      <description>&lt;p&gt;我们从简到繁看一下 Docker 的学习路线：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;docker run：Single Engine(者称 Single-Host，单 Docker 节点)下单服务运行&lt;/li&gt;
+&lt;li&gt;docker-compose：Single Engine(或者称 Single-Host，单 Docker 节点)下多服务编排&lt;/li&gt;
+&lt;li&gt;docker swarm：Multi-Host(多 Docker 节点，集群)下单服务编排&lt;/li&gt;
+&lt;li&gt;docker stack：Multi-Host(多 Docker 节点，集群)下多服务编排&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可以看到 docker stack 其实就是 docker-compose 多应用和 docker swarm 规模化两者的结合。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Docker Swarm 集群</title>
+      <link>https://wpxun.github.io/posts/docker-swarm-mode/</link>
+      <pubDate>Tue, 16 Apr 2019 17:38:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-swarm-mode/</guid>
+      <description>&lt;p&gt;概括来说，Swarm 有两个核心组件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;企业级的 Docker 安全集群&lt;/li&gt;
+&lt;li&gt;微服务应用编排引擎&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Dockerfile 应用容器化及 Compose 部署应用</title>
+      <link>https://wpxun.github.io/posts/docker-single-engine-mode/</link>
+      <pubDate>Mon, 15 Apr 2019 17:00:14 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-single-engine-mode/</guid>
+      <description>&lt;p&gt;将应用整合到容器中并且运行起来的这个过程，或者把应用打包成为一个镜像的过程，称为&lt;strong&gt;容器化&lt;/strong&gt;，有时也叫作“Docker 化”。容器化核心就是创建镜像，创建镜像有两种方式，一种是 commit 容器，还有一种是使用 Dockerfile 快速创建自定义镜像。&lt;/p&gt;
+&lt;p&gt;docker compose 能够在 Docker 节点上，以**单引擎模式(Single-Engine Mode)**进行多容器应用的部署和管理。它区别于 Swarm 和 Kubernetes 可以进行多引擎多容器应用部署(在 docker 中叫 swarm mode，Compose does not use swarm mode to deploy services to multiple nodes in a swarm)。compose 和 Kubernetes 其适用范围不同，所以不适合作对比。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Docker Engine</title>
+      <link>https://wpxun.github.io/posts/docker-engine/</link>
+      <pubDate>Sat, 13 Apr 2019 17:00:14 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/docker-engine/</guid>
+      <description>&lt;p&gt;目前，以容器技术为代表的应用形态和以虚拟化为代表的系统形态完美融合于 OpenStack 生态圈之上，Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统(基于容器技术的分布式架构)，Kubernetes 底层支持两种容器技术 Docker 的 containerd 和 CoreOS 的 rkt。
+Docker 主要以 linux 内核的 namespace 和 cgroup 等特性为基础，保障进程或者进程组处于一个隔离、受限、安全的环境之中。Docker 用 Go 实现，并在容器技术之中有风靡之势。自 2007 年 cgroups 合并至 linux 内核 2.6.24 版本，2008 年 LXC 诞生，2009 年 Go 发布，2013 年 Docker 开源，2015 年 Kubernetes 发布。到 2018 年已经有不少企业应用于生产环境；当然不免有唱衰的 &lt;a href=&#34;https://technodrone.blogspot.com/2019/02/goodbye-docker-and-thanks-for-all-fish.html&#34;&gt;再见 docker&lt;/a&gt;。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>日记——几点思考（1）</title>
+      <link>https://wpxun.github.io/posts/before-work/</link>
+      <pubDate>Fri, 12 Apr 2019 14:04:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/before-work/</guid>
+      <description>&lt;p&gt;有感而写，以后每月计划写一篇吧。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>网络杂谈</title>
+      <link>https://wpxun.github.io/posts/network/</link>
+      <pubDate>Thu, 11 Apr 2019 15:27:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/network/</guid>
+      <description>&lt;p&gt;摘要：在局域网需要靠物理地址发送给对应的主机，而到广域网是用的 IP 地址进行报文转发。IP 是点到点，负责发送给对应的主机，而 TCP 是端到端，负责发送给对应的应用程序。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>HTTPS 性能和调试</title>
+      <link>https://wpxun.github.io/posts/https/</link>
+      <pubDate>Mon, 01 Apr 2019 17:34:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/https/</guid>
+      <description>&lt;p&gt;HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;基础部分：TCP/IP，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;《TCP 传输原理》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/21/cryptology/&#34;&gt;《密码学》&lt;/a&gt;和&lt;a href=&#34;https://wpxun.github.io/2019/03/24/tls/&#34;&gt;《SSL/TLS 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;应用部分：HTTP/2，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/31/http2/&#34;&gt;《HTTP/2 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>HTTP/2 协议</title>
+      <link>https://wpxun.github.io/posts/http2/</link>
+      <pubDate>Sun, 31 Mar 2019 14:39:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/http2/</guid>
+      <description>&lt;p&gt;HTTP/1.1 与 HTTP/2 相隔了大概20年，但是从目前的研究和实验情况来看，我们不可能等上几十年才升级到下一个版本，h2 在逐渐的普及。
+h2 和 h1 的最大差别在于在 &lt;strong&gt;http 层&lt;/strong&gt;上增加了&lt;strong&gt;分帧层&lt;/strong&gt;；把原来的 http 层的数据拆分成多种帧类型，并在每种类型前加上协议性的帧首部。基于二进制分帧的优点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;传输使用的编码方式改变（采用帧、流模式），不用创建多个 TCP 连接，单个连接就可以有多个流（处理主页面和所有子元素的请求），能够减少延迟，服务器和浏览器的 socket 负载也大大减少。&lt;/li&gt;
+&lt;li&gt;并行处理，乱序发送帧，不再采用 pipeline 阻塞方式&lt;/li&gt;
+&lt;li&gt;传输的功能得以扩展（如服务端推送、首部压缩、优先级、流量控制）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;学习 HTTP/2 最好的文档是 RFC 7540。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>DevOps</title>
+      <link>https://wpxun.github.io/posts/devops/</link>
+      <pubDate>Wed, 27 Mar 2019 16:03:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/devops/</guid>
+      <description>&lt;p&gt;DevOps 是一套实践方法，在保证高质量的前提下缩短系统变更从提交到部署到生产环境的时间，它设想在开发组和运维组之间没有冲突。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>SSL/TLS 协议</title>
+      <link>https://wpxun.github.io/posts/tls/</link>
+      <pubDate>Sun, 24 Mar 2019 17:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/tls/</guid>
+      <description>&lt;p&gt;SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>密码学</title>
+      <link>https://wpxun.github.io/posts/cryptology/</link>
+      <pubDate>Thu, 21 Mar 2019 17:29:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/cryptology/</guid>
+      <description>&lt;p&gt;近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>并发的复杂性</title>
+      <link>https://wpxun.github.io/posts/go-concurrency-difficult/</link>
+      <pubDate>Thu, 14 Mar 2019 11:10:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-concurrency-difficult/</guid>
+      <description>&lt;p&gt;本文谈到的并发是指单程序、单节点并发，区别于并发系统，并发系统的一个更加流行的词是分布式系统，并发系统更有可能是并行的，因为其中的多个程序一般可以同时在不同的硬件环境上运行。分布式系统可以看我另一篇文章&lt;a href=&#34;https://wpxun.github.io/2019/03/17/microservice-architecture-difficult/&#34;&gt;《微服务架构的复杂性》&lt;/a&gt;。
+并发指的是多个任务几乎被同时发起运行，但是在同一时刻这些任务不一定都处于运行状态，这取决于 CPU 核心或者 CPU 数量。并行指的是在同一时刻可以有多个任务真正地同时运行。并行运行的必要条件是多 CPU 核心或者多 CPU 的计算环境。
+在功能开发中，非并发程序往往未能充分利用服务器的性能，为用户提供服务基本都是排队处理。而并发程序有时可以代替集群，其性能提高对整个系统是至关重要的作用，如果我们将单个节点的性能提高 30%，或者甚至超过 100%，那么我们可以节省多少台机器呢？不过同时并发却带来了编程的复杂性。不同程序单元之间的远程过程调用可以参考另一篇文章&lt;a href=&#34;https://wpxun.github.io/2019/03/12/go-network/&#34;&gt;《go 网络编程》&lt;/a&gt;。Go 语言的特点是通过内部调度可以最大限度地利用单机的计算能力。然而在分布式计算方面，它本身其实并没有提供什么现成的东西，还需要使用一些第三方的框架或工具，或者自己编写和搭建。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go I/O 操作</title>
+      <link>https://wpxun.github.io/posts/go-io/</link>
+      <pubDate>Wed, 13 Mar 2019 14:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-io/</guid>
+      <description>&lt;p&gt;理解 I/O 的一些概念问题可以先看另一篇文章&lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;《C Socket 编程》&lt;/a&gt;
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go 网络编程</title>
+      <link>https://wpxun.github.io/posts/go-network/</link>
+      <pubDate>Tue, 12 Mar 2019 09:30:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-network/</guid>
+      <description>&lt;p&gt;本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 &lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;TCP 传输原理&lt;/a&gt;和 &lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;C Socket 编程&lt;/a&gt;，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>C Socket 编程</title>
+      <link>https://wpxun.github.io/posts/c-socket/</link>
+      <pubDate>Mon, 11 Mar 2019 20:04:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/c-socket/</guid>
+      <description>&lt;p&gt;一切皆文件，I/O 操作无处不在，文件、设备、管道、Socket等都是 I/O 操作。C 语言对文件 I/O 操作分两种，一种是无缓冲的（用户层无缓存区），返回的是文件描述符（int 整型），代表函数是 open、read、write 和 socket 等；另一种是有缓冲的（用户层设计了缓存区），返回是的数据流 Stream（FILE 结构体），代表函数是 fopen、fread、fwrite、putc、getc、fputs、fgets 和 fprintf等；不过 C 标准已经不再支持对文件（这里没有包括 socket）的无缓冲操作。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>TCP 传输原理</title>
+      <link>https://wpxun.github.io/posts/tcp-protocol/</link>
+      <pubDate>Sun, 10 Mar 2019 18:00:59 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/tcp-protocol/</guid>
+      <description>&lt;p&gt;TCP的主要目的是在一个比较不可靠的相互通信上提供可靠的，安全的逻辑回路或者连接服务。为了实现这个服务，TCP 的设计 体系非常庞大，我对其理解只是冰山一角，此文只是将我学过的重点知识进行汇总。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go context 包</title>
+      <link>https://wpxun.github.io/posts/go-context/</link>
+      <pubDate>Fri, 08 Mar 2019 15:03:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-context/</guid>
+      <description>&lt;p&gt;整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go time 包</title>
+      <link>https://wpxun.github.io/posts/go-time/</link>
+      <pubDate>Fri, 08 Mar 2019 09:39:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-time/</guid>
+      <description>&lt;h3 id=&#34;时间概念&#34;&gt;时间概念&lt;/h3&gt;
+&lt;p&gt;时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。&lt;/li&gt;
+&lt;li&gt;时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。&lt;/li&gt;
+&lt;li&gt;时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。&lt;/li&gt;
+&lt;li&gt;显示格式：这部分没有逻辑问题，纯粹是视图显示。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>go 类型转换</title>
+      <link>https://wpxun.github.io/posts/go-conversions/</link>
+      <pubDate>Sat, 18 Aug 2018 17:46:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-conversions/</guid>
+      <description>&lt;p&gt;Go Conversions 和 类型断言是两种类型转换方式。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Joomla &#43; Magento 官网加商城</title>
+      <link>https://wpxun.github.io/posts/joomla-magento/</link>
+      <pubDate>Mon, 20 Mar 2017 14:06:52 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/joomla-magento/</guid>
+      <description>&lt;p&gt;今天利用 docker 服务器来搭建 Joomla 公司官网和 Magento 商城。它们都是采用了 php 语言写的应用，所以直接用我相关的文章来配置服务器即可：&lt;a href=&#34;http://blog.jemper.cn/2017/02/08/docker-and-dockerfile/&#34;&gt;docker 入门与 docker-compose 编配工具&lt;/a&gt;。
+说点题外话，如果现在还有小公司在开发什么商城或者官网类型的应用，赶紧放弃，投入到 Joomla 和 Magento 的怀抱吧。这两个已经很成熟，也是开源的，要开发也可以参考这两者或者基于它们去开发，省时省力，也利于成功。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>git 源码安装</title>
+      <link>https://wpxun.github.io/posts/git-source/</link>
+      <pubDate>Fri, 10 Feb 2017 16:06:14 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/git-source/</guid>
+      <description>&lt;p&gt;用习惯了windows下高版本2.11.0的git，再到centos7自带的1.8.5版本觉得操作还是不方便，所以今天就把它升级到最新版。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>博客实践</title>
+      <link>https://wpxun.github.io/posts/blog/</link>
+      <pubDate>Wed, 08 Feb 2017 15:56:13 +0800</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/blog/</guid>
+      <description>2019-12-21 更新到 Hugo，抛弃复杂的 hexo，hexo 依赖 node 和各种 node_module，比如集成 CNAME 这一简单的功能都是靠模块来实现。而 hugo 得益于 Go，直接 go get 生成 hugo 执行文件即可，日常操作和 hexo 基本一样： hugo server、hugo 两个命令，常用参数 -D 表示集成草稿。如果要自动部署到 github，写一个 sh 脚本即可。另外静态文件方面在根目录下有 static，直接放在里面即可：
+-rw-r--r-- 1 ada staff 14 12 21 16:08 CNAME -rw-r--r--@ 1 ada staff 10497 12 21 16:09 avatar.jpg -rw-r--r-- 1 ada staff 10 12 21 16:08 baidu_verify_MOITAeX9md.html -rw-r--r--@ 1 ada staff 1150 12 21 16:09 favicon.ico -rw-r--r-- 1 ada staff 53 12 21 16:08 googleba39dd1bfa288749.</description>
+    </item>
+    
+  </channel>
+</rss>

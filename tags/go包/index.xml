@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go包 on HOME</title>
+    <link>https://wpxun.github.io/tags/go%E5%8C%85/</link>
+    <description>Recent content in Go包 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Fri, 08 Mar 2019 15:03:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/go%E5%8C%85/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>go context 包</title>
+      <link>https://wpxun.github.io/posts/go-context/</link>
+      <pubDate>Fri, 08 Mar 2019 15:03:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-context/</guid>
+      <description>&lt;p&gt;整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go time 包</title>
+      <link>https://wpxun.github.io/posts/go-time/</link>
+      <pubDate>Fri, 08 Mar 2019 09:39:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/go-time/</guid>
+      <description>&lt;h3 id=&#34;时间概念&#34;&gt;时间概念&lt;/h3&gt;
+&lt;p&gt;时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。&lt;/li&gt;
+&lt;li&gt;时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。&lt;/li&gt;
+&lt;li&gt;时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。&lt;/li&gt;
+&lt;li&gt;显示格式：这部分没有逻辑问题，纯粹是视图显示。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

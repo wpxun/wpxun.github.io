@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>日记 on HOME</title>
+    <link>https://wpxun.github.io/categories/%E6%97%A5%E8%AE%B0/</link>
+    <description>Recent content in 日记 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Mon, 13 May 2019 18:16:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/categories/%E6%97%A5%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>日记——从现实世界看计算机世界（2）</title>
+      <link>https://wpxun.github.io/posts/hello-world/</link>
+      <pubDate>Mon, 13 May 2019 18:16:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/hello-world/</guid>
+      <description>&lt;p&gt;最近在思考计算机的发展方向，它们跟现实世界的关系是紧密的、有迹可循的，架构设计过程中理应从社会活动中得到启示。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>日记——几点思考（1）</title>
+      <link>https://wpxun.github.io/posts/before-work/</link>
+      <pubDate>Fri, 12 Apr 2019 14:04:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/before-work/</guid>
+      <description>&lt;p&gt;有感而写，以后每月计划写一篇吧。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>密码学 on HOME</title>
+    <link>https://wpxun.github.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/</link>
+    <description>Recent content in 密码学 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Thu, 21 Mar 2019 17:29:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>密码学</title>
+      <link>https://wpxun.github.io/posts/cryptology/</link>
+      <pubDate>Thu, 21 Mar 2019 17:29:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/cryptology/</guid>
+      <description>&lt;p&gt;近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

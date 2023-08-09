@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Kubernetes 网络 - HOME</title>
+  <meta property="og:title" content="Kubernetes 网络 - HOME" />
+  <meta name="twitter:title" content="Kubernetes 网络 - HOME" />
+  <meta name="description" content="微服务是多进程、多服务部署，无法通过 IPC 进程内调用，必然通过网络调用，这将带来很多问题：不可靠、有带宽、协议设计。无论是 TCP、HTTP、RPC，无论是东西流量还是南北流量，涉及限流、熔断、域名及路径上下文，都需要 Kubernetes 或者第三方产品给出解决方案。网络是 Kubernetes 的难点之一。">
+  <meta property="og:description" content="微服务是多进程、多服务部署，无法通过 IPC 进程内调用，必然通过网络调用，这将带来很多问题：不可靠、有带宽、协议设计。无论是 TCP、HTTP、RPC，无论是东西流量还是南北流量，涉及限流、熔断、域名及路径上下文，都需要 Kubernetes 或者第三方产品给出解决方案。网络是 Kubernetes 的难点之一。">
+  <meta name="twitter:description" content="微服务是多进程、多服务部署，无法通过 IPC 进程内调用，必然通过网络调用，这将带来很多问题：不可靠、有带宽、协议设计。无论是 TCP、HTTP、RPC，无论是东西流量还是南北流量，涉及限流、熔断、域名及路径上下文，都需要 Kubernetes 或者第三方产品给出解决方案。网络是 Kubernetes 的难点之一。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/kubernetes-network/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Kubernetes 网络</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>June 21, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">
+            <i class="fas fa-folder"></i>
+            云原生
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/kubernetes/">
+            <i class="fas fa-tag"></i>
+            Kubernetes
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/docker/">
+            <i class="fas fa-tag"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp三个网络">1   三个网络</a></li>
+    <li><a href="#2-nbspnbsp服务发现">2   服务发现</a></li>
+    <li><a href="#3-nbspnbspservice-网络">3   Service 网络</a>
+      <ul>
+        <li><a href="#31-nbspnbspnodeport">3.1   NodePort</a></li>
+        <li><a href="#32-nbspnbsploadbalancer">3.2   LoadBalancer</a></li>
+        <li><a href="#33-nbspnbspingress">3.3   Ingress</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+      <p>微服务是多进程、多服务部署，无法通过 IPC 进程内调用，必然通过网络调用，这将带来很多问题：不可靠、有带宽、协议设计。无论是 TCP、HTTP、RPC，无论是东西流量还是南北流量，涉及限流、熔断、域名及路径上下文，都需要 Kubernetes 或者第三方产品给出解决方案。网络是 Kubernetes 的难点之一。</p>
+<h1 id="nbspnbsp一kubernetes-自家解决方案">  一、Kubernetes 自家解决方案</h1>
+<h2 id="1-nbspnbsp三个网络">1   三个网络</h2>
+<ol>
+<li>Node</li>
+<li>Pod，同一Pod 可以和进程间 IPC 通信，可以直接用 localhost 访问同一 Pod 中的其它容器。但不同 Pods 采用了不同的虚拟 IP。共同点是都不需要 NAT 下通信，他们共享网络命名空间，他们之间的通信不需要宿主机的端口映射，Pod ip 对 Kubernetes 网络内部还是宿主机都是一样的。</li>
+<li>Service，服务发现与负载均衡。ClusterIP 虚拟网络只对 Kubernetes 内部可见</li>
+</ol>
+<p>以上三种网络是互不相交的。Kubernetes 并没有原生内置某种 Pod 网络实现，而是开放给了第三方厂商依据 CNI（Container Network Interface）规则接口实现。这是不同的容器接口可以调用相同的网络组件实现通信。
+安装 Docker 容器后会有 /opt/cni/bin 目录。一般有三种实现方式：</p>
+<ul>
+<li>二层交换</li>
+<li>三层路由</li>
+<li>Overlay 网络，在原有的网络上设计虚拟网络，实现解耦，但传输性能二法与二层和三层网络方案相比，实现上是分成 underlay 和 overlay 实现数据包地分发。
+备注：via 是导向网络 Default via 192.168.1.1，选择下一跳；dev 是导向设备 10.1.0.0/16 dev bridge，进行分发。</li>
+</ul>
+<p>以三层路由网络举例，有 node1 和 node2 节点，有以下两种方案：</p>
+<ol>
+<li>方案一，网关路由：</li>
+</ol>
+<ul>
+<li>Gateway(192.168.1.1): RouteTable(10.1.1.0/24 via 192.168.1.100, 10.1.2.0/24 via 192.168.1.101)</li>
+<li>node1(192.168.1.100/24): Container bridge(10.1.1.1/24), RouteTable(Default via 192.168.1.1)</li>
+<li>pod1: 10.1.1.2</li>
+<li>pod2: 10.1.1.3</li>
+<li>node2(192.168.1.101/24): Container bridge(10.1.2.1/24), RouteTable(Default via 192.168.1.1)</li>
+<li>pod1: 10.1.2.2</li>
+<li>pod2: 10.1.2.3</li>
+</ul>
+<ol start="2">
+<li>方案二，主机路由：</li>
+</ol>
+<ul>
+<li>Gateway(192.168.1.1):</li>
+<li>node1(192.168.1.100/24): Container bridge(10.1.1.1/24), RouteTable(Default via 192.168.1.1, 10.1.2.0/24 via 192.168.1.101)</li>
+<li>pod1: 10.1.1.2</li>
+<li>pod2: 10.1.1.3</li>
+<li>node2(192.168.1.101/24): Container bridge(10.1.2.1/24), RouteTable(Default via 192.168.1.1, 10.1.1.0/24 via 192.168.1.100)</li>
+<li>pod1: 10.1.2.2</li>
+<li>pod2: 10.1.2.3</li>
+</ul>
+<h2 id="2-nbspnbsp服务发现">2   服务发现</h2>
+<p>为了承担起 DNS 解析任务，Kubernetes 环境 master 节点都会有一个 DNS 服务（一般多个 Pod），其 selector 为 k8s-app: kube-dns，</p>
+<pre tabindex="0"><code>[yhdodo19@instance-1 ~]$ kubectl get svc -n kube-system
+NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE
+kube-dns   ClusterIP   10.96.0.10   &lt;none&gt;        53/UDP,53/TCP,9153/TCP   27d
+
+[yhdodo19@instance-1 ~]$ kubectl get po -n kube-system --show-labels | grep k8s-app=kube-dns
+coredns-fb8b8dccf-2rdns              1/1     Running   6          27d   k8s-app=kube-dns,pod-template-hash=fb8b8dccf
+coredns-fb8b8dccf-nkqtv              1/1     Running   6          27d   k8s-app=kube-dns,pod-template-hash=fb8b8dccf
+</code></pre><h2 id="3-nbspnbspservice-网络">3   Service 网络</h2>
+<h3 id="31-nbspnbspnodeport">3.1   NodePort</h3>
+<h4 id="311-nbspnbsp原理">3.1.1   原理</h4>
+<ul>
+<li>创建 socket 对外监听，但要求监听端口大于 30000</li>
+<li>基于 iptables 的流量转换，也可以认为是 socket 转发，通过 iptables Chain 实现</li>
+<li>基于 iptables 的简单负载均衡，通过 iptables 概率实现</li>
+</ul>
+<p>{% img <a href="https://wpxun.github.io/image/2019/06/nodeport.png">https://wpxun.github.io/image/2019/06/nodeport.png</a> 300 %}</p>
+<h4 id="312-nbspnbsp实现">3.1.2   实现</h4>
+<p>外部请求 -&gt; NodeIP:NodePort -&gt; ClusterIP:Port -&gt; PodIP:TargetPort，它是通过 <strong>kube-proxy</strong> 实现：</p>
+<ul>
+<li>kube-proxy 是以 daemonset pod 的形式运行在集群内的每个节点上，监听服务(Service)和端点(Endpoint)的变化设定和更新 iptables 规则</li>
+<li>kube-proxy 通过 iptables 实现 nodePort 到集群内部 Service Port 再到 Pod 中的 Container targetPort 的流量转发</li>
+<li>kube-proxy 是通过 iptables 实现 Service 流量转发到 Pod 的负载均衡</li>
+</ul>
+<p>由以上的处理方式可见 NodePort 暴露端口方案是一个 4 层网络方案，无法处理 7 层网络，不能设置 80 等常用端口，它只能用来进行一些开发、测试工作，比如映射 3306:30001 进行数据操作或者数据迁移。</p>
+<h4 id="313-nbspnbsp分析">3.1.3   分析</h4>
+<p>kube-proxy 是基于 iptable 来实现的，它是防火墙的一部分；Linux 防火墙可以对数据进行过滤、更改、转发操作，它由两个组件组成：核心层 netfilters 和用户层 iptables。 iptables 在用户层设置、变更和维护过滤规则，并最终由 netfilters 执行，iptables 主要由 一组 table 和 table 里的 Chain 组成，chain 有默认也可自定义。</p>
+<p>接下来我们以 外部请求 -&gt; NodeIP:NodePort(35.237.188.250:30001) -&gt; ClusterIP:Port(10.96.191.193:81) -&gt; PodIP:TargetPort(10.36.0.10:80, ···) 来分析 iptables 是怎样实现转发和负载均衡的。</p>
+<pre tabindex="0"><code>[yhdodo19@instance-1 ~]$ kubectl describe svc goapi
+Name:                     goapi
+Namespace:                default
+Labels:                   env=goapi
+Annotations:              kubectl.kubernetes.io/last-applied-configuration:
+                            {&#34;apiVersion&#34;:&#34;v1&#34;,&#34;kind&#34;:&#34;Service&#34;,&#34;metadata&#34;:{&#34;annotations&#34;:{},&#34;labels&#34;:{&#34;env&#34;:&#34;goapi&#34;},&#34;name&#34;:&#34;goapi&#34;,&#34;namespace&#34;:&#34;default&#34;},&#34;spec&#34;:{&#34;p...
+Selector:                 app=goweb
+Type:                     NodePort
+IP:                       10.96.191.193
+Port:                     http  81/TCP
+TargetPort:               80/TCP
+NodePort:                 http  30001/TCP
+Endpoints:                10.36.0.10:80,10.36.0.11:80,10.36.0.5:80 + 2 more...
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   &lt;none&gt;
+
+[yhdodo19@instance-1 ~]$ sudo lsof -i tcp:30001
+COMMAND    PID USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
+kube-prox 5307 root   21u  IPv6 9386976      0t0  TCP *:pago-services1 (LISTEN)
+</code></pre><p>可以看到 NodePort 就是 kube-proxy 创建并监听的，该服务一样有 5 个 Endpoints。接下执行命名 <code>iptables -t nat -vnL --line-number &gt; iptables-nat.txt</code> 导出查看：</p>
+<pre tabindex="0"><code>Chain PREROUTING (policy ACCEPT 34 packets, 3918 bytes)
+num   pkts bytes target     prot opt in     out     source               destination
+1    2796K  327M KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+
+Chain KUBE-SERVICES (2 references)
+47      23  2744 KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule in this chain */ ADDRTYPE match dst-type LOCAL
+
+Chain KUBE-NODEPORTS (1 references)
+num   pkts bytes target     prot opt in     out     source               destination
+1        0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/goapi:http */ tcp dpt:30001
+2        0     0 KUBE-SVC-4MT5SRJPZGU2FACQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/goapi:http */ tcp dpt:30001
+3        0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:tls */ tcp dpt:30614
+4        0     0 KUBE-SVC-S4S242M2WNFIAT6Y  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:tls */ tcp dpt:30614
+5        0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/web: */ tcp dpt:32063
+6        0     0 KUBE-SVC-BIJGBSD4RZCCZX5R  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/web: */ tcp dpt:32063
+7        0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https-prometheus */ tcp dpt:32105
+8        0     0 KUBE-SVC-VCO3RXEEJXVGNRLL  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https-prometheus */ tcp dpt:32105
+9        0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https-grafana */ tcp dpt:30523
+10       0     0 KUBE-SVC-MZX34IYCYJRMNTMQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https-grafana */ tcp dpt:30523
+11       0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:http2 */ tcp dpt:31380
+12       0     0 KUBE-SVC-G6D3V5KS3PXPUEDS  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:http2 */ tcp dpt:31380
+13       0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https */ tcp dpt:31390
+14       0     0 KUBE-SVC-7N6LHPYFOVFT454K  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https */ tcp dpt:31390
+15       0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:tcp */ tcp dpt:31400
+16       0     0 KUBE-SVC-62L5C2KEOX6ICGVJ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:tcp */ tcp dpt:31400
+17       0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https-kiali */ tcp dpt:32227
+18       0     0 KUBE-SVC-Y4Y3QMSBONEWNEDG  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https-kiali */ tcp dpt:32227
+19       0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:status-port */ tcp dpt:30642
+20       0     0 KUBE-SVC-TFRZ6Y6WOLX5SOWZ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:status-port */ tcp dpt:30642
+21       0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https-tracing */ tcp dpt:32308
+22       0     0 KUBE-SVC-U67ZB3ILROLSW2OD  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* istio-system/istio-ingressgateway:https-tracing */ tcp dpt:32308
+</code></pre><p>可以找到 <code>KUBE-SVC-4MT5SRJPZGU2FACQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/goapi:http */ tcp dpt:30001</code>， 继续找 KUBE-SVC-4MT5SRJPZGU2FACQ Chain</p>
+<pre tabindex="0"><code>Chain KUBE-SERVICES (2 references)
+num   pkts bytes target     prot opt in     out     source               destination
+2        0     0 KUBE-SVC-4MT5SRJPZGU2FACQ  tcp  --  *      *       0.0.0.0/0            10.96.191.193        /* default/goapi:http cluster IP */ tcp dpt:81
+
+Chain KUBE-SVC-4MT5SRJPZGU2FACQ (2 references)
+num   pkts bytes target     prot opt in     out     source               destination
+1        0     0 KUBE-SEP-2GRZXFB4YOVSQMTA  all  --  *      *       0.0.0.0/0            0.0.0.0/0            statistic mode random probability 0.20000000019
+2        0     0 KUBE-SEP-FHKPE4W4K4BU4T6A  all  --  *      *       0.0.0.0/0            0.0.0.0/0            statistic mode random probability 0.25000000000
+3        0     0 KUBE-SEP-X6ZXAKDCXPAUMTPF  all  --  *      *       0.0.0.0/0            0.0.0.0/0            statistic mode random probability 0.33332999982
+4        0     0 KUBE-SEP-GXKTNAJ66D3R7K2Y  all  --  *      *       0.0.0.0/0            0.0.0.0/0            statistic mode random probability 0.50000000000
+5        0     0 KUBE-SEP-2JFIICOQDPEEFOFI  all  --  *      *       0.0.0.0/0            0.0.0.0/0
+</code></pre><p>以上 5 条规则对应了 5 个 Endpoints，并且每一条都有概率设置实现的负载均衡。到此分析结束了。</p>
+<h3 id="32-nbspnbsploadbalancer">3.2   LoadBalancer</h3>
+<p>需要第三方的负载均衡支持，以 GCE 为例，在“网络服务 -&gt; 负载均衡”提供了三种类型的负载均衡：</p>
+<ul>
+<li>HTTP(S) 负载平衡：适用于 HTTP 和 HTTPS 应用的第 7 层负载平衡</li>
+<li>TCP 负载平衡：适用于依赖 TCP/SSL 协议的应用的第 4 层负载平衡或代理</li>
+<li>UDP 负载平衡：适用于依赖 UDP 协议的应用的第 4 层负载平衡</li>
+</ul>
+<p>{% img <a href="https://wpxun.github.io/image/2019/06/loadbalancer.png">https://wpxun.github.io/image/2019/06/loadbalancer.png</a> 300 %}</p>
+<h3 id="33-nbspnbspingress">3.3   Ingress</h3>
+<p>我们知道 Service 的表现形式为 IP:Port，即工作在 TCP/IP 层，仅适用于依赖 TCP/SSL 协议的应用的第 4 层负载平衡或代理。而对于基于 HTTP 的服务来说，不同的 URL 地址经常对应到不同的后端服务或者虚拟服务器，这些应用的转发机制仅通过 Kubernetes 的 Service 机制是无法实现的。Kubernetes 提供了 Ingress 适用于 HTTP 和 HTTPS 应用的第 7 层负载平衡：</p>
+<ul>
+<li>外部可访问 URL</li>
+<li>负载均衡</li>
+<li>SSL / TLS</li>
+<li>基于域名的虚拟主机</li>
+</ul>
+<p>其实就是实现了 nginx 的功能，更重要的是可以通过 ingress 配置文件直接控制 nginx。</p>
+<p>{% img <a href="https://wpxun.github.io/image/2019/06/ingress.png">https://wpxun.github.io/image/2019/06/ingress.png</a> 300 %}</p>
+<h4 id="231-nbspnbspingress-controllerhttpskubernetesiodocsconceptsservices-networkingingress-controllers">2.3.1   <a href="https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/">Ingress Controller</a></h4>
+<p>控制器监听 Kubernetes API Ingress 资源的变化（反向代理和负载均衡），并实时的感知后端 service、pod 等变化（服务发现），对内置的反向代理进行设置和更新。
+这里我们使用官方提供的 ingress-nginx-controller 进行实践，首先是<a href="https://kubernetes.github.io/ingress-nginx/deploy/">安装 ingress-nginx-controller</a>。只需要运行
+<code>kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml</code>
+但因为上面的配置文件没有开放 80、443 端口，所以必须得下载下来进行修改，
+添加以下信息，添加 nodeSelector 是因为它是 deployment 部署 1 个副本，为了配合域名解析的稳定性所以固定某一个 node 节点上运行 ingress-nginx。</p>
+<pre tabindex="0"><code>...
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/hostname: instance-3
+...
+</code></pre><p><code>kubectl apply -f mandatory.yaml</code>，等待 pod 启动完成。</p>
+<h4 id="332-nbspnbspingress-配置httpskubernetesiodocsconceptsservices-networkingingress">3.3.2   <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">Ingress 配置</a></h4>
+<ul>
+<li>ingress 配置的命名空间必须得在服务所在的空间，毕竟 ingress 的 backend 无法指定服务的命名空间。</li>
+<li>如果域名和路径相同，则先部署的 ingress 优先。</li>
+</ul>
+<pre tabindex="0"><code>apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-nginx
+spec:
+  rules:
+  - host: kube.jemper.cn
+    http:
+      paths:
+      - backend:
+          serviceName: goapi
+          servicePort: 81
+        path: /
+---
+</code></pre><h1 id="nbspnbsp二istio-解决方案">  二、Istio 解决方案</h1>
+<p>Istio社区意识到了Ingress和Mesh内部配置割裂的问题，因此从0.8版本开始，社区采用了 Gateway 资源代替K8s Ingress来表示流量入口。</p>
+<p>Istio Gateway资源本身只能配置L4-L6的功能，例如暴露的端口，TLS设置等；但Gateway可以和绑定一个VirtualService，在VirtualService 中可以配置七层路由规则，这些七层路由规则包括根据按照服务版本对请求进行导流，故障注入，HTTP重定向，HTTP重写等所有Mesh内部支持的路由规则。</p>
+<h1 id="nbspnbsp三api-gateway-解决方案">  三、API Gateway 解决方案</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] Kubernetes Ingress with Nginx Example. <a href="https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html">https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/istio-traffic-management/" data-toggle="tooltip" data-placement="top" title="Istio 流量管理">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/istio-prometheus/" data-toggle="tooltip" data-placement="top" title="Istio Prometheus">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

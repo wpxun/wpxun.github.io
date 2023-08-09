@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>git 源码安装 - HOME</title>
+  <meta property="og:title" content="git 源码安装 - HOME" />
+  <meta name="twitter:title" content="git 源码安装 - HOME" />
+  <meta name="description" content="用习惯了windows下高版本2.11.0的git，再到centos7自带的1.8.5版本觉得操作还是不方便，所以今天就把它升级到最新版。">
+  <meta property="og:description" content="用习惯了windows下高版本2.11.0的git，再到centos7自带的1.8.5版本觉得操作还是不方便，所以今天就把它升级到最新版。">
+  <meta name="twitter:description" content="用习惯了windows下高版本2.11.0的git，再到centos7自带的1.8.5版本觉得操作还是不方便，所以今天就把它升级到最新版。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/git-source/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">git 源码安装</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>February 10, 2017</time></li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%B7%A5%E5%85%B7/">
+            <i class="fas fa-tag"></i>
+            工具
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>用习惯了windows下高版本2.11.0的git，再到centos7自带的1.8.5版本觉得操作还是不方便，所以今天就把它升级到最新版。</p>
+<p>必须安装的dependencies</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># yum install gcc perl openssl-devel libcurl-devel expat-devel perl-ExtUtils-MakeMaker</span>
+</span></span></code></pre></div><p>这里不同环境具体也是不同的，缺什么就安装什么。上面只是我在阿里云服务器上安装时缺少的工具和头文件。
+可选安装的dependencies，安装文档套件时所需要的，安装说明文档有写到：</p>
+<blockquote>
+<p>$ make prefix=/usr all doc info ;# as yourself<br>
+# make prefix=/usr install install-doc install-html install-info ;# as root</p>
+<p>&hellip;</p>
+<p>To build and install documentation suite, you need to have
+the asciidoc/xmlto toolchain.  Because not many people are
+inclined to install the tools, the default build target
+(&ldquo;make all&rdquo;) does <em>not</em> build them.</p>
+<p>&ldquo;make doc&rdquo; builds documentation in man and html formats; there are
+also &ldquo;make man&rdquo;, &ldquo;make html&rdquo; and &ldquo;make info&rdquo;. Note that &ldquo;make html&rdquo;
+requires asciidoc, but not xmlto. &ldquo;make man&rdquo; (and thus make doc)
+requires both.</p>
+<p>&ldquo;make install-doc&rdquo; installs documentation in man format only; there
+are also &ldquo;make install-man&rdquo;, &ldquo;make install-html&rdquo; and &ldquo;make
+install-info&rdquo;.</p>
+</blockquote>
+<p>即安装 man 手册，需要 asciidoc 和 xmlto，用以下命令</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># yum install asciidoc.noarch xmlto</span>
+</span></span></code></pre></div><p>接下来就是安装了，我一般都是查网络文档，所以没有安装任何man、info、html文档，下面是安装man文档的命令</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># make prefix=/usr install install-doc</span>
+</span></span></code></pre></div><p>如果不需要man，就不用安装 asciidoc.noarch、xmlto 了。</p>
+<p>官方的git <a href="https://github.com/git/git/blob/master/INSTALL">安装说明</a><br>
+另外，可参考另一篇写得更详细的文章<a href="http://www.cnblogs.com/grimm/p/5368777.html">Git服务器安装详解及安装遇到问题解决方案</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/joomla-magento/" data-toggle="tooltip" data-placement="top" title="Joomla &#43; Magento 官网加商城">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/blog/" data-toggle="tooltip" data-placement="top" title="博客实践">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

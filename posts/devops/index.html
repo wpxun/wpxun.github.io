@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>DevOps - HOME</title>
+  <meta property="og:title" content="DevOps - HOME" />
+  <meta name="twitter:title" content="DevOps - HOME" />
+  <meta name="description" content="DevOps 是一套实践方法，在保证高质量的前提下缩短系统变更从提交到部署到生产环境的时间，它设想在开发组和运维组之间没有冲突。">
+  <meta property="og:description" content="DevOps 是一套实践方法，在保证高质量的前提下缩短系统变更从提交到部署到生产环境的时间，它设想在开发组和运维组之间没有冲突。">
+  <meta name="twitter:description" content="DevOps 是一套实践方法，在保证高质量的前提下缩短系统变更从提交到部署到生产环境的时间，它设想在开发组和运维组之间没有冲突。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/devops/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">DevOps</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 27, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/devops/">
+            <i class="fas fa-folder"></i>
+            DevOps
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>DevOps 是一套实践方法，在保证高质量的前提下缩短系统变更从提交到部署到生产环境的时间，它设想在开发组和运维组之间没有冲突。</p>
+<h2 id="1-nbspnbsp什么是-devops">1   什么是 DevOps</h2>
+<p>DevOps 是敏捷开发的延续，它将敏捷的精神延伸至运维（Operation）阶段。敏捷开发主要关注软件开发，主要目的是响应变化，快速交付价值，强调迭代增量的开发模式，没有自动化测试和部署，更没有监控等相关的流程。也就是敏捷 Scrum 可用在 DevOps 的开发过程中，但 DevOps 不仅仅是敏捷 Scrum。
+一个明显的区别就是敏捷开发可能1-6周一次迭代，而 DevOps 一天几十次迭代都可以，这就是联合系统运维高效之处。
+除外之外，DevOps 还关注团队协作与沟通，协作需要工具，沟通效果最好效率也最高的方式是面对面交谈。</p>
+<h3 id="11-nbspnbspscrum-敏捷框架">1.1   Scrum 敏捷框架</h3>
+<p>DevOps 中可以使用敏捷框架开发，常见敏捷框架有 Scrum、Kanban。大部分 IT 企业都使用 Scrum 框架，Scrum 采纳一种迭代和增量式的方法来优化对未来的预测和控制风险。作者著有<a href="https://www.scrumguides.org/">《Scrum 指南》</a>，有中文版可下载，下面简单介绍：
+{% img <a href="https://wpxun.github.io/image/2019/04/scrum_framework.png">https://wpxun.github.io/image/2019/04/scrum_framework.png</a> 700 %}
+Scrum 框架由 Scrum 团队以及与之相关的角色、事件、工件和规则组成，Scrum 的规则把角色、事件和工件组织在一起，管理它们之间的关系和交互。</p>
+<ul>
+<li>团队以及与之相关的角色：Scrum 团队有三个角色：（1）一名 Scrum Master，负责确保成员都能理解并遵循过程，服务于产品负责人，服务于开发团队，服务于组织，类似项目经理；（2）一名产品负责人，负责最大化 Scrum 团队的工作价值；（3）开发团队，负责在每个 Sprint 结束时交付潜在可发布并且“完成”的产品增量。</li>
+<li>事件：Scrum 的核心是 Sprint（短周期），其规定了 4 个正式事件，所有事件都是有时间盒限定的，也就是说每一个事件限制在最长的时间范围内，一旦 Sprint 开始，它的持续时间是固定的，不能缩短或延长，每个 Sprint 都可以被视为一个项目：</li>
+<li>Sprint 计划会议</li>
+<li>每日 Scrum 站会</li>
+<li>Sprint 评审会议</li>
+<li>Sprint 回顾会议</li>
+<li>工件：Scrum 采用了三个主要的工件：Product Backlog 是开发产品的所有需求的优先排列表，Sprint Backlog 包含在一个 Sprint 内的产品 Backlog，燃尽图用来衡量剩余的 Backlog 的工作量。</li>
+</ul>
+<p>Scrum 的使用者必须经常检视 Scrum 的工件和完成 Sprint 目标的进展。</p>
+<h3 id="12-nbspnbspdevops-应用与研究现状">1.2   DevOps 应用与研究现状</h3>
+<p>目前针对 DevOps 的研究主要集中在微服务、持续集成与持续部署、自动化工具的研发等内几个方面。</p>
+<ul>
+<li>
+<p>微服务架构风格是将单体系统程序划分为众多小而自治的服务进行开发的方式，其中每个服务都拥有自己的进程并利用轻量化机制（REST、RPC）进行通信，服务以业务为边界进行分解，可凭借自动化部署机制实现独立部署，不同服务可基于不同技术使用不同的编程语言实现并使用不同的数据存储技术（即去语言和数据中心化）。</p>
+</li>
+<li>
+<p>持续集成、持续交付和持续部署</p>
+</li>
+<li>
+<p>持续集成是代码构建完成</p>
+</li>
+<li>
+<p>持续交付一般还不是最终的生产环境，可能是预生产环境，而且一般是手动部署</p>
+</li>
+<li>
+<p>持续部署是持续交付的更高一个阶段，且通过了自动化测试，并自动化部署到生产环境</p>
+</li>
+<li>
+<p>工具研究和开发
+基础经济决定上层建筑，所以团队采用 DevOps 需要因地制宜。为了让DevOps落地，前期我们还是要从 DevOps 工具链开始实践，搭建一只小的 DevOps 团队来承载一项新的业务，等小团队适用了 DevOps 的管理节奏再推广到大团队。以下是随手记的工具链：
+生产力工具：JIRA、Confluence、Swagger
+部署工具：gitlab、jenkins、docker、k8s、ELK+自动报警机制
+我们是这样进行工作的：产品经理在 JIRA 上撰写文档创建任务，研发 Leader 将任务分配给开发，Swagger 上撰写接口文档协作，开发完成后提交代码，并创建 MR，我们在本地部署了 Jenkins 进行持续集成进行构建和测试，再由其他工程师进行人工评审，通过后并到发布分支，进行预发布，再通过持续集成进行构建，自建 Docker registry 进行构建物管理。构建出的 Docker 镜像在测试环境和预发布环境上依次进行自动化测试及人工测试，测试通过后，使用我们运维自己搭建的工具进行部署管理。</p>
+</li>
+</ul>
+<p>注：为了降低工具的成本和使用门槛，包括 CODING 在内的很多云服务厂商都在做打通全流程的 DevOps 工具链的尝试，希望可以做到让企业开箱即用，低成本的践行 DevOps 理念。不过基本上还是不能满足企业真正的需要。还是得自己搭建。</p>
+<h2 id="2-nbspnbspdevops-流程">2   DevOps 流程</h2>
+<p>这里其实并非 DevOps 所定义的，而是为了用一个更结构化的方式来归类及最佳实践。大体有以下流程，每个流程可以进一步细分为一系列阶段、过程。
+{% img <a href="https://wpxun.github.io/image/2019/04/devops_stream.png">https://wpxun.github.io/image/2019/04/devops_stream.png</a> 500 %}</p>
+<ul>
+<li>规划流程，确定业务需求，制定交付时间表，选定交付方案</li>
+<li>编码流程，特性被细化为故事，特性是使用业务语言描述的需要交付的功能性或非功能性需求。特性分解后的故事就是需要完成的源代码和脚本的技术描述。</li>
+<li>构建流程，编译代码并且没有错误日志，源码评审，单元测试通过，代码合并</li>
+<li>测试流程，执行集成测试和系统测试，服务功能验收测试执行完成</li>
+<li>发布流程，验收测试通过</li>
+<li>部署流程，通过部署流水线尽可能实现以自动化的方式在生产环境中推出新服务</li>
+<li>运维流程，保持服务的稳定可靠，保证业务的连续性</li>
+<li>监控流程，提交的是产品，不是项目</li>
+</ul>
+<h2 id="3-nbspnbsp软件架构">3   软件架构</h2>
+<p>软件框架一般是指单个服务内部的组织形式，软件框架一般是分层的（展示层、服务层、模型层、持久层），并有对类的管理如依赖注入容器等。软件的交互方式有：时间驱动、事件驱动、请求驱动。</p>
+<p>而软件架构是一个或多个服务的交互和部署方式：</p>
+<p>从服务来看：</p>
+<ul>
+<li>传统单体架构：一般是负载均衡调度服务器，服务器连接缓存、文件、数据库，属于单服务架构，但是单服务也可能集群</li>
+<li>面向服务架构：SOA，</li>
+<li>微服务架构：自动化部署、端点智能化、语言和数据去中心化控制。交互方式一般有事件驱动（消息队列）和请求驱动（REST、RPC）</li>
+</ul>
+<p>从部署来看：</p>
+<ul>
+<li>分布式架构：</li>
+<li>底层基础架构：</li>
+<li>日志系统</li>
+<li>监控与报警</li>
+<li>API 网关</li>
+<li>持续集成持续部署服务</li>
+<li>宕机自动切换</li>
+<li>消息中间件服务</li>
+</ul>
+<h2 id="4-nbspnbsp组织架构">4   组织架构</h2>
+<p>今日头条、抖音、西瓜视频……字节跳动的每款 App 都基于三个核心部门（技术、Growth 和商业化，分别负责研发、推广和收入）来发展。在项目开始时，公司会为每个项目设置虚拟项目组，由三个核心部门抽调人员组成，试水成功后直接推广。所有产品共用一条技术线，快速试错。针对 App 类产品的快速迭代的业务特性，字节跳动依据 DevOps 理念对组织架构进行调整和优化，从结构上保证了技术支持业务创新的能力。</p>
+<p>描述云时，常用电网进行类比。当要使用电时，你将设备插到标准电路上并打开开关。你要为你所使用的电付费。大多数情况下，你不用关心各个电力公司是如何发电和传输电力的。</p>
+<p>PaaS：提供一组核心服务（例如，托管 Java Web 应用、Ruby Gem 包、Scala 应用等）。一般与 Ops 部门提供的一些服务相似，Ops 部门通常接管基础设施层的管理并向开发团队提供一组环境选项来托管他们的系统。相比 IaaS，PaaS 的额外抽象着你能够集中精力在系统最重要的部分——应用。你不必处理网络配置、负载均衡器、操作系统、底层的安全补丁等。但这了意味着你要放弃对底层的可见性和控制。如果你是可以接受的，那么使用 PaaS 就很值得。然而，当你之后最终需要额外的控制时，迁移可能非常困难。</p>
+<p>从内存顺序访问1M大概需要 12us，从旋转型磁盘访问项目大概需要 4ms 将磁盘头移动到正确的位置，然后，读取1M数据大约花费 2ms。消息在相同数据中心的一个来回大概需要500us，而在加州和荷兰之间的一个来回大约花费150ms。——DevOps 软件架构师行动指南</p>
+<p>Atlassian 开发两类工具：一类是团队生产力工具，如 JIRA(问题追踪和软件开发)、Confluence Wiki、HipChat 消息和 JIRA 服务台；另一类是开发工具，例如 Bamboo 持续集成服务器和 Bitbucket 托管的存储库。</p>
+<h2 id="5-nbspnbsp软件框架">5   软件框架</h2>
+<p>软件框架一般是指单个服务内部的组织形式，软件本质上就是为了运行逻辑，这种逻辑最终由函数或者方法承担。框架可以认为是一个调度器，设计各种模块以期最适当地运行需求逻辑。</p>
+<h3 id="51-nbspnbspweb-框架">5.1   web 框架</h3>
+<p>web 框架目的暴露方法给用户，用户调用后调用逻辑方法，所以 web 框架提供了 http 各种模块，以最合适的方式让用户编写逻辑方法并与显露的接口对应起来。所以使用 web 框架应用步骤一般就是：</p>
+<ul>
+<li>路由的设计</li>
+<li>路由指向的逻辑句柄的开发</li>
+</ul>
+<p>其他像日志等就是扩展功能了。</p>
+<h3 id="52-nbspnbsp爬虫框架">5.2   爬虫框架</h3>
+<p>爬虫框架目的是从一个网址开始，调用自己的下载、分析、条目处理的方法处理各种数据，包括请求数据、响应数据、条目数据。
+下面是爬虫框架的一种设计，可以看出，框架最核心的就是一个调度器，框架的所有东西都被调度器封装成一个整体。</p>
+<ul>
+<li>框架：说是一个调度器并不为过</li>
+<li>实现：就是实现与能与框架对接的句柄</li>
+<li>启动：启动框架，然后输入参数，运行，输出结果</li>
+</ul>
+<p><img src="https://wpxun.github.io/image/2019/07/capture-frame.png" alt="抓包框架"></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] what-is-scrum. <a href="https://www.scrum.org/resources/what-is-scrum">https://www.scrum.org/resources/what-is-scrum</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/http2/" data-toggle="tooltip" data-placement="top" title="HTTP/2 协议">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/tls/" data-toggle="tooltip" data-placement="top" title="SSL/TLS 协议">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Joomla &#43; Magento 官网加商城 - HOME</title>
+  <meta property="og:title" content="Joomla &#43; Magento 官网加商城 - HOME" />
+  <meta name="twitter:title" content="Joomla &#43; Magento 官网加商城 - HOME" />
+  <meta name="description" content="今天利用 docker 服务器来搭建 Joomla 公司官网和 Magento 商城。它们都是采用了 php 语言写的应用，所以直接用我相关的文章来配置服务器即可：docker 入门与 docker-compose 编配工具。
+说点题外话，如果现在还有小公司在开发什么商城或者官网类型的应用，赶紧放弃，投入到 Joomla 和 Magento 的怀抱吧。这两个已经很成熟，也是开源的，要开发也可以参考这两者或者基于它们去开发，省时省力，也利于成功。">
+  <meta property="og:description" content="今天利用 docker 服务器来搭建 Joomla 公司官网和 Magento 商城。它们都是采用了 php 语言写的应用，所以直接用我相关的文章来配置服务器即可：docker 入门与 docker-compose 编配工具。
+说点题外话，如果现在还有小公司在开发什么商城或者官网类型的应用，赶紧放弃，投入到 Joomla 和 Magento 的怀抱吧。这两个已经很成熟，也是开源的，要开发也可以参考这两者或者基于它们去开发，省时省力，也利于成功。">
+  <meta name="twitter:description" content="今天利用 docker 服务器来搭建 Joomla 公司官网和 Magento 商城。它们都是采用了 php 语言写的应用，所以直接用我相关的文章来配置服务器即可：docker 入门与 docker-compose 编配工具。
+说点题外话，如果现在还有小公司在开发什么商城或者官网类型的应用，赶紧放弃，投入到 Joomla 和 Magento 的怀抱吧。这两个已经很成熟，也是开源的，要开发也可以参考 …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/joomla-magento/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Joomla &#43; Magento 官网加商城</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 20, 2017</time></li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%B7%A5%E5%85%B7/">
+            <i class="fas fa-tag"></i>
+            工具
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>今天利用 docker 服务器来搭建 Joomla 公司官网和 Magento 商城。它们都是采用了 php 语言写的应用，所以直接用我相关的文章来配置服务器即可：<a href="http://blog.jemper.cn/2017/02/08/docker-and-dockerfile/">docker 入门与 docker-compose 编配工具</a>。
+说点题外话，如果现在还有小公司在开发什么商城或者官网类型的应用，赶紧放弃，投入到 Joomla 和 Magento 的怀抱吧。这两个已经很成熟，也是开源的，要开发也可以参考这两者或者基于它们去开发，省时省力，也利于成功。</p>
+<h3 id="joomla">Joomla</h3>
+<p>先来看看 Joomla!3x (Joomla! versions 3.5 and later) 推荐的硬件要求：</p>
+<ul>
+<li>PHP (Magic Quotes GPC off)  5.6 + or 7 +</li>
+<li>MySQL (InnoDB support required) 5.5.3 +</li>
+<li>Nginx 1.8 +</li>
+</ul>
+<p>解压 Joomla 压缩包到 /var/www/joomla，配置目录权限；创建 joomla 数据库。
+nginx 配置文件：</p>
+<pre tabindex="0"><code>server {
+        listen 80;
+        server_name kl.jemper.cn;
+        server_name_in_redirect off;
+
+        access_log /var/log/nginx/joomla.access_log;
+        error_log /var/log/nginx/joomla.error_log info;
+
+        root /var/www/joomla;
+        index index.php index.html index.htm default.html default.htm;
+        # Support Clean (aka Search Engine Friendly) URLs
+        location / {
+                try_files $uri $uri/ /index.php?$args;
+        }
+
+        # deny running scripts inside writable directories
+        location ~* /(images|cache|media|logs|tmp)/.*\.(php|pl|py|jsp|asp|sh|cgi)$ {
+                return 403;
+                error_page 403 /403_error.html;
+        }
+
+        location ~ \.php$ {
+            fastcgi_pass  alpine;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+
+        # caching of files
+        location ~* \.(ico|pdf|flv)$ {
+                expires 1y;
+        }
+
+        location ~* \.(js|css|png|jpg|jpeg|gif|swf|xml|txt)$ {
+                expires 14d;
+        }
+
+}
+</code></pre><p>其安装很简单，直接打开域名就可以了，点击下一步就基本可以安装成功。</p>
+<h4 id="joomla-的思想">Joomla 的思想</h4>
+<h5 id="网站结构">网站结构：</h5>
+<ul>
+<li>一个网站由各个菜单组成，一个菜单即是一个页面，比如首页页面，业务页面，集团页面，集团下的子页面等等；</li>
+<li>一个菜单由各个模块组成，一个模块即是一块内容，比如首页从上到下由“苦干实干提质量 建设一流能源公司”、四栏信息栏、轮播图、码头|供油船|储油库、头版文章列表、产品与服务和辐射区域等模块组成；</li>
+<li>一个模块由各种图片，文章，文字组成，比如轮播图由多张图片组成，头版文章列表由文章组成；
+**所以，管理菜单即是管理网站结构。**后台导航处有菜单下拉列表，分为菜单（这里的菜单即是菜单的分类）和各菜单分类下包含的菜单项。</li>
+</ul>
+<h5 id="网站内容">网站内容：</h5>
+<ul>
+<li>有了网站结构，相当于建好了一座楼的框架，接下来就是填充内容，内容分为两种：文章和图片。</li>
+<li>**所以，管理内容即是管理网站显示的信息。**后台导航处有内容下拉列表，分为分类管理（即文章的分类）、各文章分类下包含的文章（即文章管理）和媒体管理（即是图片管理），其中各篇文章可以标星，就变成了头版文章。</li>
+</ul>
+<h5 id="相关的认识">相关的认识</h5>
+<ul>
+<li>存在一个菜单其菜单项类型是文章列表相关的排版，则该文章分类下的所以有文章都会在该菜单页面中打开。</li>
+<li>一套模板，选择某一 layout 或所有，每个 layout 有固定好的 position。</li>
+</ul>
+<h3 id="magento">Magento</h3>
+<p>先来看看 Magento 推荐的硬件要求：
+Magento 需要一些额外的扩展，在安装的时候进行检测，可以根据提示安装扩展。</p>
+<pre tabindex="0"><code>rm -rf /var/www/magento/*
+tar -xzf Magento-CE-2.1.5_sample_data-2017-02-20-05-42-11.tar.gz -C /var/www/magento/
+cp source_zh_CN.csv /var/www/magento/
+chmod -R 777 /var/www/magento
+</code></pre><p><a href="http://107.170.242.99/download.php">语言文件下载</a>
+执行</p>
+<pre tabindex="0"><code>bin/magento i18n:pack -m replace -d source_zh_CN.csv  zh_Hans_CN
+</code></pre><p>然后更新缓存却可，要注意区别 zh_Hans_CN、zh_Hant_HK、zh_Hant_TW</p>
+<h3 id="相关连接">相关连接</h3>
+<p><a href="http://docs.magento.com/m2/ce/user_guide/getting-started.html">官方文档</a>
+<a href="http://devdocs.magento.com/guides/v2.0/install-gde/trouble/php/tshoot_70pct.html">Installation stops at about 70%</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/go-conversions/" data-toggle="tooltip" data-placement="top" title="go 类型转换">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/git-source/" data-toggle="tooltip" data-placement="top" title="git 源码安装">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>日记——从现实世界看计算机世界（2） - HOME</title>
+  <meta property="og:title" content="日记——从现实世界看计算机世界（2） - HOME" />
+  <meta name="twitter:title" content="日记——从现实世界看计算机世界（2） - HOME" />
+  <meta name="description" content="最近在思考计算机的发展方向，它们跟现实世界的关系是紧密的、有迹可循的，架构设计过程中理应从社会活动中得到启示。">
+  <meta property="og:description" content="最近在思考计算机的发展方向，它们跟现实世界的关系是紧密的、有迹可循的，架构设计过程中理应从社会活动中得到启示。">
+  <meta name="twitter:description" content="最近在思考计算机的发展方向，它们跟现实世界的关系是紧密的、有迹可循的，架构设计过程中理应从社会活动中得到启示。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/hello-world/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">日记——从现实世界看计算机世界（2）</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>May 13, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E6%97%A5%E8%AE%B0/">
+            <i class="fas fa-folder"></i>
+            日记
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>最近在思考计算机的发展方向，它们跟现实世界的关系是紧密的、有迹可循的，架构设计过程中理应从社会活动中得到启示。</p>
+<h2 id="nbspnbsp组件">  组件</h2>
+<p>世界上千千万万的事件，电视、空调、保湿杯、书桌、手机、房子、玩具等，它们通常都是一个完整的个体，但是他们本质上就是由各个组件组装形成的，大部分企业将它组装好再出售，比如将空调组装成一个整体，并和安装安调的服务二次组装整体出售；而像宜家、电商大件商品偏向提供所有零部件，让用户自行安装。太多的太多都可以看出组装的身影，只有极少的东西才是一体的比如玻璃杯、陶瓷、水果，这些东西看不出组装的痕迹，我只能把它们归类到不可拆分的东西部分。</p>
+<p>但因为计算机世界是依据于现实世界而存在或设计的，其设计理念也必然适用这种现象，我们的库组件，模块组件，微服务的服务组件都是往这方面发展，这两种组件的区别只是组件的调用方式，但组件化越来越为人看好，而不是单体程序。</p>
+<h2 id="nbspnbsp文件">  文件</h2>
+<p>蒙昧时代跨入文明时代的象征一般认为两个：金属工具的作用和文字的发明。文字其实就是知识的记载工具，文字未发明之前只能靠记忆，后来人类用绳子打结来记录一件事件，但这种记录本质上也是记忆。而记忆的缺点就是无法传承、数据量有限、容易出错。</p>
+<p>在计算机世界里，人类和计算机交流的协议就是类似人类与人类交流的文字。协议是双方通信的一个约定，比如传过来的一段字符流数据，其中第1个字节表示什么，第2个字节表示什么，类似这样的约定。编程语言是协议，通信要协议（TCP是二进制协议，HTTP是文本协议），运行要协议。然而只有协议还不够，就如同只有文字还不够一样，还要知道怎么用这些协议去编写程序，描述操作，就如同用文字描述论文、描述科技、描述知识一样；以配置一个软件为例，先要安装，要点这个确定那个确定，要修改配置，要运行，要开机运行，要日志输出配置等，因此开发人员就要按照经验一步步输入指令操作（当然可以自己记录成流程文档，以后复制执行），但其本质上还是没有逃脱记忆的处理方式，于是 unix 提出了“一切皆文件”，Plan9 计划更是按照这一标准设计，到现在大大小小的工具软件都提出了这一要求，就是文件化。发展到现在，有一个词就是：xx即代码；基础设施即代码(vagrantfile)、流水线即代码(jenkinsfile)、依赖即代码(glide)、容器部署即代码(dockerfile)、Kubernetes 资源配置文件，这些努力无非就是记忆电子化，变成一篇一篇的“论文”，不需要再依靠人的记忆；总之所有的流水线操作都应该往自动化方向发展。</p>
+<h2 id="nbspnbsp限制">  限制</h2>
+<p>法国大革命口号是：“自由、平等、博爱”。孙中山的三民主义：“民族、民权、民生”。都有交织的地方，一般来说民权强调自由，民生着重平等；人类社会中有相对的平等，但不可能有绝对的自由，统治管理的目的就是“限制”人的自由，法律条文本质上也是对“限制“做出明文规定。以驾驶证来说，没有驾驶证限制你驾车，驾驶证的车型限制你开的车的类型，斑马线限制你走的路线。如果没有这些限制，那就是原始社会了。历来中国素被称为“礼乐之邦”，“礼”就是规范人的行为；发展到现代文明，对人的限制变得宽松——更自由，限制的政策不歧视——更平等，但限制一直存在。</p>
+<p>计算机也是由规则组成，否则无法与计算机交流，所谓规则也是限制。架构就是限制，限制源码位置，限制依赖，限制通信方式等；三种编程范式也是限制，它限制我们的控制流和数据流：结构化编程限制了控制权的直接转移，面向对象编程限制了控制权的间接转移，函数式编程限制了赋值。</p>
+<h2 id="nbspnbsp能集中控制的要集中需分散配置的要分散">  能集中控制的要集中，需分散配置的要分散</h2>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/microservice-architecture-difficult/" data-toggle="tooltip" data-placement="top" title="微服务架构">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/kubernetes-resource/" data-toggle="tooltip" data-placement="top" title="Kubernetes 资源">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

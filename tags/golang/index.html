@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Golang - HOME</title>
+  <meta property="og:title" content="Golang - HOME" />
+  <meta name="twitter:title" content="Golang - HOME" />
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/tags/golang/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link href="/tags/golang/index.xml" rel="alternate" type="application/rss+xml" title="HOME" />
+  <link href="/tags/golang/index.xml" rel="feed" type="application/rss+xml" title="HOME" />
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <section class="list term-list">
+      <article class="article">
+        <a href="/posts/assembly/" class="article-titles">
+          <h2 class="article-title">汇编语言</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>August 27, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/c/">
+              <i class="fas fa-folder"></i>
+              C
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/c/">
+              <i class="fas fa-tag"></i>
+              C
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E7%BC%96%E7%A8%8B/">
+              <i class="fas fa-tag"></i>
+              编程
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>图灵在数理逻辑方面的理论研究，间接地创造了机器指令设计的基本方法，计算机界最高奖项也因此称图灵奖；现代计算机之父冯诺依曼，于1945年提出了“存储程序通用电子计算方案”，提出了指令数据存储思想，并在 1951 年成功研制出了冯诺依曼结构的 IAS 计算机（现在计算机的原型机），奠定了现代计算机的微体系设计和程序结构设计。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/assembly/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-command/" class="article-titles">
+          <h2 class="article-title">go command 命令</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>August 16, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>/usr/local/go/bin 下提供了三个命令 go、gofmt、godoc。主命令 Go 下分二级和三级子命令，本文档将迭代完善，争取列出所有功能点，目前还处于更新状态。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-command/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-log/" class="article-titles">
+          <h2 class="article-title">go log 包</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>August 6, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <h2 id="1-nbspnbsp错误相关的概念">1   错误相关的概念</h2>
+<ul>
+<li><strong>编译错误</strong>：build的时候就报错，由于考虑不周或输入错误导致程序异常（Exception），比如数组越界访问，除数为零，堆栈溢出等等。是大意疏忽。</li>
+<li><strong>运行错误</strong>：run的时候才报错，由于程序设计思路的错误导致程序异常或难以得到预期的效果。运行错误可以是预期的，也可以是不可预期的，对于可预期的不要用 panic，panic 恐慌机制是意料之外，如果不恢复（recover）就会导致宕机。**宕机（panic）**不是一件很好的事情，可能造成体验停止、服务中断，就像没有人希望在取钱时遇到 ATM 机蓝屏一样。但是，如果在损失发生时，程序没有因为宕机而停止，那么用户将会付出更大的代价，这种代价可以是金钱、时间甚至生命。因此宕机有时是一种合理的止损方法。</li>
+<li><strong>error错误</strong>：错误是业务过程的一部分，而异常不是。错误是可预期的结果，error错误机制是意料之中。</li>
+</ul>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-log/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-concurrency-difficult/" class="article-titles">
+          <h2 class="article-title">并发的复杂性</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 14, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%B9%B6%E5%8F%91/">
+              <i class="fas fa-tag"></i>
+              并发
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>本文谈到的并发是指单程序、单节点并发，区别于并发系统，并发系统的一个更加流行的词是分布式系统，并发系统更有可能是并行的，因为其中的多个程序一般可以同时在不同的硬件环境上运行。分布式系统可以看我另一篇文章<a href="/2019/03/17/microservice-architecture-difficult/">《微服务架构的复杂性》</a>。
+并发指的是多个任务几乎被同时发起运行，但是在同一时刻这些任务不一定都处于运行状态，这取决于 CPU 核心或者 CPU 数量。并行指的是在同一时刻可以有多个任务真正地同时运行。并行运行的必要条件是多 CPU 核心或者多 CPU 的计算环境。
+在功能开发中，非并发程序往往未能充分利用服务器的性能，为用户提供服务基本都是排队处理。而并发程序有时可以代替集群，其性能提高对整个系统是至关重要的作用，如果我们将单个节点的性能提高 30%，或者甚至超过 100%，那么我们可以节省多少台机器呢？不过同时并发却带来了编程的复杂性。不同程序单元之间的远程过程调用可以参考另一篇文章<a href="/2019/03/12/go-network/">《go 网络编程》</a>。Go 语言的特点是通过内部调度可以最大限度地利用单机的计算能力。然而在分布式计算方面，它本身其实并没有提供什么现成的东西，还需要使用一些第三方的框架或工具，或者自己编写和搭建。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-concurrency-difficult/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-io/" class="article-titles">
+          <h2 class="article-title">go I/O 操作</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 13, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/io/">
+              <i class="fas fa-tag"></i>
+              io
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>理解 I/O 的一些概念问题可以先看另一篇文章<a href="/2019/03/11/c-socket/">《C Socket 编程》</a>
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-io/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-network/" class="article-titles">
+          <h2 class="article-title">go 网络编程</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 12, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E7%BD%91%E7%BB%9C/">
+              <i class="fas fa-tag"></i>
+              网络
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/socket/">
+              <i class="fas fa-tag"></i>
+              Socket
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/rpc/">
+              <i class="fas fa-tag"></i>
+              RPC
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/http/">
+              <i class="fas fa-tag"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 <a href="/2019/03/10/tcp-protocol/">TCP 传输原理</a>和 <a href="/2019/03/11/c-socket/">C Socket 编程</a>，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-network/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-context/" class="article-titles">
+          <h2 class="article-title">go context 包</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 8, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/go%E5%8C%85/">
+              <i class="fas fa-tag"></i>
+              Go包
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-context/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-time/" class="article-titles">
+          <h2 class="article-title">go time 包</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 8, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/go%E5%8C%85/">
+              <i class="fas fa-tag"></i>
+              Go包
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <h3 id="时间概念">时间概念</h3>
+<p>时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。</p>
+<ul>
+<li>时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。</li>
+<li>时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。</li>
+<li>时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。</li>
+<li>显示格式：这部分没有逻辑问题，纯粹是视图显示。</li>
+</ul>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-time/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-conversions/" class="article-titles">
+          <h2 class="article-title">go 类型转换</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>August 18, 2018</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>Go Conversions 和 类型断言是两种类型转换方式。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-conversions/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+    </section>
+    
+  </div>
+
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-rsslink">
+      <a href="/tags/golang/index.xml" type="application/rss+xml" target="_blank" title="RSS">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>go 网络编程 - HOME</title>
+  <meta property="og:title" content="go 网络编程 - HOME" />
+  <meta name="twitter:title" content="go 网络编程 - HOME" />
+  <meta name="description" content="本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 TCP 传输原理和 C Socket 编程，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。">
+  <meta property="og:description" content="本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 TCP 传输原理和 C Socket 编程，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。">
+  <meta name="twitter:description" content="本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 TCP 传输原理和 C Socket 编程，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/go-network/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">go 网络编程</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 12, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/golang/">
+            <i class="fas fa-folder"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/golang/">
+            <i class="fas fa-tag"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E7%BD%91%E7%BB%9C/">
+            <i class="fas fa-tag"></i>
+            网络
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/socket/">
+            <i class="fas fa-tag"></i>
+            Socket
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/rpc/">
+            <i class="fas fa-tag"></i>
+            RPC
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/http/">
+            <i class="fas fa-tag"></i>
+            HTTP
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 <a href="/2019/03/10/tcp-protocol/">TCP 传输原理</a>和 <a href="/2019/03/11/c-socket/">C Socket 编程</a>，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。</p>
+<h2 id="1-nbspnbspgo-http-原理">1   Go HTTP 原理</h2>
+<h3 id="11-nbspnbsp服务端">1.1   服务端</h3>
+<h4 id="111-nbspnbsp三层逻辑">1.1.1   三层逻辑</h4>
+<p>先说明一下，这种分类仁者见仁，智者见智，能说清楚脉络就是好方法。</p>
+<ul>
+<li><strong>ServeMux</strong> 类型：有两大类方法：
+(1) HandleFunc()、Handle() 创建其属性，m: map[string]muxEntry 路由和函数执行体；
+(2) ServeHTTP()、Handler()、handler() 接收到请求后对 m 的路由查找，找到函数执行体；</li>
+<li><strong>Server</strong> 类型：包含了 ServeMux 这个 Handler 接口类型，ListenAndServe() 和 Serve() 方法主要负责监听和接口请求，并启用 goroutine 调用下面 conn 类型的 serve()；</li>
+<li><strong>conn</strong> 类型：包含了 Server 类型，serve() 方法，先通过 serverHandler 类型的 ServeHTTP() 方法 查找到 ServeMux，调用 ServeMux 的（2）相关方法找到函数执行体（也是一个 ServeHTTP() 方法）并执行。
+这一下就提到三个 ServeHTTP() 方法，功能都是不一样的，第一个是用于查找 ServeMux，第二个是用于查找函数执行体，第三个是要执行的函数执行体，注意不要混淆了。</li>
+</ul>
+<p>一言以蔽之，先保存路由和函数执行体映射（ServeMux 准备阶段）；开启监听和等待连接，接受连接请求并新开一个 goroutine（Server 等待连接阻塞，承上启下）；通过查找映射找到函数执行体（conn 执行阶段）。
+其中的监听、等待连接、接受连接是 Go 语言的实现，底层调用了 C 的接口。</p>
+<h3 id="112-nbspnbsp细节剖析">1.1.2   细节剖析</h3>
+<p>上面的三个类型中其实就是一层一层包含，里面通过一些重点内核函数（如监听连接等）或者辅助函数（如 serverHandler 等）实现该层的功能或逻辑。
+在调用 <code>func ListenAndServe(addr string, handler Handler)</code> 函数的的时候，第二个就是可以自定义 Handler，也可以传 nil 表示使用 http.DefaultServeMux 进行处理，而下面是就设置 http.DefaultServeMux 中的 m 属性的方式：</p>
+<pre tabindex="0"><code>//句柄pattern1  通过一个结构体
+type Mux struct{}
+
+func (Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, &#34;welcome to china&#34;)
+}
+
+//句柄pattern2 通过一个函数
+type HandlerFunc func(http.ResponseWriter, *http.Request)
+
+func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	f(w, r)
+}
+
+//句柄pattern3 这其实和pattern2一样，只是调用的不是自定义的HandlerFunc，而是http.HandlerFunc
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, &#34;hello world&#34;)
+}
+
+func httpServe(){
+	http.Handle(&#34;/pattern1&#34;, new(Mux))
+	http.Handle(&#34;/pattern2&#34;, HandlerFunc(IndexHandler))
+	http.Handle(&#34;pattern3&#34;, http.HandlerFunc(IndexHandler))
+	http.HandleFunc(&#34;/pattern4&#34;, IndexHandler)
+	http.ListenAndServe(&#34;:8000&#34;, nil)
+}
+</code></pre><h3 id="12-nbspnbsp客户端">1.2   客户端</h3>
+<p>客户端的实现方式有很多种，下面我只实现两种。另外，理解 go 的 HTTP 最佳的方式是理解原代码，理解原代码的方式是进行服务端调试，要进行服务端的调度需要从客户端请求开始。</p>
+<h4 id="121-nbspnbsp基于-tcp-的-http-客户端">1.2.1   基于 TCP 的 HTTP 客户端</h4>
+<pre tabindex="0"><code>tcpAddr, err := net.ResolveTCPAddr(&#34;tcp4&#34;, &#34;localhost:8000&#34;)
+conn, err := net.DialTCP(&#34;tcp&#34;, nil, tcpAddr)
+_, err = conn.Write([]byte(&#34;GET /pattern2 HTTP/1.1\r\nHost: localhost:8000\r\n\r\n&#34;))
+_ = conn.CloseWrite() //发送 FIN
+result, err := ioutil.ReadAll(conn)
+</code></pre><h4 id="122-nbspnbsp基于-httpclient-的-http-客户端">1.2.2   基于 http.Client 的 HTTP 客户端</h4>
+<pre tabindex="0"><code>req, _ := http.NewRequest(&#34;GET&#34;, &#34;http://localhost:8000/pattern2&#34;, nil)
+client := &amp;http.Client{}
+resp, err := client.Do(req)
+result, err := ioutil.ReadAll(resp.Body)
+</code></pre><h2 id="2-nbspnbsprpc">2   RPC</h2>
+<h3 id="21-概述">2.1 概述</h3>
+<p>RPC 是远程过程调用，或者说是远程方法调用、远程函数调用，多了一个“远程”，区别于同一进程空间内的方法或者函数调用，服务调用方须以网络的形式进行远程调用，是服务化框架的核心之一。
+TCP/IP 和 HTTP 我把他们定位为实现数据传输，是协议设计。
+RPC 和 Restful 我把他们定位为在数据传输基础上提供服务，是框架设计。
+Restful 是基于 HTTP 的，但 RPC 可以基于 HTTP，也可以基于 TCP/IP。换句话说，HTTP 是面向“事先没有沟通”的普通用户，Restful 一般是面向“事先有简单沟通”的程序员（有后端的，但更多是前端），相对来说还是存在通用性设计；而 RPC 是面向“事先有良好沟通”的程序员（后端），所以可以去掉一些通用设计而采用精准功能设计，从而提高效率。
+打个比喻，Restful 或者 HTTP 犹如有界面操作系统，事先用户简单学习甚至完全不需要学习其使用方式，用户自己摸索就能使用它；RPC 犹如命令操作系统，直接提供命令给你操作，前提是你得来学习命令或者函数操作方式，去掉“中间商赚差价”，所以效率提高了。</p>
+<p>Go 语言标准包中已经提供了对 RPC 的支持，而且支持三个级别的 RPC：TCP(使用的标准包 net/rpc)、HTTP(使用的标准包 net/http、net/rpc)、JSONRPC(使用的标准包 net/rpc、net/rpc/jsonrpc)。但 Go 语言的 RPC 包是独一无二的 RPC，只支持 <strong>Go 语言开发的服务器与客户端之间的交互</strong>，因为在内部，它们采用了 Gob 来编码。所以如果是跨语言的，可以采用开源的 RPC，比如 gRPC，基于 HTTP，它采用 protocol 编码，支持很多语言，如 Java、Go、C++ 和 PHP 等。
+下面我只讲解实现基于 TCP 的 Go 标准包 RPC（说明这个 RPC 是用 TCP 传输，且用了 Gob 编码），服务端和客户端都使用标准包 net/rpc。</p>
+<h3 id="22-nbspnbsp基于-tcp-的标准包-rpc">2.2   基于 TCP 的标准包 RPC</h3>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/go-io/" data-toggle="tooltip" data-placement="top" title="go I/O 操作">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/c-socket/" data-toggle="tooltip" data-placement="top" title="C Socket 编程">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

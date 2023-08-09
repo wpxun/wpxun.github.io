@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>go time 包 - HOME</title>
+  <meta property="og:title" content="go time 包 - HOME" />
+  <meta name="twitter:title" content="go time 包 - HOME" />
+  <meta name="description" content="时间概念
+时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。
+
+时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。
+时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。
+时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。
+显示格式：这部分没有逻辑问题，纯粹是视图显示。
+">
+  <meta property="og:description" content="时间概念
+时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。
+
+时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。
+时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。
+时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。
+显示格式：这部分没有逻辑问题，纯粹是视图显示。
+">
+  <meta name="twitter:description" content="时间概念
+时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。
+
+时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。
+时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。
+时区：时间点有时区差异，同一个时间戳 …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/go-time/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">go time 包</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 8, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/golang/">
+            <i class="fas fa-folder"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/golang/">
+            <i class="fas fa-tag"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/go%E5%8C%85/">
+            <i class="fas fa-tag"></i>
+            Go包
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <h3 id="时间概念">时间概念</h3>
+<p>时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。</p>
+<ul>
+<li>时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。</li>
+<li>时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。</li>
+<li>时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。</li>
+<li>显示格式：这部分没有逻辑问题，纯粹是视图显示。</li>
+</ul>
+<h3 id="time-包使用">time 包使用</h3>
+<ol>
+<li><strong>time.Time：它封装了时间点和时区</strong></li>
+</ol>
+<pre tabindex="0"><code>type Time struct {
+	// 时间点的实现
+	wall uint64
+	ext  int64
+	// 时区的实现
+	loc *Location
+}
+</code></pre><p>所以，可以对时间点进行的操作包括（不限于）：</p>
+<ul>
+<li>取得时间点，Now() 返回 Time，其实它是有时区的；Unix() 返回整数型，没有时区概念；</li>
+<li>加减时间段 Add(时间段)，可以使用正负；</li>
+<li>减时间点算时间差 Sub(时间点)、After(时间点)、Before(时间点)、Equal(时间点)，注意没有加时间点的方法；另外还提供了 Since(时间点)、Until(时间点) 等函数对参数时间点和当前时间点做减法运算；</li>
+<li>设置时区，默认是 local，UTC() 和 In() 等都是设置时区的。</li>
+</ul>
+<ol start="2">
+<li><strong>定时相关的接口和函数</strong></li>
+</ol>
+<ul>
+<li>Timer 接口，包含有 Stop()、Reset() 方法，包含的函数有 After()，返回通道（阻塞），所以无法提前停止；AfterFunc() ，返回 Timer，后期可以用 Stop() 提前停止；还有 NewTimer() 函数也是返回 Timer，故也可以提前停止；</li>
+<li>Ticker 接口，也是包含有 Stop() 方法，包含有函数有 Tick() 和 NewTicker()，前者返回通道（阻塞），无法提前停止，如果需要提前停止，只能调用后者，因为它返回 Ticker。</li>
+</ul>
+<ol start="3">
+<li>
+<p><strong>时间段</strong>的操作比较简单，暂不举例。</p>
+</li>
+<li>
+<p><strong>格式化</strong>的操作也比较简单，暂不举例。</p>
+</li>
+</ol>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/go-context/" data-toggle="tooltip" data-placement="top" title="go context 包">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/go-conversions/" data-toggle="tooltip" data-placement="top" title="go 类型转换">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

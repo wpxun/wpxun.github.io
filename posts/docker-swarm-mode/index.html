@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Docker Swarm 集群 - HOME</title>
+  <meta property="og:title" content="Docker Swarm 集群 - HOME" />
+  <meta name="twitter:title" content="Docker Swarm 集群 - HOME" />
+  <meta name="description" content="概括来说，Swarm 有两个核心组件：
+
+企业级的 Docker 安全集群
+微服务应用编排引擎
+">
+  <meta property="og:description" content="概括来说，Swarm 有两个核心组件：
+
+企业级的 Docker 安全集群
+微服务应用编排引擎
+">
+  <meta name="twitter:description" content="概括来说，Swarm 有两个核心组件：
+
+企业级的 Docker 安全集群
+微服务应用编排引擎
+">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/docker-swarm-mode/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Docker Swarm 集群</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 16, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/docker/">
+            <i class="fas fa-folder"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/docker/">
+            <i class="fas fa-tag"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%AE%B9%E5%99%A8/">
+            <i class="fas fa-tag"></i>
+            容器
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp环境">1   环境</a></li>
+    <li><a href="#2-nbspnbsp集群初始化">2   集群初始化</a></li>
+    <li><a href="#3-nbspnbsp创建服务">3   创建服务</a></li>
+    <li><a href="#4-nbspnbspscale-规模">4   Scale 规模</a></li>
+    <li><a href="#5-nbspnbsp滚动升级">5   滚动升级</a></li>
+    <li><a href="#6-nbspnbsp节点管理">6   节点管理</a>
+      <ul>
+        <li><a href="#61-nbspnbsp新增节点">6.1   新增节点</a></li>
+        <li><a href="#62-nbspnbsp更新节点">6.2   更新节点</a></li>
+        <li><a href="#63-nbspnbsp删除节点">6.3   删除节点</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-nbspnbsp删除服务">7   删除服务</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>概括来说，Swarm 有两个核心组件：</p>
+<ul>
+<li>企业级的 Docker 安全集群</li>
+<li>微服务应用编排引擎</li>
+</ul>
+<h2 id="1-nbspnbsp环境">1   环境</h2>
+<p>Swarm 对主机（节点）的要求并不高，我在4台 f1-micro（1 个 vCPU，0.6 GB 内存）+ 10G磁盘上操作，开启三个小型的服务共40个副本（采取逐步调整 scale，每个副本 13M 左右，平均一个节点10个副本），副本太多容易导致 Leader 节点编排的时候 Docker 服务宕掉，所以 Leader 性能要好一点。总之对学习来说并不存在环境障碍。</p>
+<ul>
+<li>用四台机器进行部署：</li>
+</ul>
+<pre tabindex="0"><code>姓名        地区                        内部 IP
+binke01    asia-northeast1-a           10.146.0.2 (nic0)   
+binke01-1  asia-northeast1-a           10.146.0.3 (nic0)   
+binke01-2  asia-northeast1-a           10.146.0.4 (nic0)   
+binke01-3  asia-northeast1-a           10.146.0.5 (nic0)   
+</code></pre><ul>
+<li>开放端口，一般云服务器内网不需要此操作</li>
+</ul>
+<pre tabindex="0"><code>firewall-cmd --permanent --add-port=2377/tcp
+firewall-cmd --permanent --add-port=7946/tcp
+firewall-cmd --permanent --add-port=7946/udp
+firewall-cmd --permanent --add-port=4789/tcp
+firewall-cmd --reload
+</code></pre><ul>
+<li>准备应用代码，我是用 Go 写的一个小应用，一共两个版本，只是把“this is version 1”中的改为2即可，build 完后必须推到 hub 库，创建服务的时候节点在本地查找镜像，没找到会去拉取；代码读取容器的 HOSTNAME（容器的 HOSTNAME 其实就是容器的 ID），可以检验基于 Ingress 的容器负载均衡：</li>
+</ul>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;main.go
+package main
+
+import (
+    &#34;fmt&#34;
+    &#34;net/http&#34;
+    &#34;os&#34;
+)
+
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+    host := os.Getenv(&#34;HOSTNAME&#34;)
+    fmt.Fprintln(w, &#34;hello world &#34;+ host +&#34;, this is version 1.&#34; )
+}
+
+
+func main()  {
+    http.Handle(&#34;/pattern&#34;, http.HandlerFunc(IndexHandler))
+    http.ListenAndServe(&#34;:80&#34;, nil)
+}
+EOF
+</code></pre><ul>
+<li>编写 Dockerfile，采用多阶段构建方式，使得镜像只有 12.9MB</li>
+</ul>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;Dockerfile
+FROM golang:1.12.4-alpine3.9  AS front
+COPY main.go /go/src/github.com/wpxun/onlygo/
+RUN set -xe &amp;&amp; go install github.com/wpxun/onlygo
+
+FROM alpine:3.9
+ENV GOM_VERSION   1904.1
+COPY --from=front /go/bin /go/bin/
+EXPOSE 80
+CMD [&#34;/go/bin/onlygo&#34;]
+EOF
+</code></pre><h2 id="2-nbspnbsp集群初始化">2   集群初始化</h2>
+<p>只能在管理节点上初始化 Swarm 集群。我把 binke01-1 节点初始化：</p>
+<pre tabindex="0"><code>&gt; docker swarm init
+Swarm initialized: current node (qr7i763tagufpcyn4qf37b5fs) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-33x2n6mrudf0x4s4j3zque3lec9c2dq5jeiaj17b7yujuaklns-ayc7mxqui49frdgb8hadcmmyf 10.146.0.3:2377
+
+To add a manager to this swarm, run &#39;docker swarm join-token manager&#39; and follow the instructions.
+</code></pre><p>按上面的提示把其它节点 join 进来，查看节点列表：</p>
+<pre tabindex="0"><code>&gt; docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+0kjqucshibpm35zhq7kizldp0     binke01             Ready               Active                                  18.09.3
+qr7i763tagufpcyn4qf37b5fs *   binke01-1           Ready               Active              Leader              18.09.5
+186b6a4dpvy8alzdfuf3jtrv4     binke01-2           Ready               Active                                  18.09.5
+ogvwkwq0zxw3s05shey2ruzqa     binke01-3           Ready               Active              Reachable           18.09.5
+</code></pre><p>其中 * 表示当前命令所在的节点，工作节点不能查看或者管理集群状态（node、service 等子命令不能用）。
+Docker Swarm 推荐奇数个管理节点（1，3，5，不要大于7个）。</p>
+<p>创建一个覆盖网络（即驱动类型：overlay）
+bridge 是 single-host network，其 SCOPE 只能是 local；而 overlay 是 multi-host network，其 SCOPE 则是 swarm。且只能在 manager node 创建，此时只有当前的 Swarm 管理节点可见，其它节点如果有容器接入该网络后也是可见的。
+如果是 docker-compose 创建的，其名称是“目录名_网络名”。</p>
+<pre tabindex="0"><code>&gt;docker network create -d overlay onlygo-net
+fe1wzq8dljvcqzd8o5vhw7bma
+
+&gt; docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+079de4d69078        bridge              bridge              local
+41c3503514c2        docker_gwbridge     bridge              local
+e6f7a28b3b05        host                host                local
+njzh016c5qrl        ingress             overlay             swarm
+cf1660673a83        none                null                local
+fe1wzq8dljvc        onlygo-net          overlay             swarm
+</code></pre><h2 id="3-nbspnbsp创建服务">3   创建服务</h2>
+<p>无论哪种模式，即使主节点（Leader）挂掉，其它没挂掉的节点还是可以访问。而挂掉的节点其 IP 一定不能访问。</p>
+<ol>
+<li>入站模式（Ingress Mode），也是默认的模式，是在 Swarm 中的所有节点开放端口：</li>
+</ol>
+<ul>
+<li>即使节点上没有服务的副本，通过 IP 也可以访问，所有的节点都配置有映射，因此会将请求转发给运行有服务副本的节点，相当有了负载的能力，即基于 Ingress 的容器负载均衡；当然如果某个节点 Down 掉，则不可能再访问那个节点的 IP。</li>
+<li>一个节点可以有多个副本，如下的 binke01-2 节点有两个副本</li>
+<li>通过端口显示（为空或 80/tcp）就可以看出是服务提供统一端口，单引擎和 Swarm 端口冲突时不管谁先启动，以 Swarm 优先，即如果宿主机端口已经占用，docker 会把它分配回给 Swarm，从这一点看如果已经是 Swarm 就不建议同时作为单引擎使用了，当然如果端口不冲突那是可以共用的。</li>
+</ul>
+<pre tabindex="0"><code>&gt; docker service create --name onlygo-svc -p 80:80 --replicas 5 --network onlygo-net wpxun/onlygo:v1
+
+# PORTS 看出服务提供端口
+&gt; docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE               PORTS
+zai8apyhcv0c        onlygo-svc          replicated          5/5                 wpxun/onlygo:v1     *:80-&gt;80/tcp
+
+# PORTS 看出节点并没有提供端口
+&gt; docker service ps onlygo-svc
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
+asda8ds4ae70        onlygo-svc.1        wpxun/onlygo:v1     binke01-2           Running             Running 31 seconds ago
+0dpg2041gjhv        onlygo-svc.2        wpxun/onlygo:v1     binke01-2           Running             Running 31 seconds ago
+h0a302tciz4d        onlygo-svc.3        wpxun/onlygo:v1     binke01-3           Running             Running 32 seconds ago
+c4zs50l7ji3m        onlygo-svc.4        wpxun/onlygo:v1     binke01-1           Running             Running 35 seconds ago
+lm5rvn4oc2h6        onlygo-svc.5        wpxun/onlygo:v1     binke01             Running             Running 32 seconds ago
+
+&gt; docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES
+6389302152c1        wpxun/onlygo:v1     &#34;/go/bin/onlygo&#34;    About a minute ago   Up About a minute   80/tcp              onlygo-svc.4.c4zs50l7ji3mw4ate9iz7m6bv
+</code></pre><ol start="2">
+<li>主机模式（Host Mode），即仅在运行有容器副本的节点上开放端口：</li>
+</ol>
+<ul>
+<li>节点上如果没有服务的副本，就不能通过 IP 访问，节点不配置映射，相当于没有负载</li>
+<li>一个节点最多只能有一个副本，如果副本多于节点，会提示 no suitable node (host-mode port already in use on 4 nodes)</li>
+<li>通过端口显示（*:80-&gt;80/tcp 和 0.0.0.0:80-&gt;80/tcp）就可以看出是各节点各自提供端口；另外还要防止端口冲突：Bind for 0.0.0.0:80 failed: port is already allocated</li>
+</ul>
+<pre tabindex="0"><code>&gt; docker service create --name onlygo-svc --publish published=80,target=80,mode=host --replicas 5 --network onlygo-net wpxun/onlygo:v1
+
+# PORTS 看出节点提供端口
+&gt; docker service ps --no-trunc onlygo-svc
+ID                          NAME                IMAGE                                                                                     NODE                DESIRED STATE       CURRENT STATE            ERROR                                                           PORTS
+u7a6xsh8si0uz9917j3i3gp3d   onlygo-svc.1        wpxun/onlygo:v1@sha256:b98f1f36fe80f113f4e23932fc5a0314ced0ef87f5e1b33d0528a05acbd2c2f5   binke01-2           Running             Running 8 minutes ago                                                                    *:80-&gt;80/tcp
+f51qf2f3cl5pt2jjda1323pux   onlygo-svc.2        wpxun/onlygo:v1@sha256:b98f1f36fe80f113f4e23932fc5a0314ced0ef87f5e1b33d0528a05acbd2c2f5   binke01-3           Running             Running 8 minutes ago                                                                    *:80-&gt;80/tcp
+n9rgob84kpa4d2b7fgswnt1ib   onlygo-svc.3        wpxun/onlygo:v1@sha256:b98f1f36fe80f113f4e23932fc5a0314ced0ef87f5e1b33d0528a05acbd2c2f5   binke01-1           Running             Running 8 minutes ago                                                                    *:80-&gt;80/tcp
+n3wjdse90bjp47cauozew8rny   onlygo-svc.4        wpxun/onlygo:v1@sha256:b98f1f36fe80f113f4e23932fc5a0314ced0ef87f5e1b33d0528a05acbd2c2f5   binke01             Running             Running 53 seconds ago                                                                   *:80-&gt;80/tcp
+m3k4wlocswfila6evuvrocydv   onlygo-svc.5        wpxun/onlygo:v1@sha256:b98f1f36fe80f113f4e23932fc5a0314ced0ef87f5e1b33d0528a05acbd2c2f5                       Running             Pending 55 seconds ago   &#34;no suitable node (host-mode port already in use on 4 nodes)&#34;
+
+[feixin10@binke01-3 ~]$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                NAMES
+51b3c95d4772        wpxun/onlygo:v1     &#34;/go/bin/onlygo&#34;    30 minutes ago      Up 30 minutes       0.0.0.0:80-&gt;80/tcp   onlygo-svc.2.f51qf2f3cl5pt2jjda1323pux
+</code></pre><p>另外要注意几点：
+（1）通过 <code>docker service ls</code> 列表的 PORTS 表示服务的端口，而通过 <code>docker service ps onlygo-svc</code> 列表的 PORTS 表示节点的端口。
+（2）拉取的镜像 tag 为 none(如下图正常 create 时 tag 为 v1 和 v2)，不要进行修改，否则运行的容器会退出。当然可以退出副本看管理节点自动控制能力，docker service ps 列表的 ERROR 行也可以看出哪些副本状态异常。</p>
+<pre tabindex="0"><code>&gt; docker images -a
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+wpxun/onlygo        &lt;none&gt;              c36b4eaf86ea        6 hours ago         12.9MB
+wpxun/onlygo        &lt;none&gt;              bb89b247fa08        6 hours ago         12.9MB
+</code></pre><h2 id="4-nbspnbspscale-规模">4   Scale 规模</h2>
+<p>缩放 scale 和 create 是很像的，如果有副本异常会持续编排，可能通过 ctrl+c 中断（不会影响正常运行的副本）。</p>
+<pre tabindex="0"><code>&gt; docker service scale onlygo-svc=3
+onlygo-svc scaled to 3
+overall progress: 3 out of 3 tasks
+1/3: running   [==================================================&gt;]
+2/3: running   [==================================================&gt;]
+3/3: running   [==================================================&gt;]
+verify: Service converged
+</code></pre><h2 id="5-nbspnbsp滚动升级">5   滚动升级</h2>
+<p><code>docker service update --image wpxun/onlygo:v2 --update-parallelism 2 --update-delay 80s onlygo-svc</code></p>
+<ul>
+<li>image 要升级为的镜像</li>
+<li>update-parallelism 每次使用新镜像更新的副本数</li>
+<li>update-delay 每次更新的延迟时间</li>
+</ul>
+<p>下面是运行结果，初始是 5 个副本，每次更新 2 个副本，经过三轮更新，每轮 80s 延迟。</p>
+<pre tabindex="0"><code># 初始 5 个副本
+&gt; docker service ps onlygo-svc
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
+vrenb115qwe9        onlygo-svc.1        wpxun/onlygo:v1     binke01             Running             Running 9 minutes ago
+w4sz99i5xfgm        onlygo-svc.2        wpxun/onlygo:v1     binke01-2           Running             Running 9 minutes ago
+fe5bh6j2o6jq        onlygo-svc.3        wpxun/onlygo:v1     binke01-3           Running             Running 9 minutes ago
+vyv2hj1q8tdn        onlygo-svc.4        wpxun/onlygo:v1     binke01-1           Running             Running 9 minutes ago
+usrztf48878j        onlygo-svc.5        wpxun/onlygo:v1     binke01             Running             Running 9 minutes ago
+
+# 第一轮更新
+&gt; docker service ps onlygo-svc
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE                    ERROR               PORTS
+vrenb115qwe9        onlygo-svc.1        wpxun/onlygo:v1     binke01             Running             Running 10 minutes ago
+obtas0qo4lq6        onlygo-svc.2        wpxun/onlygo:v2     binke01-3           Running             Running less than a second ago
+w4sz99i5xfgm         \_ onlygo-svc.2    wpxun/onlygo:v1     binke01-2           Shutdown            Shutdown 5 seconds ago
+xl3fldhit8s4        onlygo-svc.3        wpxun/onlygo:v2     binke01-2           Running             Running 4 seconds ago
+fe5bh6j2o6jq         \_ onlygo-svc.3    wpxun/onlygo:v1     binke01-3           Shutdown            Shutdown 6 seconds ago
+vyv2hj1q8tdn        onlygo-svc.4        wpxun/onlygo:v1     binke01-1           Running             Running 10 minutes ago
+usrztf48878j        onlygo-svc.5        wpxun/onlygo:v1     binke01             Running             Running 10 minutes ago
+
+# 等待 80s
+# 第二轮更新
+&gt; docker service ps onlygo-svc
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE                 ERROR               PORTS
+4hrqsqc59stn        onlygo-svc.1        wpxun/onlygo:v2     binke01             Running             Running 28 seconds ago
+vrenb115qwe9         \_ onlygo-svc.1    wpxun/onlygo:v1     binke01             Shutdown            Shutdown 29 seconds ago
+obtas0qo4lq6        onlygo-svc.2        wpxun/onlygo:v2     binke01-3           Running             Running about a minute ago
+w4sz99i5xfgm         \_ onlygo-svc.2    wpxun/onlygo:v1     binke01-2           Shutdown            Shutdown about a minute ago
+xl3fldhit8s4        onlygo-svc.3        wpxun/onlygo:v2     binke01-2           Running             Running about a minute ago
+fe5bh6j2o6jq         \_ onlygo-svc.3    wpxun/onlygo:v1     binke01-3           Shutdown            Shutdown about a minute ago
+vyv2hj1q8tdn        onlygo-svc.4        wpxun/onlygo:v1     binke01-1           Running             Running 12 minutes ago
+7jcq34xnxhpw        onlygo-svc.5        wpxun/onlygo:v2     binke01-3           Running             Running 32 seconds ago
+usrztf48878j         \_ onlygo-svc.5    wpxun/onlygo:v1     binke01             Shutdown            Shutdown 33 seconds ago
+
+# 等待 80s
+# 第三轮更新
+&gt; docker service ps onlygo-svc
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE                 ERROR               PORTS
+4hrqsqc59stn        onlygo-svc.1        wpxun/onlygo:v2     binke01             Running             Running about a minute ago
+vrenb115qwe9         \_ onlygo-svc.1    wpxun/onlygo:v1     binke01             Shutdown            Shutdown about a minute ago
+obtas0qo4lq6        onlygo-svc.2        wpxun/onlygo:v2     binke01-3           Running             Running 2 minutes ago
+w4sz99i5xfgm         \_ onlygo-svc.2    wpxun/onlygo:v1     binke01-2           Shutdown            Shutdown 3 minutes ago
+xl3fldhit8s4        onlygo-svc.3        wpxun/onlygo:v2     binke01-2           Running             Running 3 minutes ago
+fe5bh6j2o6jq         \_ onlygo-svc.3    wpxun/onlygo:v1     binke01-3           Shutdown            Shutdown 3 minutes ago
+tmnwlqvydpgn        onlygo-svc.4        wpxun/onlygo:v2     binke01-1           Running             Running 11 seconds ago
+vyv2hj1q8tdn         \_ onlygo-svc.4    wpxun/onlygo:v1     binke01-1           Shutdown            Shutdown 12 seconds ago
+7jcq34xnxhpw        onlygo-svc.5        wpxun/onlygo:v2     binke01-3           Running             Running about a minute ago
+usrztf48878j         \_ onlygo-svc.5    wpxun/onlygo:v1     binke01             Shutdown            Shutdown about a minute ago
+
+# 查看每个节点运行的容器，比如在 binke01-1 上查看
+&gt; docker container ls -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                     PORTS               NAMES
+107b41631240        wpxun/onlygo:v2     &#34;/go/bin/onlygo&#34;    8 minutes ago       Up 8 minutes               80/tcp              onlygo-svc.4.tmnwlqvydpgng67an6hliqibx
+a5faabc04466        wpxun/onlygo:v1     &#34;/go/bin/onlygo&#34;    22 minutes ago      Exited (2) 8 minutes ago                       onlygo-svc.4.vyv2hj1q8tdnedue98c2725z3
+</code></pre><p>可以注意到，Swarm 在升级中会均衡的将副本分配给 Swarm 中的所有节点。</p>
+<p>查看 inspect 可以看到，更新的配置已经成为服务定义的一部分，之后的更新将会自动使用这些设置，直到使用参数覆盖它们。</p>
+<pre tabindex="0"><code>&gt; docker service inspect --pretty onlygo-svc
+
+ID:     p9p5hfije6krnjtrusz3ut1st
+Name:       onlygo-svc
+Service Mode:   Replicated
+ Replicas:  5
+UpdateStatus:
+ State:     completed
+ Started:   19 minutes ago
+ Completed: 14 minutes ago
+ Message:   update completed
+Placement:
+UpdateConfig:
+ Parallelism:   2
+ Delay:     1m20s
+ On failure:    pause
+ Monitoring Period: 5s
+ Max failure ratio: 0
+ Update order:      stop-first
+RollbackConfig:
+ Parallelism:   1
+ On failure:    pause
+ Monitoring Period: 5s
+ Max failure ratio: 0
+ Rollback order:    stop-first
+ContainerSpec:
+ Image:     wpxun/onlygo:v2@sha256:5a4e11c60f0ff8956b7ae972e0588753c27fc0376025e1fc02582af21d84dab7
+ Init:      false
+Resources:
+Endpoint Mode:  vip
+Ports:
+ PublishedPort = 80
+  Protocol = tcp
+  TargetPort = 80
+  PublishMode = ingress
+</code></pre><p>再次“升级”回 v1 版本 <code>docker service update --image wpxun/onlygo:v1 onlygo-svc</code>：</p>
+<pre tabindex="0"><code># 第三轮升级等待中
+&gt; docker service update --image wpxun/onlygo:v1 onlygo-svc
+onlygo-svc
+overall progress: 4 out of 5 tasks
+1/5: running   [==================================================&gt;]
+2/5: running   [==================================================&gt;]
+3/5:
+4/5: running   [==================================================&gt;]
+5/5: running   [==================================================&gt;]
+
+# 升级完成查看副本列表
+&gt; docker service ps onlygo-svc
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE                 ERROR               PORTS
+xsry6d3b57qy        onlygo-svc.1        wpxun/onlygo:v1     binke01             Running             Running 2 minutes ago
+4hrqsqc59stn         \_ onlygo-svc.1    wpxun/onlygo:v2     binke01             Shutdown            Shutdown 3 minutes ago
+vrenb115qwe9         \_ onlygo-svc.1    wpxun/onlygo:v1     binke01             Shutdown            Shutdown 24 minutes ago
+39g1ghfjc2up        onlygo-svc.2        wpxun/onlygo:v1     binke01-3           Running             Running about a minute ago
+obtas0qo4lq6         \_ onlygo-svc.2    wpxun/onlygo:v2     binke01-3           Shutdown            Shutdown about a minute ago
+w4sz99i5xfgm         \_ onlygo-svc.2    wpxun/onlygo:v1     binke01-2           Shutdown            Shutdown 26 minutes ago
+jsbd3x38qouo        onlygo-svc.3        wpxun/onlygo:v1     binke01-2           Running             Running about a minute ago
+xl3fldhit8s4         \_ onlygo-svc.3    wpxun/onlygo:v2     binke01-2           Shutdown            Shutdown about a minute ago
+fe5bh6j2o6jq         \_ onlygo-svc.3    wpxun/onlygo:v1     binke01-3           Shutdown            Shutdown 26 minutes ago
+ig89pa0ylmrf        onlygo-svc.4        wpxun/onlygo:v1     binke01-1           Running             Running 7 seconds ago
+tmnwlqvydpgn         \_ onlygo-svc.4    wpxun/onlygo:v2     binke01-1           Shutdown            Shutdown 9 seconds ago
+vyv2hj1q8tdn         \_ onlygo-svc.4    wpxun/onlygo:v1     binke01-1           Shutdown            Shutdown 23 minutes ago
+ud4kn771erry        onlygo-svc.5        wpxun/onlygo:v1     binke01             Running             Running 2 minutes ago
+7jcq34xnxhpw         \_ onlygo-svc.5    wpxun/onlygo:v2     binke01-3           Shutdown            Shutdown 3 minutes ago
+usrztf48878j         \_ onlygo-svc.5    wpxun/onlygo:v1     binke01             Shutdown            Shutdown 24 minutes ago
+
+# 在某个节点上查看运行的容器，对应上面该节点上的副本的状态
+[feixin10@binke01 ~]$ docker container ls -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                      PORTS               NAMES
+619e375ca3f9        wpxun/onlygo:v1     &#34;/go/bin/onlygo&#34;    5 minutes ago       Up 5 minutes                80/tcp              onlygo-svc.5.ud4kn771erryzg2d0cansm3md
+26ac4c19a78f        wpxun/onlygo:v1     &#34;/go/bin/onlygo&#34;    5 minutes ago       Up 5 minutes                80/tcp              onlygo-svc.1.xsry6d3b57qy1bpc2x8ptbxyd
+0f54cadb8f00        wpxun/onlygo:v2     &#34;/go/bin/onlygo&#34;    26 minutes ago      Exited (2) 5 minutes ago                        onlygo-svc.1.4hrqsqc59stnioxgmo94h6gsa
+75b3967ee0c9        wpxun/onlygo:v1     &#34;/go/bin/onlygo&#34;    38 minutes ago      Exited (2) 26 minutes ago                       onlygo-svc.5.usrztf48878jn3490qeujwjc6
+13ccf9d7fbaa        wpxun/onlygo:v1     &#34;/go/bin/onlygo&#34;    38 minutes ago      Exited (2) 26 minutes ago                       onlygo-svc.1.vrenb115qwe9qg488megfnq1j
+</code></pre><h2 id="6-nbspnbsp节点管理">6   节点管理</h2>
+<p>节点的选择可以用 ID 或 HOSTNAME。</p>
+<h3 id="61-nbspnbsp新增节点">6.1   新增节点</h3>
+<p><code>docker swarm join --token</code>
+下面新增节点 binke01-4，ip:10.146.0.6，然后修改 scale = 9，然后查看编排结果：</p>
+<pre tabindex="0"><code>&gt; docker swarm join --token SWMTKN-1-33x2n6mrudf0x4s4j3zque3lec9c2dq5jeiaj17b7yujuaklns-ayc7mxqui49frdgb8hadcmmyf 10.146.0.3:2377
+&gt; docker service scale onlygo-svc=9
+
+&gt; docker service ps onlygo-svc
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE             ERROR               PORTS
+xsry6d3b57qy        onlygo-svc.1        wpxun/onlygo:v1     binke01             Running             Running 18 minutes ago
+4hrqsqc59stn         \_ onlygo-svc.1    wpxun/onlygo:v2     binke01             Shutdown            Shutdown 18 minutes ago
+vrenb115qwe9         \_ onlygo-svc.1    wpxun/onlygo:v1     binke01             Shutdown            Shutdown 40 minutes ago
+39g1ghfjc2up        onlygo-svc.2        wpxun/onlygo:v1     binke01-3           Running             Running 17 minutes ago
+obtas0qo4lq6         \_ onlygo-svc.2    wpxun/onlygo:v2     binke01-3           Shutdown            Shutdown 17 minutes ago
+w4sz99i5xfgm         \_ onlygo-svc.2    wpxun/onlygo:v1     binke01-2           Shutdown            Shutdown 41 minutes ago
+jsbd3x38qouo        onlygo-svc.3        wpxun/onlygo:v1     binke01-2           Running             Running 17 minutes ago
+xl3fldhit8s4         \_ onlygo-svc.3    wpxun/onlygo:v2     binke01-2           Shutdown            Shutdown 17 minutes ago
+fe5bh6j2o6jq         \_ onlygo-svc.3    wpxun/onlygo:v1     binke01-3           Shutdown            Shutdown 41 minutes ago
+ig89pa0ylmrf        onlygo-svc.4        wpxun/onlygo:v1     binke01-1           Running             Running 15 minutes ago
+tmnwlqvydpgn         \_ onlygo-svc.4    wpxun/onlygo:v2     binke01-1           Shutdown            Shutdown 15 minutes ago
+vyv2hj1q8tdn         \_ onlygo-svc.4    wpxun/onlygo:v1     binke01-1           Shutdown            Shutdown 38 minutes ago
+ud4kn771erry        onlygo-svc.5        wpxun/onlygo:v1     binke01             Running             Running 18 minutes ago
+7jcq34xnxhpw         \_ onlygo-svc.5    wpxun/onlygo:v2     binke01-3           Shutdown            Shutdown 18 minutes ago
+usrztf48878j         \_ onlygo-svc.5    wpxun/onlygo:v1     binke01             Shutdown            Shutdown 40 minutes ago
+lxjhy78nsn45        onlygo-svc.6        wpxun/onlygo:v1     binke01-4           Running             Running 10 seconds ago
+nzc6wenlsl8o        onlygo-svc.7        wpxun/onlygo:v1     binke01-4           Running             Running 10 seconds ago
+fz51eign4ms1        onlygo-svc.8        wpxun/onlygo:v1     binke01-3           Running             Running 15 seconds ago
+ma78euhri5p6        onlygo-svc.9        wpxun/onlygo:v1     binke01-1           Running             Running 15 seconds ago
+</code></pre><h3 id="62-nbspnbsp更新节点">6.2   更新节点</h3>
+<ol>
+<li>
+<p><code>docker node update --role worker binke01-3</code> 把节点转成工作节点，转换后至少还存在一个管理节点就可以，比如有两个管理节点，把 leader 转成工作节点，则另一个管理节点会转成 leader；&ndash;role 有两个选项 worker|manager</p>
+</li>
+<li>
+<p><code>docker node update --availability drain binke01-4</code></p>
+</li>
+</ol>
+<ul>
+<li>availability string(&ldquo;active&rdquo;|&ldquo;pause&rdquo;|&ldquo;drain&rdquo;) 其中 drain 即是排空节点，把节点上的副本移到其它节点，同时阻止在该节点上分配新的副本；</li>
+</ul>
+<h3 id="63-nbspnbsp删除节点">6.3   删除节点</h3>
+<ol>
+<li>离开 Swarm 群，可以在任意节点上操作，使其连通状态为 Down；</li>
+</ol>
+<pre tabindex="0"><code>[feixin10@binke01-4 ~]$ docker swarm leave
+Node left the swarm.
+</code></pre><p>查看节点列表，status 表示节点连通状态有 Ready|Down；availability 表示可编排状态，有 active|pause|drain 三种状态。</p>
+<pre tabindex="0"><code>&gt; docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+0kjqucshibpm35zhq7kizldp0     binke01             Ready               Active                                  18.09.3
+qr7i763tagufpcyn4qf37b5fs *   binke01-1           Ready               Active              Reachable           18.09.5
+186b6a4dpvy8alzdfuf3jtrv4     binke01-2           Ready               Active                                  18.09.5
+ogvwkwq0zxw3s05shey2ruzqa     binke01-3           Ready               Active              Leader              18.09.5
+zadyw6n9o8h14x0flsjmrkoyl     binke01-4           Down                Drain                                   18.09.5
+</code></pre><p>除此之外，节点的 Docker 服务未开启时也是 Down 状态。</p>
+<ol start="2">
+<li>删除节点，只有 Down 状态下才可能删除(不在乎 availability 的状态)，另外还有强制删除但不建议使用；
+<code>docker node rm binke01-4</code></li>
+</ol>
+<h2 id="7-nbspnbsp删除服务">7   删除服务</h2>
+<p><code>docker service rm onlygo-svc</code>，没有任何警告，直接删除服务和所有的副本，但不会删除拉取过的镜像。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] Nigel Poulton. 深入浅出 Dokcer. 版次：2019年4月第1版
+[2] Getting started with swarm mode. <a href="https://docs.docker.com/engine/swarm/swarm-tutorial/">https://docs.docker.com/engine/swarm/swarm-tutorial/</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/docker-stack/" data-toggle="tooltip" data-placement="top" title="Docker Stack 多服务">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/docker-single-engine-mode/" data-toggle="tooltip" data-placement="top" title="Dockerfile 应用容器化及 Compose 部署应用">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

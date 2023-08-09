@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jenkins on HOME</title>
+    <link>https://wpxun.github.io/tags/jenkins/</link>
+    <description>Recent content in Jenkins on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Sun, 28 Apr 2019 11:59:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/jenkins/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Jenkins 持续集成</title>
+      <link>https://wpxun.github.io/posts/jenkins/</link>
+      <pubDate>Sun, 28 Apr 2019 11:59:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/jenkins/</guid>
+      <description>&lt;p&gt;今天看到《Jenkins2 权威指南》出来了，马上买了一本，DevOps 相关的书籍更新太快了，这包括 Docker、Jenkins，新特性快速推出，旧版本必然快速淘汰，可以看一下 &lt;a href=&#34;http://mirrors.jenkins.io/war-stable/&#34;&gt;Jenkins 的版本&lt;/a&gt;，Jenkins 1.x 相关书籍已经严重滞后了。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

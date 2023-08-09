@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Posts - HOME</title>
+  <meta property="og:title" content="Posts - HOME" />
+  <meta name="twitter:title" content="Posts - HOME" />
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="HOME" />
+  <link href="/posts/index.xml" rel="feed" type="application/rss+xml" title="HOME" />
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="breadcrumb">
+    Posts
+  </div>
+  <div class="main" role="main">
+    <section class="list section-list">
+      <article class="article">
+        <a href="/posts/http2/" class="article-titles">
+          <h2 class="article-title">HTTP/2 协议</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 31, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/http/">
+              <i class="fas fa-tag"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+              <i class="fas fa-tag"></i>
+              协议
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>HTTP/1.1 与 HTTP/2 相隔了大概20年，但是从目前的研究和实验情况来看，我们不可能等上几十年才升级到下一个版本，h2 在逐渐的普及。
+h2 和 h1 的最大差别在于在 <strong>http 层</strong>上增加了<strong>分帧层</strong>；把原来的 http 层的数据拆分成多种帧类型，并在每种类型前加上协议性的帧首部。基于二进制分帧的优点：</p>
+<ol>
+<li>传输使用的编码方式改变（采用帧、流模式），不用创建多个 TCP 连接，单个连接就可以有多个流（处理主页面和所有子元素的请求），能够减少延迟，服务器和浏览器的 socket 负载也大大减少。</li>
+<li>并行处理，乱序发送帧，不再采用 pipeline 阻塞方式</li>
+<li>传输的功能得以扩展（如服务端推送、首部压缩、优先级、流量控制）。</li>
+</ol>
+<p>学习 HTTP/2 最好的文档是 RFC 7540。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/http2/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/devops/" class="article-titles">
+          <h2 class="article-title">DevOps</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 27, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/devops/">
+              <i class="fas fa-folder"></i>
+              DevOps
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>DevOps 是一套实践方法，在保证高质量的前提下缩短系统变更从提交到部署到生产环境的时间，它设想在开发组和运维组之间没有冲突。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/devops/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/tls/" class="article-titles">
+          <h2 class="article-title">SSL/TLS 协议</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 24, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/tls/">
+              <i class="fas fa-tag"></i>
+              TLS
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+              <i class="fas fa-tag"></i>
+              协议
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/tls/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/cryptology/" class="article-titles">
+          <h2 class="article-title">密码学</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 21, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/tls/">
+              <i class="fas fa-tag"></i>
+              TLS
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/">
+              <i class="fas fa-tag"></i>
+              密码学
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>近代加密都是加密算法公开的，自行设计算法要求编程阶段就要进行协商开发，且存可能是不严格的数学模型存在安全漏洞。一般企业内部也是用流行的密码学算法（语言支持的加密算法函数）。学习密码学有利于分析安全工具其背后的密码学原理，比如数字证书、SSH、AES的密码原理等。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/cryptology/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-concurrency-difficult/" class="article-titles">
+          <h2 class="article-title">并发的复杂性</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 14, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%B9%B6%E5%8F%91/">
+              <i class="fas fa-tag"></i>
+              并发
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>本文谈到的并发是指单程序、单节点并发，区别于并发系统，并发系统的一个更加流行的词是分布式系统，并发系统更有可能是并行的，因为其中的多个程序一般可以同时在不同的硬件环境上运行。分布式系统可以看我另一篇文章<a href="/2019/03/17/microservice-architecture-difficult/">《微服务架构的复杂性》</a>。
+并发指的是多个任务几乎被同时发起运行，但是在同一时刻这些任务不一定都处于运行状态，这取决于 CPU 核心或者 CPU 数量。并行指的是在同一时刻可以有多个任务真正地同时运行。并行运行的必要条件是多 CPU 核心或者多 CPU 的计算环境。
+在功能开发中，非并发程序往往未能充分利用服务器的性能，为用户提供服务基本都是排队处理。而并发程序有时可以代替集群，其性能提高对整个系统是至关重要的作用，如果我们将单个节点的性能提高 30%，或者甚至超过 100%，那么我们可以节省多少台机器呢？不过同时并发却带来了编程的复杂性。不同程序单元之间的远程过程调用可以参考另一篇文章<a href="/2019/03/12/go-network/">《go 网络编程》</a>。Go 语言的特点是通过内部调度可以最大限度地利用单机的计算能力。然而在分布式计算方面，它本身其实并没有提供什么现成的东西，还需要使用一些第三方的框架或工具，或者自己编写和搭建。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-concurrency-difficult/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-io/" class="article-titles">
+          <h2 class="article-title">go I/O 操作</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 13, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/io/">
+              <i class="fas fa-tag"></i>
+              io
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>理解 I/O 的一些概念问题可以先看另一篇文章<a href="/2019/03/11/c-socket/">《C Socket 编程》</a>
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-io/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-network/" class="article-titles">
+          <h2 class="article-title">go 网络编程</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 12, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E7%BD%91%E7%BB%9C/">
+              <i class="fas fa-tag"></i>
+              网络
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/socket/">
+              <i class="fas fa-tag"></i>
+              Socket
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/rpc/">
+              <i class="fas fa-tag"></i>
+              RPC
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/http/">
+              <i class="fas fa-tag"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
+在进行原理讲解之前我觉得有必要熟悉一下 <a href="/2019/03/10/tcp-protocol/">TCP 传输原理</a>和 <a href="/2019/03/11/c-socket/">C Socket 编程</a>，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-network/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/c-socket/" class="article-titles">
+          <h2 class="article-title">C Socket 编程</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 11, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/c/">
+              <i class="fas fa-folder"></i>
+              C
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/c/">
+              <i class="fas fa-tag"></i>
+              C
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/socket/">
+              <i class="fas fa-tag"></i>
+              Socket
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E7%BC%96%E7%A8%8B/">
+              <i class="fas fa-tag"></i>
+              编程
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/io/">
+              <i class="fas fa-tag"></i>
+              io
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>一切皆文件，I/O 操作无处不在，文件、设备、管道、Socket等都是 I/O 操作。C 语言对文件 I/O 操作分两种，一种是无缓冲的（用户层无缓存区），返回的是文件描述符（int 整型），代表函数是 open、read、write 和 socket 等；另一种是有缓冲的（用户层设计了缓存区），返回是的数据流 Stream（FILE 结构体），代表函数是 fopen、fread、fwrite、putc、getc、fputs、fgets 和 fprintf等；不过 C 标准已经不再支持对文件（这里没有包括 socket）的无缓冲操作。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/c-socket/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/tcp-protocol/" class="article-titles">
+          <h2 class="article-title">TCP 传输原理</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 10, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/http/">
+              <i class="fas fa-folder"></i>
+              HTTP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/tcp/">
+              <i class="fas fa-tag"></i>
+              TCP
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+              <i class="fas fa-tag"></i>
+              协议
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>TCP的主要目的是在一个比较不可靠的相互通信上提供可靠的，安全的逻辑回路或者连接服务。为了实现这个服务，TCP 的设计 体系非常庞大，我对其理解只是冰山一角，此文只是将我学过的重点知识进行汇总。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/tcp-protocol/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-context/" class="article-titles">
+          <h2 class="article-title">go context 包</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 8, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/go%E5%8C%85/">
+              <i class="fas fa-tag"></i>
+              Go包
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-context/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+    </section>
+    
+    <ul class="pagination pagination-default">
+      <li class="page-item">
+        <a href="/posts/" aria-label="First" class="page-link" role="button"><span aria-hidden="true">&laquo;&laquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/page/2/" aria-label="Previous" class="page-link" role="button"><span aria-hidden="true">&laquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/" aria-label="Page 1" class="page-link" role="button">1</a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/page/2/" aria-label="Page 2" class="page-link" role="button">2</a>
+      </li>
+      <li class="page-item active">
+        <a aria-current="page" aria-label="Page 3" class="page-link" role="button">3</a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/page/4/" aria-label="Page 4" class="page-link" role="button">4</a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/page/4/" aria-label="Next" class="page-link" role="button"><span aria-hidden="true">&raquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/page/4/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
+      </li>
+    </ul>
+  </div>
+
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-rsslink">
+      <a href="/posts/index.xml" type="application/rss+xml" target="_blank" title="RSS">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

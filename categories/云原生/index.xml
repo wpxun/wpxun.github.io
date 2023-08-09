@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>云原生 on HOME</title>
+    <link>https://wpxun.github.io/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</link>
+    <description>Recent content in 云原生 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Wed, 26 Jun 2019 17:00:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Istio 流量管理</title>
+      <link>https://wpxun.github.io/posts/istio-traffic-management/</link>
+      <pubDate>Wed, 26 Jun 2019 17:00:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/istio-traffic-management/</guid>
+      <description>&lt;p&gt;流量管理是 istio 最核心的问题，涉及 v1alpha3 中的配置资源，包括Gateway、VirtualSerice、DestinationRule 等。本文主要是基于 &lt;a href=&#34;https://wpxun.github.io/2019/05/30/istio/&#34;&gt;Istio 基础&lt;/a&gt;一文已经部署的实例来进行讲解。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 网络</title>
+      <link>https://wpxun.github.io/posts/kubernetes-network/</link>
+      <pubDate>Fri, 21 Jun 2019 12:22:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-network/</guid>
+      <description>&lt;p&gt;微服务是多进程、多服务部署，无法通过 IPC 进程内调用，必然通过网络调用，这将带来很多问题：不可靠、有带宽、协议设计。无论是 TCP、HTTP、RPC，无论是东西流量还是南北流量，涉及限流、熔断、域名及路径上下文，都需要 Kubernetes 或者第三方产品给出解决方案。网络是 Kubernetes 的难点之一。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Istio Prometheus</title>
+      <link>https://wpxun.github.io/posts/istio-prometheus/</link>
+      <pubDate>Thu, 30 May 2019 00:33:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/istio-prometheus/</guid>
+      <description>&lt;p&gt;我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Istio 基础</title>
+      <link>https://wpxun.github.io/posts/istio/</link>
+      <pubDate>Thu, 30 May 2019 00:33:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/istio/</guid>
+      <description>&lt;p&gt;我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>微服务架构</title>
+      <link>https://wpxun.github.io/posts/microservice-architecture-difficult/</link>
+      <pubDate>Mon, 20 May 2019 15:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/microservice-architecture-difficult/</guid>
+      <description>&lt;p&gt;这是一个架构概念爆发的时代，是架构本身的复杂度已经开始超越业务逻辑本身的时代，同时也是越来越接近 DevOps 工作方式的时代。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 资源</title>
+      <link>https://wpxun.github.io/posts/kubernetes-resource/</link>
+      <pubDate>Tue, 07 May 2019 13:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-resource/</guid>
+      <description>&lt;p&gt;本文重点理解 Kubernetes 资源的作用，并用一个简单的例子进行演示。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 集群安装</title>
+      <link>https://wpxun.github.io/posts/kubernetes-install/</link>
+      <pubDate>Sun, 28 Apr 2019 16:06:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/kubernetes-install/</guid>
+      <description>&lt;p&gt;有了 Docker Swarm 基础，再来学习 Kubernetes 会相对容易一些，不过安装 Kubernetes 还是挺繁琐的，对官方文档中需要访问谷歌外网的部分，还需要替换成国内源。如果目的为了学习，还可以使用 minikube 或 Vagrant 快速创建集群。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Vagrant 虚拟机管理</title>
+      <link>https://wpxun.github.io/posts/vagrant/</link>
+      <pubDate>Sat, 27 Apr 2019 10:04:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/vagrant/</guid>
+      <description>&lt;p&gt;个人操作系统并不需要配置化，但随着开发人员的复杂化，每个开发人员都需要同样的主机系统以保证开发环境的可移植性；另外一方面，随着微服务的推广需要多主机节点管理，重复性的指令配置消耗大量时间且容易出错，于是出现了多主机配置化，可以用现在流行的说法“基础设施即代码”，Infrastructure as code (IaC)，例如 docker machine、vagrant，本文将讲解 vagrant 的使用，并安装 Kubernetes 集群进行实战。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

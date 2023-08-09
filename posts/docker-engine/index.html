@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Docker Engine - HOME</title>
+  <meta property="og:title" content="Docker Engine - HOME" />
+  <meta name="twitter:title" content="Docker Engine - HOME" />
+  <meta name="description" content="目前，以容器技术为代表的应用形态和以虚拟化为代表的系统形态完美融合于 OpenStack 生态圈之上，Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统(基于容器技术的分布式架构)，Kubernetes 底层支持两种容器技术 Docker 的 containerd 和 CoreOS 的 rkt。
+Docker 主要以 linux 内核的 namespace 和 cgroup 等特性为基础，保障进程或者进程组处于一个隔离、受限、安全的环境之中。Docker 用 Go 实现，并在容器技术之中有风靡之势。自 2007 年 cgroups 合并至 linux 内核 2.6.24 版本，2008 年 LXC 诞生，2009 年 Go 发布，2013 年 Docker 开源，2015 年 Kubernetes 发布。到 2018 年已经有不少企业应用于生产环境；当然不免有唱衰的 再见 docker。">
+  <meta property="og:description" content="目前，以容器技术为代表的应用形态和以虚拟化为代表的系统形态完美融合于 OpenStack 生态圈之上，Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统(基于容器技术的分布式架构)，Kubernetes 底层支持两种容器技术 Docker 的 containerd 和 CoreOS 的 rkt。
+Docker 主要以 linux 内核的 namespace 和 cgroup 等特性为基础，保障进程或者进程组处于一个隔离、受限、安全的环境之中。Docker 用 Go 实现，并在容器技术之中有风靡之势。自 2007 年 cgroups 合并至 linux 内核 2.6.24 版本，2008 年 LXC 诞生，2009 年 Go 发布，2013 年 Docker 开源，2015 年 Kubernetes 发布。到 2018 年已经有不少企业应用于生产环境；当然不免有唱衰的 再见 docker。">
+  <meta name="twitter:description" content="目前，以容器技术为代表的应用形态和以虚拟化为代表的系统形态完美融合于 OpenStack 生态圈之上，Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统(基于容器技术的分布式架构)，Kubernetes 底层支持两种容器技术 Docker 的 containerd 和 CoreOS 的 rkt。
+Docker 主要以 linux 内核的 namespace 和 cgroup  …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/docker-engine/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Docker Engine</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 13, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/docker/">
+            <i class="fas fa-folder"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/docker/">
+            <i class="fas fa-tag"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp诞生与发展">1   诞生与发展</a></li>
+    <li><a href="#2-nbspnbsp引擎架构">2   引擎架构</a>
+      <ul>
+        <li><a href="#21-nbspnbspdocker-vs-虚拟机">2.1   Docker vs 虚拟机</a></li>
+        <li><a href="#22-nbspnbsp引擎模块">2.2   引擎模块</a></li>
+        <li><a href="#23-nbspnbsp模块通信">2.3   模块通信</a></li>
+        <li><a href="#24-nbspnbsp启动容器的过程">2.4   启动容器的过程</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsp安装">3   安装</a></li>
+    <li><a href="#4-nbspnbsp镜像">4   镜像</a>
+      <ul>
+        <li><a href="#41-nbspnbspimages-和-layers">4.1   images 和 layers</a></li>
+        <li><a href="#42-nbspnbsp通过命令输出理解镜像">4.2   通过命令输出理解镜像</a></li>
+        <li><a href="#43-nbspnbspinspect-image">4.3   inspect image</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-nbspnbsp容器">5   容器</a></li>
+    <li><a href="#6-nbspnbsp常用命令">6   常用命令</a></li>
+    <li><a href="#7-nbspnbsp本地仓库">7   本地仓库</a>
+      <ul>
+        <li><a href="#71-nbspnbsp服务端">7.1   服务端</a></li>
+        <li><a href="#72-nbspnbsp客户端配置">7.2   客户端配置</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+      <p>目前，以容器技术为代表的应用形态和以虚拟化为代表的系统形态完美融合于 OpenStack 生态圈之上，Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源系统(基于容器技术的分布式架构)，Kubernetes 底层支持两种容器技术 Docker 的 containerd 和 CoreOS 的 rkt。
+Docker 主要以 linux 内核的 namespace 和 cgroup 等特性为基础，保障进程或者进程组处于一个隔离、受限、安全的环境之中。Docker 用 Go 实现，并在容器技术之中有风靡之势。自 2007 年 cgroups 合并至 linux 内核 2.6.24 版本，2008 年 LXC 诞生，2009 年 Go 发布，2013 年 Docker 开源，2015 年 Kubernetes 发布。到 2018 年已经有不少企业应用于生产环境；当然不免有唱衰的 <a href="https://technodrone.blogspot.com/2019/02/goodbye-docker-and-thanks-for-all-fish.html">再见 docker</a>。</p>
+<h2 id="1-nbspnbsp诞生与发展">1   诞生与发展</h2>
+<p>Docker 和 Kubernetes 一样都是新生事物，处于快速迭代期，所以很多规范、架构、功能一直在更新中。书籍和网上的文章淘汰速度也很快，特别是 v1.13.0（2017年）前的版本其知识点并不一定适用于最新的版本。所以这里有必要对一些重要版本或时间点作一些说明：</p>
+<ul>
+<li>2013-03，发布 <a href="https://github.com/docker/engine">Docker Engine 项目</a> v0.1.0；</li>
+<li>2014-03，v0.9.0，用 libcontainerd 取代了早期 Docker 架构中的 LXC；</li>
+<li>2014-12，CoreOS 由于与 Docker 对于容器的发展方向见解不合，自立门户建立了 rkt 容器项目和 AppC 容器标准，该标准为后来的容器统一标准 OCI 的诞生奠定了基础。</li>
+<li>2015-04，CoreOS 成为 Kubernetes 的战略合作平台，并共同推出了 CoreOS+rkt+Kubernetes 的新项目 Tectonic(和 Swarm 同级产品)。</li>
+<li>2015-06，Linux 基金会出面调和，成立开放容器计划（The Open Container Initiative，前身是 OCP），谷歌、CoreOS 及 Docker 都加入 OCI 开放标准，Docker 引擎往模块化设计方向走。</li>
+<li>2015-07，<a href="https://github.com/kubernetes/kubernetes">Kubernetes v1.0</a> 正式发布；</li>
+<li>2015-08，Linux 基金会宣布成立 <a href="https://www.cncf.io/projects/">CNCF</a>，也就是原生云计算基金会(Cloud Native Computing Foundation)，原生云应用和服务成为焦点。有毕业、孵化中、初级三个级别项目，比如 Kubernetes、containerd 是毕业项目（目前是6个），gRPC 是孵化项目；现有 300 多个成员，国内包括阿里、腾讯、百度。</li>
+<li>2016-02，v1.10.0，<strong>对 images 和 layers 采用了新的 content-addressable storage 方式</strong>，镜像的结构变得更加灵活；</li>
+<li>2016-04，v.1.11，Docker 由 4 个执行程序 docker, docker-containerd, docker-containerd-shim and docker-runc 组成；</li>
+<li>2016-07，v1.12.0，把 docker 执行程序拆分成 docker(docker client)程序和 dockerd(docker daemon)程序。</li>
+<li>2016-12，containerd 捐献给了云原生计算基金会(CNCF)，CorsOS 的 <a href="https://coreos.com/rkt/">rkt</a> 也捐献给 CNCF；containerd 和 rkt 都是 Container Runtime，不过后者是孵化中项目。</li>
+<li>2017-01， v1.13.0 API 1.25 开始支持 docker stack；</li>
+<li>2017-02，<a href="https://docs.docker.com/release-notes/docker-engine/">v1.13.1</a> 版本之后分化成了 <a href="https://github.com/docker/docker-ce">Community Edition(CE)</a> 和 Enterprise Edition(EE) 两个版本，版本从 <a href="https://docs.docker.com/engine/release-notes/">v17.04.0</a> 开始，这也算是 docker 商业化的一个探索；而且对命令进行了整合，<strong>移除了 <code>docker daemon</code> 命令，并把之前的顶级命令归类到 <a href="https://blog.couchbase.com/docker-1-13-management-commands/">Management Commands</a> 中</strong>，使得命令的含意更加清晰。</li>
+<li>2017-04，Docker 项目正式命名为 <a href="https://github.com/moby/moby">Moby 项目</a>，并遵循开放容器计划（The Open Container Initiative, OCI）规范，比如容器运行时格式和镜像格式等。Docker 公司为了让 Docker Engine 项目得以生存，逐渐放弃自己独家控制权；</li>
+<li>2017-12，containerd 并发布了 <a href="https://github.com/containerd/containerd">v1.0 版本</a>。</li>
+<li>2018-09，v18.09.0，<strong>The client and container runtime are now in separate packages from the daemon in Docker Engine 18.09.</strong> Users should install and update all three packages at the same time to get the latest patch releases. For example, on Ubuntu: sudo apt install <strong>docker-ce docker-ce-cli containerd.io</strong>，这里的 docker-ce 相当于 deamon，daemon 去掉了 client 和 containerd，可以说是历史以来最简化，目前 daemon 还剩下镜像管理、镜像构建、REST API、身份验证、安全、核心网络以及编排。Docker 引擎的模块化工作仍在进行中。</li>
+</ul>
+<h2 id="2-nbspnbsp引擎架构">2   引擎架构</h2>
+<h3 id="21-nbspnbspdocker-vs-虚拟机">2.1   Docker vs 虚拟机</h3>
+<p>容器比虚拟机轻量级的原因是共享宿主机的操作系统内核；而虚拟机各自运行一个完整的 Guest OS 并通过 hypervisor 连接到宿主机。所以 Docker 的 linux 内核版本一定是跟宿主机一样，不同的是操作系统发行版本。下面引用 <a href="https://docs.docker.com/get-started/">docker 文档图片</a>：</p>
+<p>{% img <a href="https://wpxun.github.io/image/2019/04/Container@2x.png">https://wpxun.github.io/image/2019/04/Container@2x.png</a> 300 %}
+{% img <a href="https://wpxun.github.io/image/2019/04/VM@2x.png">https://wpxun.github.io/image/2019/04/VM@2x.png</a> 300 %}</p>
+<h3 id="22-nbspnbsp引擎模块">2.2   引擎模块</h3>
+<p>一般我们用 Docker(大写D)表示整个 Docker，docker 和 dockerd 表示执行程序，docker ≈ docker client，dockerd ≈ docker daemon，docker engine ≈ client + daemon + containerd + runc，daemon ≈ 镜像管理、镜像构建、REST API、身份验证、安全、核心网络以及编排。总体逻辑如下图：
+{% img <a href="https://wpxun.github.io/image/2019/04/docker_engine.jpeg">https://wpxun.github.io/image/2019/04/docker_engine.jpeg</a> 300 %}</p>
+<h3 id="23-nbspnbsp模块通信">2.3   模块通信</h3>
+<p>综合 <code>systemctl status docker</code>、<code>systemctl status containerd</code> 等可以理解以下内容：</p>
+<ol>
+<li><code>/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock</code>，dockerd 通过 -H 连接到 fd://，并用 &ndash;containerd 参数指定容器运行时；</li>
+<li>API listen on /var/run/docker.sock，dockerd 提供 API 接口并开启监听；</li>
+<li><code>docker -H unix:///var/run/docker.sock</code>，docker 通过 -H 连接到 dockerd(docker daemon);
+docker 默认是 unix socket，所以只能同一宿主机调用，远程调用可以改为 TCP socket。
+守护进程：<code>dockerd -H tcp://0.0.0.0:2375</code>
+客户进程：<code>docker -H tcp://&lt;宿主机 IP&gt;:2375</code>
+需要注意的时，守护进程改用 tcp 提供调用后，客户进程即使在本机也需要通过 tcp 去调用。</li>
+</ol>
+<p>docker 和 dockerd 的通信可以用 socat 进行抓包。socat 是一个强大的代理命令，能让用户在两个几乎任意类型的通道之间中继数据。groups 包括 FD,SOCKET,LISTEN,CHILD,RANGE,IP4,IP6,UDP,TCP 等，操作如下：</p>
+<pre tabindex="0"><code>socat -v unix-listen:/tmp/dockerapi.sock unix-connect:/var/run/docker.sock
+docker -H unix:///tmp/dockerapi.sock images
+</code></pre><h3 id="24-nbspnbsp启动容器的过程">2.4   启动容器的过程</h3>
+<p>dockerd 监听 client 的处理请求，并连接到 containerd 管理容器在宿主机的生命周期：start、stop、pause、rm 等。启动容器的过程如下图：
+{% img <a href="https://wpxun.github.io/image/2019/04/docker_step_container.jpeg">https://wpxun.github.io/image/2019/04/docker_step_container.jpeg</a> 300 %}</p>
+<h2 id="3-nbspnbsp安装">3   安装</h2>
+<p>安装 docker 和 docker-compose 等都很简单，按<a href="https://docs.docker.com/install/linux/docker-ce/centos/">官方文档</a>安装就可以了。一般安装最新社区版（CE）即可，安装完成后 systemctl start docker、systemctl enable docker 自启动。macOS 和 Windows 抛弃了过时的 Docker Toolbox，采用桌面版安装。一般 linux 服务器只安装 Docker Engine(Docker 引擎)，Mac 的桌面版包括了 Docker 引擎、Compose、Machine、Notary。</p>
+<p>最好通过非 root 用户使用 Docker，如有提示：Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock; 处理方式文档中有说明
+By default, a unix domain socket (or IPC socket) is created at /var/run/docker.sock, requiring either root permission, or docker group membership. <code>sudo usermod -aG docker USER_NAME</code></p>
+<p>Docker 文档提供了命令的使用 <a href="https://docs.docker.com/engine/reference/commandline/docker/">Command-Line Interfaces</a>：</p>
+<ul>
+<li>Docker CLI(docker)：客户端，很多子命令</li>
+<li>Daemon CLI(dockerd)：Docker 服务器，单命令</li>
+<li>Machine CLI(docker-machine)：机器，很多子命令</li>
+<li>Compose CLI(docker-compose)：编排，很多子命令</li>
+<li>Dockerfile：构建文件，很多指令</li>
+</ul>
+<h2 id="4-nbspnbsp镜像">4   镜像</h2>
+<h3 id="41-nbspnbspimages-和-layers">4.1   images 和 layers</h3>
+<p>镜像是由 <strong>layer</strong> 有序列表和一些<strong>元数据</strong>组成的配置对象，layer 才是实际数据存储的地方（比如文件等，镜像之间是完全独立的，并没有从属于某个镜像集合的概念）。</p>
+<p>linux 从启动到运行需要两个 fs：
+bootfs：用 bootloader 引导加载 kernel, 当 boot 成功后 kernel 被加载到内存中后 bootfs 就被 umount。
+rootfs：kernel 利用 aufs 等添加系统的 rootfs 文件系统。</p>
+<ol>
+<li>
+<p>基础镜像： 从 scratch 空镜像构建起，在此基础上添加一层 rootfs，比如 centos-7-docker.tar.xz、alpine-minirootfs-3.9.3-x86_64.tar.gz。
+这里要特别提一下 Alpine 基础镜像，稳定性和安全性都是挺可靠的，大小也在 5M 左右，未来 docker 官方也会用 Alpine 取代 Ubuntu。
+基础镜像在启动后只会启动前台进程 bash。</p>
+</li>
+<li>
+<p>其它镜像构建于基础镜像之上，即 baseImage/image/image&hellip;，即在基础镜像层上利用 UnionFS（联合文件系统） 构建一层一层的只读文件系统层。
+一般这类镜像在启动后都会启动守护进程。</p>
+</li>
+</ol>
+<p>镜像 ID: 每个镜像都是用唯一 IMAGE ID 标识，并用可视化别名 NAME[:TAG] 分类显示，ID 和别名是一对多的关系；如同 IP 对域名一样。TAG 不指定的时候表示默认值 latest，但是不推荐用默认值。
+镜像 digest: 镜像摘要
+When pushing or pulling to a 2.0 registry, the push or pull command output includes the image digest. You can pull using a digest value. You can also reference by digest in create, run, and rmi commands, as well as the FROM image reference in a Dockerfile.</p>
+<h3 id="42-nbspnbsp通过命令输出理解镜像">4.2   通过命令输出理解镜像</h3>
+<ol>
+<li>下面实例通过 Dockerfile 文件创建一个镜像。Dockerfile 文件内容如下：</li>
+</ol>
+<pre tabindex="0"><code>FROM alpine:3.9
+ENV ABC_VERSION   20190416
+RUN apk add --no-cache --virtual .persistent-deps xz
+COPY test_copy /usr/local/etc
+ADD test_add /usr/local/etc
+RUN adduser -u 1001 -D -s /sbin/nologin pub
+EXPOSE 80
+CMD [&#34;/bin/sh&#34;]
+</code></pre><ol start="2">
+<li>看创建时输出信息：</li>
+</ol>
+<pre tabindex="0"><code>&gt; docker build -t dtest:1.0 .
+Sending build context to Docker daemon  324.1kB
+Step 1/8 : FROM alpine:3.9
+ ---&gt; cdf98d1859c1
+Step 2/8 : ENV ABC_VERSION   20190416
+ ---&gt; Running in 44ed3f9df47b
+Removing intermediate container 44ed3f9df47b
+ ---&gt; a06b9552c5be
+Step 3/8 : RUN apk add --no-cache --virtual .persistent-deps xz
+ ---&gt; Running in fd75b4d2063c
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/community/x86_64/APKINDEX.tar.gz
+(1/3) Installing xz-libs (5.2.4-r0)
+(2/3) Installing xz (5.2.4-r0)
+(3/3) Installing .persistent-deps (0)
+Executing busybox-1.29.3-r10.trigger
+OK: 6 MiB in 17 packages
+Removing intermediate container fd75b4d2063c
+ ---&gt; c421ae62239c
+Step 4/8 : COPY test_copy /usr/local/etc
+ ---&gt; 123b7cf03238
+Step 5/8 : ADD test_add /usr/local/etc
+ ---&gt; f63b6fdf1995
+Step 6/8 : RUN adduser -u 1001 -D -s /sbin/nologin pub
+ ---&gt; Running in dc2be3fdbc00
+Removing intermediate container dc2be3fdbc00
+ ---&gt; cd4063d6d004
+Step 7/8 : EXPOSE 80
+ ---&gt; Running in df6d2ebc78ef
+Removing intermediate container df6d2ebc78ef
+ ---&gt; a948ed8f4770
+Step 8/8 : CMD [&#34;/bin/sh&#34;]
+ ---&gt; Running in cc2b4eaca4a6
+Removing intermediate container cc2b4eaca4a6
+ ---&gt; b28b2394f41a
+Successfully built b28b2394f41a
+Successfully tagged dtest:1.0
+</code></pre><ol start="3">
+<li>查看所生成的镜像和中间镜像，注意这里上下并不是依赖关系，仅仅是时间排序。</li>
+</ol>
+<pre tabindex="0"><code>&gt; docker images -a
+dtest               1.0                 b28b2394f41a        37 seconds ago      5.83MB
+&lt;none&gt;              &lt;none&gt;              a948ed8f4770        37 seconds ago      5.83MB
+&lt;none&gt;              &lt;none&gt;              cd4063d6d004        37 seconds ago      5.83MB
+&lt;none&gt;              &lt;none&gt;              f63b6fdf1995        38 seconds ago      5.82MB
+&lt;none&gt;              &lt;none&gt;              123b7cf03238        38 seconds ago      5.82MB
+&lt;none&gt;              &lt;none&gt;              c421ae62239c        38 seconds ago      5.82MB
+&lt;none&gt;              &lt;none&gt;              a06b9552c5be        41 seconds ago      5.53MB
+</code></pre><ol start="4">
+<li>查看构建历史</li>
+</ol>
+<pre tabindex="0"><code>&gt; docker history dtest:1.0
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+b28b2394f41a        2 minutes ago       /bin/sh -c #(nop)  CMD [&#34;/bin/sh&#34;]              0B
+a948ed8f4770        2 minutes ago       /bin/sh -c #(nop)  EXPOSE 80                    0B
+cd4063d6d004        2 minutes ago       /bin/sh -c adduser -u 1001 -D -s /sbin/nolog…   4.82kB
+f63b6fdf1995        2 minutes ago       /bin/sh -c #(nop) ADD file:b803a882fa128cb8c…   9B
+123b7cf03238        2 minutes ago       /bin/sh -c #(nop) COPY file:24b874c6ab361858…   17B
+c421ae62239c        2 minutes ago       /bin/sh -c apk add --no-cache --virtual .per…   291kB
+a06b9552c5be        2 minutes ago       /bin/sh -c #(nop)  ENV ABC_VERSION=20190416     0B
+cdf98d1859c1        7 days ago          /bin/sh -c #(nop)  CMD [&#34;/bin/sh&#34;]              0B
+&lt;missing&gt;           7 days ago          /bin/sh -c #(nop) ADD file:2e3a37883f56a4a27…   5.53MB
+</code></pre><ol start="5">
+<li>查看 所有镜像的 layers</li>
+</ol>
+<pre tabindex="0"><code>&gt; docker inspect -f &#39;{{json .RootFS.Layers}}&#39;  `docker history -q dtest:1.0`
+[&#34;sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9&#34;,&#34;sha256:35b7153bfc8fd8e90ff45282bf7abb9c43046400287a912693fa409d4278818c&#34;,&#34;sha256:e7d271231802f2b45e74efcb14dfefc5dd952e0c3914fa823a5ce2c30c461043&#34;,&#34;sha256:3077c11a618ad8a5da0802c9228e4c17f1b0759950fbcca7256d2bdcdcf922a4&#34;,&#34;sha256:1e9e99d1a6a31105f60b0e466627405b653f1159d27d3c0f265e5f3c9f99e812&#34;]
+[&#34;sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9&#34;,&#34;sha256:35b7153bfc8fd8e90ff45282bf7abb9c43046400287a912693fa409d4278818c&#34;,&#34;sha256:e7d271231802f2b45e74efcb14dfefc5dd952e0c3914fa823a5ce2c30c461043&#34;,&#34;sha256:3077c11a618ad8a5da0802c9228e4c17f1b0759950fbcca7256d2bdcdcf922a4&#34;,&#34;sha256:1e9e99d1a6a31105f60b0e466627405b653f1159d27d3c0f265e5f3c9f99e812&#34;]
+[&#34;sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9&#34;,&#34;sha256:35b7153bfc8fd8e90ff45282bf7abb9c43046400287a912693fa409d4278818c&#34;,&#34;sha256:e7d271231802f2b45e74efcb14dfefc5dd952e0c3914fa823a5ce2c30c461043&#34;,&#34;sha256:3077c11a618ad8a5da0802c9228e4c17f1b0759950fbcca7256d2bdcdcf922a4&#34;,&#34;sha256:1e9e99d1a6a31105f60b0e466627405b653f1159d27d3c0f265e5f3c9f99e812&#34;]
+[&#34;sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9&#34;,&#34;sha256:35b7153bfc8fd8e90ff45282bf7abb9c43046400287a912693fa409d4278818c&#34;,&#34;sha256:e7d271231802f2b45e74efcb14dfefc5dd952e0c3914fa823a5ce2c30c461043&#34;,&#34;sha256:3077c11a618ad8a5da0802c9228e4c17f1b0759950fbcca7256d2bdcdcf922a4&#34;]
+[&#34;sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9&#34;,&#34;sha256:35b7153bfc8fd8e90ff45282bf7abb9c43046400287a912693fa409d4278818c&#34;,&#34;sha256:e7d271231802f2b45e74efcb14dfefc5dd952e0c3914fa823a5ce2c30c461043&#34;]
+[&#34;sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9&#34;,&#34;sha256:35b7153bfc8fd8e90ff45282bf7abb9c43046400287a912693fa409d4278818c&#34;]
+[&#34;sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9&#34;]
+[&#34;sha256:a464c54f93a9e88fc1d33df1e0e39cca427d60145a360962e8f19a1dbf900da9&#34;]
+Error: No such object: &lt;missing&gt;
+</code></pre><ol start="6">
+<li>删除镜像</li>
+</ol>
+<pre tabindex="0"><code>&gt; docker rmi dtest:1.0
+Untagged: dtest:1.0                                                                Step
+Deleted: sha256:b28b2394f41a2793a39ef52d5dd9d2baee25577ca186ae418f40788953461feb     8
+Deleted: sha256:a948ed8f4770e63f048bd70cfeed285282b8f00cabd1e1f533a87f108bc732b0     7
+Deleted: sha256:cd4063d6d0042155a55656769d862f245e52c3b4850c0058b9df57a2efb14f7e     6
+Deleted: sha256:4e93fada93b2cd4957de03f29afcef7a1902f32bcfc2c1dc18981589908d17cc     删除6引用layer
+Deleted: sha256:f63b6fdf19958d210f4025bd8e7712674100c258dc9cec1989b694f8ce584bb6     5
+Deleted: sha256:137b3352b7489125cefce90a8090e65784b80f26cfd1d1d3cd476b8aaaa1ec25     删除5引用layer
+Deleted: sha256:123b7cf032389fe77fbf9ceb824b78d193245994f4363a0afe54c22f022ef979     4
+Deleted: sha256:24763812613715916999c97b6701f9efad57b5279037ada7379173cc4d3c2743     删除4引用layer
+Deleted: sha256:c421ae62239c98dd587bc7f5a9acb03ea2566a72025b21006c25373ec0c186d9     3
+Deleted: sha256:6a9da1e2e4d23c4323fb85d14fe8ca6d030a367d712189f193638296f5c82f68     删除3引用layer
+Deleted: sha256:a06b9552c5be5fa3546e5eb25db5dccc196dfdb1fc3cd6f90def57bd0bac9488     2
+</code></pre><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>指令</th>
+<th>中间容器 ID</th>
+<th>IMAGE ID</th>
+<th>Layers(只截前5字符)</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>FROM</td>
+<td>-</td>
+<td>cdf98d1859c1</td>
+<td>a464c</td>
+<td>基础镜像 layer</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ENV</td>
+<td>44ed3f9df47b</td>
+<td>a06b9552c5be</td>
+<td>a464c</td>
+<td>元数据</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RUN</td>
+<td>fd75b4d2063c</td>
+<td>c421ae62239c</td>
+<td>a464c,35b71</td>
+<td>新 layer</td>
+</tr>
+<tr>
+<td>4</td>
+<td>COPY</td>
+<td>-</td>
+<td>123b7cf03238</td>
+<td>a464c,35b71 e7d27</td>
+<td>新 layer</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ADD</td>
+<td>-</td>
+<td>f63b6fdf1995</td>
+<td>a464c,35b71,e7d27 3077c,</td>
+<td>新 layer</td>
+</tr>
+<tr>
+<td>6</td>
+<td>RUN</td>
+<td>dc2be3fdbc00</td>
+<td>cd4063d6d004</td>
+<td>a464c,35b71,e7d27,3077c,ef463</td>
+<td>新 layer</td>
+</tr>
+<tr>
+<td>7</td>
+<td>EXPOSE</td>
+<td>df6d2ebc78ef</td>
+<td>a948ed8f4770</td>
+<td>a464c,35b71,e7d27,3077c,ef463</td>
+<td>元数据</td>
+</tr>
+<tr>
+<td>8</td>
+<td>CMD</td>
+<td>cc2b4eaca4a6</td>
+<td>b28b2394f41a</td>
+<td>a464c,35b71,e7d27,3077c,ef463</td>
+<td>元数据</td>
+</tr>
+</tbody>
+</table>
+<p>根据以上分析可以看出，所有涉及的镜像仅由 5 layers 组成，第一个就是基础镜像的 layer，RUN、COPY、ADD、RUN 新增加 4 个 layers，从 history 的 SIZE 字段也可以看出。而 ENV、EXPOSE、CMD 只增加了元数据。关于如何区分命令是否会新建镜像层，一个基本的原则是，如果指令的作用是向镜像中增添新的文件或者程序，那么这条指令就会新建镜像层；如果只是告诉 Docker 如何完成构建或者如何运行应用程序，那么就只会增加镜像的元数据。所以并非所有的 RUN 都会有创建新层，比如 <code>RUN echo &quot;no data&quot;</code> 就不会创建新的层。
+每一个指令都有相应的镜像，但是否生成中间容器要看指令看是否需要运行验证。
+删除镜像的时候，会把新生成的7个镜像和4个 layers 都删除掉。对于拉取的镜像没有中间镜像，删除的时候就只主镜像和 layers。</p>
+<h3 id="43-nbspnbspinspect-image">4.3   inspect image</h3>
+<p>inspect 命令可以列出与镜像相关的信息，但是这些信息并不都是镜像的属性，而是对同一个镜像 ID 信息的归纳。以下列举一些说明:</p>
+<ul>
+<li>Id            ：即配置对象本身的散列值，一般叫 IMAGE ID；这个 Id 是跟仓库等属性无关的，只与 layer 和 元数据有关。</li>
+<li>RepoTags      ：数组类型，格式为 name:tag；按名称和标签分组；</li>
+<li>RepoDigests   ：数组类型，格式为 name@sha256:hex；按名称分组；在 push 后才会生成；</li>
+<li>RootFS        ：layer 相关的信息，列有 layer 本身内容的散列值；不过要注意的是，push 到仓库后会进行压缩，所以远端会用分发散列值。</li>
+</ul>
+<h2 id="5-nbspnbsp容器">5   容器</h2>
+<p>容器是以镜像为模板，在镜像上添加一层可写的容器层就成为容器：baseImage/image/image&hellip;/container，对容器的修改仅限于该容器的可写层。可以比喻镜像是类，容器是实例化的对象。</p>
+<h2 id="6-nbspnbsp常用命令">6   常用命令</h2>
+<ul>
+<li>
+<p>pull 拉取镜像，如docker pull php:7.1.3-fpm-alpine</p>
+</li>
+<li>
+<p>push 推送镜像，注意使用前需要 docker login 登录</p>
+</li>
+<li>
+<p>inspect/network inspect 查看镜像、容器和网络</p>
+</li>
+<li>
+<p>ps 查看运行中的容器，常用的属性有 -a，还有其它的一些命令，如 docker rm `docker ps -a -q`、docker network inspect $(docker network ls -q)</p>
+</li>
+<li>
+<p>images 查看镜像，除了正常的镜像，还有三类 <code>&lt;none&gt;</code> 镜像：</p>
+</li>
+</ul>
+<ol>
+<li>正常镜像的中间镜像，无法删除，因为被上层依赖。<code>docker images -a</code> 命令才看得到；</li>
+<li>dangling 镜像，即重复 build 会把原来正常的镜像变成 dangling，可以用 <code>docker rmi $(docker images -f “dangling=true” -q)</code> 删除；</li>
+<li>没用的镜像，可以用 <code>docker image prune -f</code> 删除。</li>
+</ol>
+<ul>
+<li>run 常用参数 docker run &ndash;name nginx_server -d -p 80:80 &ndash;link php:php -v /Users/mylxsw/Dockers/php/nginx.conf:/etc/nginx/nginx.conf &ndash;volumes-from php nginx，需要注意的是：Docker容器后台运行,就必须有一个前台进程.容器运行的命令如果不是那些一直挂起的命令（比如运行top，tail），就是会自动退出的，以 nginx 为例，默认以交互方式在前台运行，要在后台运行有两种方式：
+（1）nginx -g &ldquo;daemon off&rdquo;. CMD 或者 ENTRYPOINT 两种方式
+（2）nginx.conf 加入 daemon off. 这样 run 指令就只要 nginx 就可以了</li>
+<li>-e：设置环境变量，有三种方式：-e MYVAR1 &ndash;env MYVAR2=foo &ndash;env-file ./env.list</li>
+</ul>
+<p>也可以不加-d,并运行/bin/sh，依次输入ctrl+p、ctrl+q，就不会终止容器而只是退出。
+&ndash;restart string                 Restart policy to apply when a container exits (default &ldquo;no&rdquo;)</p>
+<ul>
+<li>
+<p>exec 进入容器，如 docker exec -it e97e3208d019 /bin/sh，在运行中的容器内部额外启动进程，参数和 run 类似。直接 exit 或 ctrl+D 不会退出容器</p>
+</li>
+<li>
+<p>attach 可以附着到容器上，就相当于 run 的方式进入，直接 exit 或 ctrl+D 会退出容器</p>
+</li>
+<li>
+<p>restart 或者 start 可以重启容器、stop 停止守护容器、rm 删除容器、rmi 删除镜像</p>
+</li>
+<li>
+<p>build 基于基础镜像和 Dockerfile 构建新镜像，如 <code>docker build -t wpxun/php:7.1.3 .</code></p>
+</li>
+<li>
+<p>tag 打上标签</p>
+</li>
+</ul>
+<p>上面的命令基本够用了，更多的命令可以查阅官方文档 <a href="https://docs.docker.com/engine/reference/commandline/docker/">Command-Line Interfaces</a>。</p>
+<h2 id="7-nbspnbsp本地仓库">7   本地仓库</h2>
+<p>部署一个本地仓库可以查阅官方文档 <a href="https://docs.docker.com/registry/">Docker Registry</a>，需要注意的几点是：</p>
+<ul>
+<li>采用 <a href="https://hub.docker.com/_/registry">registry 官方镜像</a>部署</li>
+<li>一般把容器的镜像目录映射到宿主机</li>
+<li>远程访问时开启 HTTPS，一般可以用 Let’s Encrypt、insecure registry（包括 HTTP 和 self-signed certificates）</li>
+</ul>
+<h3 id="71-nbspnbsp服务端">7.1   服务端</h3>
+<p>最简单可以用 <code>docker run -d -p 5000:5000 --restart=always --name registry registry:2.7.1</code> 这种情况只能在宿主机下操作，为了在其它主机连接上仓库，必须用 TLS。</p>
+<p>接下来用自签名证书演示：</p>
+<pre tabindex="0"><code>$ mkdir -p certs
+
+$ openssl req \
+  -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \
+  -x509 -days 365 -out certs/domain.crt -subj &#34;/CN=192.168.56.113&#34;
+#Be sure to use the name myregistrydomain.com as a CN. 可以加 -subj &#39;/C=CN/ST=ShenZhen/L=NanShan/CN=&lt;Ipaddress&gt;&#39;
+
+$ docker run -d \
+  --restart=always \
+  --name registry \
+  -v `pwd`/registry:/var/lib/registry \
+  -v `pwd`/certs:/certs \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+  -p 5000:5000 \
+  registry:2.7.1
+</code></pre><h3 id="72-nbspnbsp客户端配置">7.2   客户端配置</h3>
+<p>客户端配置其实就是公钥配置。</p>
+<ul>
+<li>对宿主机可以用 localhost:5000 连接仓库的操作，无需配置公钥</li>
+<li>对其它 Docker 主机，需要信任该证书，把公钥放到相应的目录下</li>
+<li>对 CentOS，把公钥放在 /etc/docker/certs.d/ 目录下，无需重启 Docker。
+<code>Copy the domain.crt file to /etc/docker/certs.d/&lt;MyRegistry&gt;:&lt;Port&gt;/ca.crt on every Docker host. You do not need to restart Docker.</code></li>
+<li>对 MacOS 桌面版，把公钥放在 ~/.docker/certs.d 目录下，并重启 Docker
+<code>~/.docker/certs.d/&lt;MyRegistry&gt;:&lt;Port&gt;/ca.crt</code></li>
+<li>对 curl，可以把公钥追加到 /etc/pki/tls/certs/ca-bundle.crt 中，也可以 &ndash;cacert 指定证书，还可以加 -k 参数不安全访问
+curl https://192.168.56.113:5000/v2/_catalog -k
+curl https://192.168.56.113:5000/v2/golang/tags/list -k</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] Nigel Poulton. 深入浅出 Dokcer. 版次：2019年4月第1版
+[2] Lan Miell.等. Docker 实践. 版次：2018年2月第1版
+[3] Explaining Docker Image IDs. <a href="https://windsock.io/explaining-docker-image-ids/">https://windsock.io/explaining-docker-image-ids/</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/docker-single-engine-mode/" data-toggle="tooltip" data-placement="top" title="Dockerfile 应用容器化及 Compose 部署应用">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/before-work/" data-toggle="tooltip" data-placement="top" title="日记——几点思考（1）">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

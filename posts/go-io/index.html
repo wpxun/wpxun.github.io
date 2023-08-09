@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>go I/O 操作 - HOME</title>
+  <meta property="og:title" content="go I/O 操作 - HOME" />
+  <meta name="twitter:title" content="go I/O 操作 - HOME" />
+  <meta name="description" content="理解 I/O 的一些概念问题可以先看另一篇文章《C Socket 编程》
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。">
+  <meta property="og:description" content="理解 I/O 的一些概念问题可以先看另一篇文章《C Socket 编程》
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。">
+  <meta name="twitter:description" content="理解 I/O 的一些概念问题可以先看另一篇文章《C Socket 编程》
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/go-io/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">go I/O 操作</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>March 13, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/golang/">
+            <i class="fas fa-folder"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/golang/">
+            <i class="fas fa-tag"></i>
+            Golang
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/io/">
+            <i class="fas fa-tag"></i>
+            io
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>理解 I/O 的一些概念问题可以先看另一篇文章<a href="/2019/03/11/c-socket/">《C Socket 编程》</a>
+Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。</p>
+<h2 id="1-nbspnbsp简介">1   简介</h2>
+<p>先进行接口设计，后进行实现设计，即对每一个接口方法进行设计。</p>
+<h3 id="11-nbspnbsp接口设计">1.1   接口设计</h3>
+<p>定义一个接口，是要设计一种方法集。在做接口设计的时候，每一个方法的具体功能一定要能表述出来；并且根据所有方法，其中可以汇总出核心必备的属性，当然接口不能拥有属性，这只是一种脑补的属性，有利于实现设计。</p>
+<p>可以分析 io 的接口实现，包括所有接口的功能描述和脑补核心属性：</p>
+<ul>
+<li>io.Reader：只有一个 Read 方法</li>
+</ul>
+<ol>
+<li>Read 方法的功能：可以从中读取数据，可以分多次读取</li>
+<li>脑补核心属性：有两个，一个是源比如字符串、文件等；另一个是对源的当前读取到的指向</li>
+</ol>
+<ul>
+<li>io.Writer：只有一个 Write 方法</li>
+</ul>
+<ol>
+<li>Write 方法的功能：可以把数据写进去，能写多少依据源的能力</li>
+<li>脑补核心属性：直接一个源就可以了</li>
+</ol>
+<h3 id="12-nbspnbsp实现设计">1.2   实现设计</h3>
+<p>根据要实现的方法集的一种设计，并可以由此知道需要的属性。原则上对每一个方法，如果有输出的话，则无论采用哪种设计，对同样的输入（或者同样的无输入），应该要有同样的输出。
+实现其实就是一种设计（当然也可以扩充其功能），比如 strings.Reader 基本上就是比较原始的设计，而 bufio.Reader 采用了缓冲的设计实现了同样的功能。接下来我们列举一些常用的实现，并分析其原理。</p>
+<h3 id="13-nbspnbspio-包">1.3   io 包</h3>
+<p>io 包中定义有：</p>
+<ul>
+<li>大量的接口</li>
+<li>一些通用函数</li>
+<li>小量的接口实现，在原io中的实现并不常用，strings、bufio 等包对 io 的实现更常用一些。</li>
+</ul>
+<p>总体来看，io.go 主要是进行接口设计，实现设计是次要的。</p>
+<h2 id="2-nbspnbspbufio-实现设计">2   bufio 实现设计</h2>
+<p>bufio.Reader 封装了 io.Reader，bufio.Writer 封装了 io.Writer，接下来就分别从这两个类型进行讲解。</p>
+<h3 id="21-nbspnbspbufioreader">2.1   bufio.Reader</h3>
+<p>bufio 封装了对应 io 的同时多了 buf 属性，和对 buf 的控制r、w这两个属性，读和写其实就会优先从 buf 进行，</p>
+<p>bufio.Reader 主要有buf、r、w、rd(io.Reader)等属性（其它属性对原理的理解相对次要所以不提），把读操作优化成“rd-&gt;buf-&gt;变量”，除了一些特殊情况还是保留“rd-&gt;变量”的读取方式。
+读取主要分两类：1、确定读取长度，如bufio.Read，bufio.ReadByte等；2、确定读取到某个字符，如bufio.ReadSlice，bufio.ReadLine，bufio.ReadBytes，bufio.ReadString等</p>
+<ol>
+<li>bufio.Read：</li>
+</ol>
+<ul>
+<li>如果 buf 不为空，则从 buf 取数据尽可能多的把 p 填满（可能填不满，这种情况下即使io.Reader还有未读数据，也不会再去取，也就是只取 buf 数据）。</li>
+<li>如果 buf 为空，即 r==w，则判断要取的长度是否大于buf，如果大于等于buf，再直接从io.Reader取，也只有这种情况下是直接取的即“rd-&gt;变量”；如果小于 buf，则把buf填满，然后回到1；</li>
+</ul>
+<ol start="2">
+<li>
+<p>ReadSlice 或 ReadLine
+该两个方法比较底层，不建议使用，这里需要注意的，返回的其实是指向 bufio.buf 属性的切片，因为 bufio.buf 底层的数组指针一直不变，而值却在变，因为返回的切片区域可能会因为 bufio.buf 值的改变而改变，特别在多次调用时要注意。</p>
+</li>
+<li>
+<p>ReadBytes 或 ReadString
+这两个方法通过调用 ReadSlice 实现，并在最终 copy 到新创建的切片返回，所以多次读取很安全。</p>
+</li>
+<li>
+<p>WriteTo
+它的功能是把全部数据写到 Writer，对于 bufio，必须分两步：</p>
+</li>
+</ol>
+<ul>
+<li>第一步把当前的缓冲写到 Writer，内部函数 writeBuf 就是单纯把缓冲区写到 Writer</li>
+<li>然后把还没有缓冲的问题写到 Writer，判断逻辑是：源 Reader 有 WriterTo 就调用其 WriterTo，没有就走 fill 填充（也就是调用源 Reader 的 Read 读取）</li>
+</ul>
+<h3 id="22-nbspnbspbufiowriter">2.2   bufio.Writer</h3>
+<p>如果写入的数据大于缓冲区，则直接写入。
+写入只是写到缓冲区，注意需要调用 Flush 方法写入，否则即使是程序运行结束也不会写入。</p>
+<ol>
+<li>ReadFrom</li>
+</ol>
+<ul>
+<li>如果缓冲为空且源 ReaderFrom 存在，则直接从源里调用</li>
+<li>否则循环的取到缓冲中，并 Flush</li>
+</ul>
+<h2 id="3-nbspnbspbytesbuffer-实现设计">3   bytes.buffer 实现设计</h2>
+<p>主要属性有 buf []byte 和 off：read at &amp;buf[off], write at &amp;buf[len(buf)]</p>
+<h2 id="4-nbspnbspsocket-实现设计">4   Socket 实现设计</h2>
+<p>首先我们看一下一段 TCP 代码 <a href="https://github.com/wpxun/blog/blob/master/sample/socket.go">socker.go</a>。</p>
+<p>net.Dial 和 net.Listen().Accept() 返回 socket，可读可写，本质上是经过以下步骤取得文件句柄的：
+net.Listen().fd.accept() 取得 fd 句柄，然后创建 net.conn（实际上 socket 还要经过协议一层包装）</p>
+<pre tabindex="0"><code>type conn struct {
+	fd *netFD
+}
+</code></pre><p>抓包分析：以代码的逻辑，TCP 数据一定是完整传输的，且每次发送的时间都有 PSH 标识；但因为并发的原因，服务端仅一次且不确定时间地读取 TCP 数据，导致在服务端读取之后发送的数据没有继续读取。
+<img src="https://wpxun.github.io/image/2019/07/go-socket-sample.png" alt="发送与接收"></p>
+<h2 id="4-nbspnbspioutil-工具">4   ioutil 工具</h2>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/go-concurrency-difficult/" data-toggle="tooltip" data-placement="top" title="并发的复杂性">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/go-network/" data-toggle="tooltip" data-placement="top" title="go 网络编程">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

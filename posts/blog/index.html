@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>博客实践 - HOME</title>
+  <meta property="og:title" content="博客实践 - HOME" />
+  <meta name="twitter:title" content="博客实践 - HOME" />
+  <meta name="description" content="2019-12-21 更新到 Hugo，抛弃复杂的 hexo，hexo 依赖 node 和各种 node_module，比如集成 CNAME 这一简单的功能都是靠模块来实现。而 hugo 得益于 Go，直接 go get 生成 hugo 执行文件即可，日常操作和 hexo 基本一样： hugo server、hugo 两个命令，常用参数 -D 表示集成草稿。如果要自动部署到 github，写一个 sh 脚本即可。另外静态文件方面在根目录下有 static，直接放在里面即可：
+-rw-r--r-- 1 ada staff 14 12 21 16:08 CNAME -rw-r--r--@ 1 ada staff 10497 12 21 16:09 avatar.jpg -rw-r--r-- 1 ada staff 10 12 21 16:08 baidu_verify_MOITAeX9md.html -rw-r--r--@ 1 ada staff 1150 12 21 16:09 favicon.ico -rw-r--r-- 1 ada staff 53 12 21 16:08 googleba39dd1bfa288749.">
+  <meta property="og:description" content="2019-12-21 更新到 Hugo，抛弃复杂的 hexo，hexo 依赖 node 和各种 node_module，比如集成 CNAME 这一简单的功能都是靠模块来实现。而 hugo 得益于 Go，直接 go get 生成 hugo 执行文件即可，日常操作和 hexo 基本一样： hugo server、hugo 两个命令，常用参数 -D 表示集成草稿。如果要自动部署到 github，写一个 sh 脚本即可。另外静态文件方面在根目录下有 static，直接放在里面即可：
+-rw-r--r-- 1 ada staff 14 12 21 16:08 CNAME -rw-r--r--@ 1 ada staff 10497 12 21 16:09 avatar.jpg -rw-r--r-- 1 ada staff 10 12 21 16:08 baidu_verify_MOITAeX9md.html -rw-r--r--@ 1 ada staff 1150 12 21 16:09 favicon.ico -rw-r--r-- 1 ada staff 53 12 21 16:08 googleba39dd1bfa288749.">
+  <meta name="twitter:description" content="2019-12-21 更新到 Hugo，抛弃复杂的 hexo，hexo 依赖 node 和各种 node_module，比如集成 CNAME 这一简单的功能都是靠模块来实现。而 hugo 得益于 Go，直接 go get 生成 hugo 执行文件即可，日常操作和 hexo 基本一样： hugo server、hugo 两个命令，常用参数 -D 表示集成草稿。如果要自动部署到 github， …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/blog/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">博客实践</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>February 8, 2017</time></li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#hexo-环境">Hexo 环境</a></li>
+    <li><a href="#hexo-使用">Hexo 使用</a>
+      <ul>
+        <li><a href="#常用命令">常用命令</a></li>
+        <li><a href="#分类和标签">分类和标签</a></li>
+      </ul>
+    </li>
+    <li><a href="#github-pages">GitHub Pages</a></li>
+    <li><a href="#引入-disqus-评论模块">引入 Disqus 评论模块</a></li>
+    <li><a href="#引入目录模块">引入目录模块</a></li>
+    <li><a href="#随处写文章解决方案">随处写文章解决方案</a></li>
+    <li><a href="#seo-搜索">SEO 搜索</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>2019-12-21 更新到 Hugo，抛弃复杂的 hexo，hexo 依赖 node 和各种 node_module，比如集成 CNAME 这一简单的功能都是靠模块来实现。而 hugo 得益于 Go，直接 go get 生成 hugo 执行文件即可，日常操作和 hexo 基本一样：
+hugo server、hugo 两个命令，常用参数 -D 表示集成草稿。如果要自动部署到 github，写一个 sh 脚本即可。另外静态文件方面在根目录下有 static，直接放在里面即可：</p>
+<!-- raw HTML omitted -->
+<pre tabindex="0"><code>-rw-r--r--  1 ada  staff     14 12 21 16:08 CNAME
+-rw-r--r--@ 1 ada  staff  10497 12 21 16:09 avatar.jpg
+-rw-r--r--  1 ada  staff     10 12 21 16:08 baidu_verify_MOITAeX9md.html
+-rw-r--r--@ 1 ada  staff   1150 12 21 16:09 favicon.ico
+-rw-r--r--  1 ada  staff     53 12 21 16:08 googleba39dd1bfa288749.html
+</code></pre><p>最佳实践是，hugo 工作目录和发布目录分库，而不是分支，分库后利用 .gitmodules：</p>
+<pre tabindex="0"><code>[submodule &#34;themes/pure&#34;]
+  path = themes/pure
+  url = git@github.com:xiaoheiAh/hugo-theme-pure.git
+[submodule &#34;public&#34;]
+  path = public
+  url = git@github.com:wpxun/wpxun.github.io.git
+  branch = master
+</code></pre><p>下面两个链接已经讲得非常详细了：<br>
+<a href="https://gohugo.io">1. Quick Start</a><br>
+<a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">2. Host on GitHub</a></p>
+<hr>
+<p><strong>下面是历史 Hexo 的部署方式，食之无味，弃之可惜。</strong></p>
+<hr>
+<p><a href="http://hexo.io">Hexo</a> 是一个很不错的静态博客管理工具的，快速发布，Markdown 支持，插件支持。官网现在列出了100来个主题都很好看，第一篇文章就来写 Hexo 的部署工作吧。
+我个人比较喜欢用 Centos，所以我是基于 Centos7 环境来写 Hexo 博客的，Win10 用户可以用 Linux 子系统来部署，这样可以在 Linux 上部署，在 Win10 上写文章；网上也有很多类似的文章，我自己喜欢折腾，大家没事可以粗略看一看。</p>
+<h2 id="hexo-环境">Hexo 环境</h2>
+<ol>
+<li>git 和 ssh</li>
+<li>nodejs</li>
+</ol>
+<p><strong>1</strong>、Centos7 下 yum 安装的 git 都是1.8^，如果想安装 2.11^ 得用源码安装，可以在这里看关于<a href="http://jemper.cn/2017/02/10/git-source/">Git源码安装</a>的文章。ssh避免了每次输入密码，如果是只有一个ssh密钥，也就没有必要用ssh-agent管理工具了，直接放在 ~/.ssh/ 下，使用ssh时默认就会去查找 ~/.ssh/id_rsa（可以先用ssh -T <a href="mailto:git@github.com">git@github.com</a>测试一下连接）。</p>
+<p><strong>2</strong>、node.js 在 Hexo 文档中有介绍，但是我试了安装不了，还是直接到 <a href="https://github.com/creationix/nvm#install-script">nvm源</a> 里查看安装方法吧。</p>
+<h2 id="hexo-使用">Hexo 使用</h2>
+<p>这部分主要参考<a href="https://hexo.io/docs/commands.html">官方文档</a>。注意命令可以缩写，比如hexo cl、hexo d，和ip address 缩写成ip a或者ip add一样的道理。<br>
+文档中命令的参数并没有完全写出来，比如hexo server 还有其它的参数，hexo server -i 192.168.2.15 中的参数 -i 可加 ip 地址，用hexo help server 查看完整的命令参数。</p>
+<h3 id="常用命令">常用命令</h3>
+<ul>
+<li>hexo init 当前文件夹列出的hexo所有命令跟是否已经在该文件夹init有关系，这点做得挺好的；</li>
+<li>hexo new 新建文件，会去scaffolds复制模板，如果使用 hexo new drafts &ldquo;article title&rdquo;，就需要用 hexo publish drafts &ldquo;article title&rdquo; 发布；</li>
+<li>hexo generate 生成静态网站；</li>
+<li>hexo deploy 根据_config.yml文件的deplay type类型部署静态网站文件到服务器；</li>
+<li>hexo clean 清除 public，缩写 hexo cl，不能缩写成 hexo c；</li>
+<li>hexo server 可以在本地浏览器预览，可见即可得，无需 generate，方便样式调试；hexo s &ndash;drafts 可以把草稿变成文章；</li>
+</ul>
+<h3 id="分类和标签">分类和标签</h3>
+<ul>
+<li>tags: [Sports,Baseball]，也可以用 <code>-</code> 数组形式</li>
+<li>categories:
+<ol>
+<li>多级分类，文章会放在 Sports/Baseball 目录下
+<pre tabindex="0"><code>categories:
+</code></pre></li>
+</ol>
+<ul>
+<li>Sports</li>
+<li>Baseball</li>
+</ul>
+</li>
+</ul>
+<p>categories: [Sports,Baseball]</p>
+<pre tabindex="0"><code> 2. 多个子分类，会分别放在 Sports 和 Baseball 两个目录下
+</code></pre><p>categories:</p>
+<ul>
+<li>
+<p>[Sports]</p>
+</li>
+<li>
+<p>[Baseball]</p>
+<pre tabindex="0"><code></code></pre></li>
+</ul>
+<h2 id="github-pages">GitHub Pages</h2>
+<p>Hexo 和 GitHub 是代码和代码库的关系，Hexo 和 <a href="https://pages.github.com/">GitHub Pages</a> 是代码和服务器的关系。
+GitHub 创建一个库，名字一样要是{yourname}.github.io,这样才能正常用{yourname}.github.io域名访问。
+在代码库里设置 setting 里的 Options/GitHub Pages 栏配置域名和分支，我这里是用master分支。如果有配置域名，相当于分支下 Create a CNAME file，为了不影响每次 deploy 后被 CNAME 文件删除，安装插件<code>npm install --save hexo-generator-cname3</code>。域名做 cname 记录到{yourname}.github.io。
+然后配置 Hexo 根目录下的 _config.yml 的 deploy 属性，type 如果是用 git，相应的就需要安装<code>npm install hexo-deployer-git --save</code>；branch 和 setting 的 master 分支保持一致，有域名的话要加上一行 cname: [YOUR.DOMAIN]。</p>
+<pre tabindex="0"><code>deploy:
+  type: git
+  repo: git@github.com:wpxun/wpxun.github.io.git
+  branch: master
+  message: &#39;站点更新:{{now(&#34;YYYY-MM-DD HH/mm/ss&#34;)}}&#39;
+
+cname: jemper.cn
+</code></pre><h2 id="引入-disqus-评论模块">引入 Disqus 评论模块</h2>
+<p>到 <a href="https://disqus.com/">Disqus</a> 网站注册并添加站点，获得 disqus_shortname，在根目录 /_config.yml 中添加行<code>disqus_shortname: yourDisqusShortname</code>，至于怎么在 Disqus 新建站点，网上教程好多。</p>
+<h2 id="引入目录模块">引入目录模块</h2>
+<p>Hexo 已经有 <a href="https://hexo.io/zh-cn/docs/helpers">辅助函数</a>，形式: &lt;%- toc(page.content) %&gt;，根据以下的配置，默认就会开启目录，如需关闭，只需要在文章 item（判断了 item.toc） 处设置 toc: false。</p>
+<p>在 /themes/light/layout/_partial/article.ejs 修改 entry 部分为：</p>
+<pre tabindex="0"><code>    &lt;div class=&#34;entry&#34;&gt;
+      &lt;% if (item.excerpt &amp;&amp; index){ %&gt;
+        &lt;%- item.excerpt %&gt;
+      &lt;% } else { %&gt;
+        &lt;% if (item.toc !== false){ %&gt;
+            &lt;div id=&#34;toc&#34; class=&#34;toc-article&#34;&gt;
+                &lt;%- toc(item.content, {list_number: false}) %&gt;
+            &lt;/div&gt;
+        &lt;% } %&gt;
+        &lt;%- item.content %&gt;
+      &lt;% } %&gt;
+    &lt;/div&gt;
+</code></pre><p>在 themes/light/source/css/_partial/article.styl 添加：</p>
+<pre tabindex="0"><code>.toc-article
+  margin 0.5em
+  border-left 10px solid color-border
+  padding 0.5em
+  strong
+.toc-article li
+  list-style none
+</code></pre><h2 id="随处写文章解决方案">随处写文章解决方案</h2>
+<p>上面已经有一个 master 主分支，用来放博客静态文件；还需要一个 source 分支，用来放博客的源文件。原理是先拉代码下来，创建空的 source 分支，把博客源文件放进入提交到 source 分支，推到 Github。需要注意的一点是主题不要用<code>git clone https://github.com/ahonn/hexo-theme-even themes/even</code>，而是在其它地方git拉取，再复制到theme目录下，git嵌套不了。操作如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ cd hexo
+</span></span><span style="display:flex;"><span>$ hexo clean <span style="color:#f92672">&amp;&amp;</span> hexo deploy //这是单纯的hexo，deploy到github的wpxun.github.io分支了
+</span></span><span style="display:flex;"><span>$ cd ..
+</span></span><span style="display:flex;"><span>$ git clone git@github.com:wpxun/wpxun.github.io.git //在新的目录下拉取下来，之后就在这个分支书写了，上面的 hexo 目录就可以删除了
+</span></span><span style="display:flex;"><span>$ cd wpxun.github.io
+</span></span><span style="display:flex;"><span>$ git co --orphan source //创建新分支
+</span></span><span style="display:flex;"><span>$ git rm -rf .
+</span></span><span style="display:flex;"><span>$ cp -r ../hexo wpxun.github.io
+</span></span><span style="display:flex;"><span>$ hexo clean
+</span></span><span style="display:flex;"><span>$ touch .gitignore //里面写上<span style="color:#f92672">[</span>.deploy_git、public、db.json<span style="color:#f92672">]</span>这三行
+</span></span><span style="display:flex;"><span>$ git add .
+</span></span><span style="display:flex;"><span>$ git ci -am<span style="color:#e6db74">&#34;add source branch&#34;</span> <span style="color:#f92672">&amp;&amp;</span> git push -u origin source
+</span></span></code></pre></div><p>至此，以后在新的机器上写文章的操作如下：</p>
+<ol>
+<li>
+<p>拉取代码切换到 source 分支下；</p>
+</li>
+<li>
+<p>因为 node_modules 跟 node 版本或者操作系统版本有关（这也是.gitignore要排除掉它的原因），所以不同操作系统或不同版本的 node，node_modules 文件夹并不能共用。所以需要在该系统中其它文件夹 hexo init，并安装相应的依赖（<code>npm install --save hexo-generator-cname3</code>，<code>npm install hexo-deployer-git --save</code>）再把 node_modules 文件夹再复制过来</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git clone git@github.com:wpxun/wpxun.github.io.git
+</span></span><span style="display:flex;"><span>$ cd wpxun.github.io
+</span></span><span style="display:flex;"><span>$ git co source //这步操作后需要进行第2点的复制文件操作，否则hexo不能正常执行，相关操作以上已经说明，就不赘述了
+</span></span><span style="display:flex;"><span>$ hexo new <span style="color:#e6db74">&#34;add-post&#34;</span>
+</span></span><span style="display:flex;"><span>$ hexo cl <span style="color:#f92672">&amp;&amp;</span> hexo d
+</span></span><span style="display:flex;"><span>$ hexo cl
+</span></span><span style="display:flex;"><span>$ git add .
+</span></span><span style="display:flex;"><span>$ git ci -am<span style="color:#e6db74">&#34;add post&#34;</span> <span style="color:#f92672">&amp;&amp;</span> git push
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="seo-搜索">SEO 搜索</h2>
+<ol>
+<li>
+<p>验证所有权：一般采用文件验证，把文件直接放在 themes/light/source</p>
+</li>
+<li>
+<p>生成 Sitemap：安装 Baidu/Google Sitemap 插件</p>
+<pre tabindex="0"><code>npm install hexo-generator-baidu-sitemap --save
+npm install hexo-generator-sitemap --save
+</code></pre><p>修改站点配置文件_config.yml，添加以下内容：</p>
+<pre tabindex="0"><code># 自动生成 sitemap
+sitemap:
+path: sitemap.xml
+baidusitemap:
+path: baidusitemap.xml
+</code></pre></li>
+</ol>
+
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/git-source/" data-toggle="tooltip" data-placement="top" title="git 源码安装">&lt; Newer</a>
+      </li>
+      <li class="pager-older pager-noitem">Older &gt;</li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

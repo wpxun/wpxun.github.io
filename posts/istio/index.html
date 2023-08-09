@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Istio 基础 - HOME</title>
+  <meta property="og:title" content="Istio 基础 - HOME" />
+  <meta name="twitter:title" content="Istio 基础 - HOME" />
+  <meta name="description" content="我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。">
+  <meta property="og:description" content="我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。">
+  <meta name="twitter:description" content="我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/istio/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Istio 基础</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>May 30, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">
+            <i class="fas fa-folder"></i>
+            云原生
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/kubernetes/">
+            <i class="fas fa-tag"></i>
+            Kubernetes
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/service-mesh/">
+            <i class="fas fa-tag"></i>
+            Service Mesh
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp为什么需要-service-mesh">1   为什么需要 Service Mesh</a></li>
+    <li><a href="#2-nbspnbsp安装">2   安装</a>
+      <ul>
+        <li><a href="#21-nbspnbsp工具准备">2.1   工具准备</a></li>
+        <li><a href="#22-nbspnbsp方式1---快速安装httpsistioiodocssetupkubernetesinstallkubernetes">2.2   方式1 - <a href="https://istio.io/docs/setup/kubernetes/install/kubernetes/">快速安装</a></a></li>
+        <li><a href="#23-nbspnbsp方式2---helm-安装httpsistioiodocssetupkubernetesinstallhelm">2.3   方式2 - <a href="https://istio.io/docs/setup/kubernetes/install/helm/">Helm 安装</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsp部署应用前准备">3   部署应用前准备</a>
+      <ul>
+        <li><a href="#31-nbspnbsp把-envoy-容器注入-pod">3.1   把 Envoy 容器注入 Pod</a></li>
+        <li><a href="#32-nbspnbspistio-对-pod-和服务的要求httpsistioiozhdocssetupkubernetesadditional-setuprequirements">3.2   <a href="https://istio.io/zh/docs/setup/kubernetes/additional-setup/requirements/">Istio 对 Pod 和服务的要求</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#4-nbspnbsp部署应用">4   部署应用</a>
+      <ul>
+        <li><a href="#41-nbspnbsp启动应用">4.1   启动应用</a></li>
+        <li><a href="#42-nbspnbsp创建目标规则和默认路由规则">4.2   创建目标规则和默认路由规则</a></li>
+        <li><a href="#43-nbspnbsp访问服务">4.3   访问服务</a></li>
+        <li><a href="#44-nbspnbsp总结">4.4   总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+      <p>我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。</p>
+<h2 id="1-nbspnbsp为什么需要-service-mesh">1   为什么需要 Service Mesh</h2>
+<p>有了 Kubernetes 的 Service，为什么还需要 Service Mesh ？相信这是初学者最大的疑问。</p>
+<p>微服务架构解决了单体应用的很多老问题，但同时也带来了一些新问题：</p>
+<ul>
+<li>对部署和运维的自动化要求更高</li>
+<li>对网络这一不可靠的基础设施依赖增强</li>
+<li>调用链路变长</li>
+<li>日志分散，跟踪和分析难度加大</li>
+<li>服务分散，受攻击面积更广</li>
+<li>跨服务控制协调能力要求更高</li>
+<li>自动伸缩、路由管理、存储共享等</li>
+</ul>
+<p>为了解决微服务架构产生的一些问题，以 Kubernetes 为代表的容器云系统出现了。这类容器云系统以容器技术为基础，在进程级别为微服务提供了一致的部署、调度、伸缩、监控、日志等功能。
+然而，除了进程本身的问题，微服务之间的通信和联系更加复杂，其中的观测、控制和服务质量保障等都成为微服务方案的短板，因此随着 Kubernetes 成为事实标准，Service Mesh 顺势登场。</p>
+<p>一言蔽之：就是单体应用问题很多，用微服务架构来解决，但微服务架构实施部署难度加大，借助 Kubernetes 实现了，尔后发现 Kubernetes 只是解决了大部分问题，还有遗留的问题，于是第三方（Buoyant 公司，也就是 Linkerd 的开发商）在新的层次里（Kubernetes 层次外，也就是 Service Mesh）间接地解决。</p>
+<p><img src="https://wpxun.github.io/image/2019/05/istio_architecture.svg" alt="Istio Architecture from https://istio.io/docs/concepts/what-is-istio/"></p>
+<h2 id="2-nbspnbsp安装">2   安装</h2>
+<h3 id="21-nbspnbsp工具准备">2.1   工具准备</h3>
+<p>其安装都是直接复制命令程序即可：</p>
+<ul>
+<li><a href="https://helm.sh/docs/using_helm/#installing-helm">helm 工具安装</a></li>
+<li><a href="https://istio.io/docs/setup/kubernetes/download/">istio 工具安装</a></li>
+</ul>
+<p><a href="https://istio.io/docs/setup/kubernetes/install/">Istio 的安装</a>目前有两种：快速安装和 Helm 安装。其原理都一样：</p>
+<ol>
+<li>注册 crds 资源，需要生成“资源清单”后用 apply 打入 kubernetes</li>
+<li>部署 Istio 组件，需要生成“组件清单”后用 apply 打入 kubernetes</li>
+</ol>
+<p>Helm 是目前 Istio 官方推荐的安装方式，不过功能性学习时可以选择快速安装。</p>
+<h3 id="22-nbspnbsp方式1---快速安装httpsistioiodocssetupkubernetesinstallkubernetes">2.2   方式1 - <a href="https://istio.io/docs/setup/kubernetes/install/kubernetes/">快速安装</a></h3>
+<ol>
+<li>安装 Istio 定义的资源  Custom Resource Definitions (CRDs)
+<code>for i in install/kubernetes/helm/istio-init/files/crd*yaml; do kubectl apply -f $i; done</code>
+我们可以看到，Istio v1.1.7 创建了 4 种 apiVersion，可以通过类似 <code>/apis | grep 'istio.io'</code> API 查看</li>
+</ol>
+<ul>
+<li>authentication.istio.io/v1alpha1</li>
+<li>rbac.istio.io/v1alpha1</li>
+<li>config.istio.io/v1alpha2</li>
+<li>networking.istio.io/v1alpha3</li>
+</ul>
+<p>全部 53 个 Istio CRD 被提交到 Kubernetes api-server（如果你启用了 cert-manager,那么 CRD 的数目为58个），可以使用 <code>kubectl get crds</code> 查看所有的 CRD。需要注意的是，v1.2.0 版本已经调整成 23 个。</p>
+<ol start="2">
+<li>
+<p>部署 Istio 核心组件
+选择一个 配置文件，接着部署与你选择的配置文件相对应的 Istio 的核心组件，比如没有 tls 的 istio-demo.yaml 配置文件：
+<code>kubectl apply -f install/kubernetes/istio-demo.yaml</code>
+我们看到，除了常见的 Deployment、Service、Configmap、ServiceAccount 等 Kubernetes 对象，这里还创建了各种 Istio CRD 的下属资源。</p>
+</li>
+<li>
+<p>卸载</p>
+</li>
+</ol>
+<pre tabindex="0"><code>kubectl delete -f install/kubernetes/istio-demo.yaml
+for i in install/kubernetes/helm/istio-init/files/crd*yaml; do kubectl delete -f $i; done
+</code></pre><h3 id="23-nbspnbsp方式2---helm-安装httpsistioiodocssetupkubernetesinstallhelm">2.3   方式2 - <a href="https://istio.io/docs/setup/kubernetes/install/helm/">Helm 安装</a></h3>
+<p>这里我们推荐 helm template 安装。</p>
+<p>核心资源在 install/kubernetes/helm 目录中。</p>
+<ol>
+<li>
+<p>为 Istio 组件创建命名空间 istio-system：
+<code>$ kubectl create namespace istio-system</code></p>
+</li>
+<li>
+<p>使用 kubectl apply 安装所有的 Istio CRD，命令执行之后，会隔一段时间才能被 Kubernetes API Server 收到，并查询确保全部 53个（如果你启用了 cert-manager,那么 CRD 的数目为58个,在 install/kubernetes/helm/istio-init/values.yaml 配置）Istio CRD 被提交到 Kubernetes api-server：
+<code>$ helm template install/kubernetes/helm/istio-init --name istio-init --namespace istio-system | kubectl apply -f -</code>
+<code>$ kubectl get crds | grep 'istio.io\|certmanager.k8s.io' | wc -l</code></p>
+</li>
+<li>
+<p>选择一个 配置文件，接着部署与你选择的配置文件相对应的 Istio 的核心组件，我们建议在生成环境部署中使用 default 配置文件:
+<code>$ helm template install/kubernetes/helm/istio --name istio --namespace istio-system --values install/kubernetes/helm/istio/values-istio-demo.yaml --set gateways.istio-ingressgateway.type=NodePort | kubectl apply -f -</code>
+你可以添加一个或多个 <code>--set &lt;key&gt;=&lt;value&gt;</code> 来进一步自定义 helm 命令的安装选项，<strong>另外对于缺少 LoadBalancer 支持的平台，执行下面的安装步骤时，可以在 Helm 命令中加入 &ndash;set gateways.istio-ingressgateway.type=NodePort 选项，使用 NodePort 来替代 LoadBalancer 服务类型。</strong>
+但是推荐在配置文件中进行配置。
+命令行参数解释：</p>
+</li>
+</ol>
+<ul>
+<li>&ndash;name istio：代表生成的部署内容的基础名称为“istio”，比如 pod “istio-grafana-post-install-1.1.7-c4n6t”；</li>
+<li>&ndash;namespace istio-system：代表将 Istio 部署到命名空间 istio-system 中；</li>
+<li>&ndash;values(-f) values-istio-demo.yaml：代表从 values-istio-demo.yaml 文件中获取输入的内容，一般我们不直接修改原 values.yaml 文件，而是通过新增 yaml 文件为各种场景下的关键配置提供范本。</li>
+</ul>
+<ol start="4">
+<li>卸载</li>
+</ol>
+<ul>
+<li>卸载组件
+<code>$ helm template install/kubernetes/helm/istio --name istio --namespace istio-system | kubectl delete -f -</code>
+<code>$ kubectl delete namespace istio-system</code></li>
+<li>删除 CRD 和 Istio 配置
+<code>kubectl delete -f install/kubernetes/helm/istio-init/files</code></li>
+</ul>
+<h2 id="3-nbspnbsp部署应用前准备">3   部署应用前准备</h2>
+<h3 id="31-nbspnbsp把-envoy-容器注入-pod">3.1   把 Envoy 容器注入 Pod</h3>
+<h4 id="311-nbspnbsp自动注入">3.1.1   自动注入</h4>
+<p>配置在 install/kubernetes/helm/istio/values.yaml 中：</p>
+<pre tabindex="0"><code>autoInject: enabled
+sidecarInjectorWebhook:
+  enabled: true
+  replicaCount: 1
+  image: sidecar_injector
+  enableNamespaceByDefault: false
+</code></pre><p>需要同时满足以下三个条件才会开启自动注入功能：</p>
+<ol>
+<li>sidecarInjectorWebhook.enabled：总控制开头，为 true 表示开启自动注入特性，这里一定要设置为 true</li>
+<li>enableNamespaceByDefault：为 true 表示为所有的命令空间开启自动注入功能；为 false 表示只为标签 istio-injection: enabled 的命名空间才会开启自动注入。</li>
+<li>autoInject：命名有点歧义，它其实是跟 pod 的 sidecar.istio.io/inject 的注解（annotations，注意不是标签）有关，以下两种情况会自动注入：</li>
+</ol>
+<ul>
+<li>enabled + !sidecar.istio.io/inject: false</li>
+<li>disable + sidecar.istio.io/inject: true</li>
+</ul>
+<p>因为 enableNamespaceByDefault 设置为 false，所以想要自动注入的命令空间都要打上 istio-injection=enabled，这样才满足条件2：
+<code>kubectl label ns default istio-injection=enabled</code></p>
+<h4 id="311-nbspnbsp手动注入">3.1.1   手动注入</h4>
+<p>如果目标命名空间中没有打上 istio-injection 标签， 可以使用 istioctl kube-inject 命令，在部署之前手工把 Envoy 容器注入到应用 Pod 之中</p>
+<h3 id="32-nbspnbspistio-对-pod-和服务的要求httpsistioiozhdocssetupkubernetesadditional-setuprequirements">3.2   <a href="https://istio.io/zh/docs/setup/kubernetes/additional-setup/requirements/">Istio 对 Pod 和服务的要求</a></h3>
+<p>要成为服务网格的一部分，Kubernetes 集群中的 Pod 和服务必须满足以下几个要求：</p>
+<ul>
+<li>
+<p>需要给端口正确命名：服务端口必须进行命名。端口名称只允许是&lt;协议&gt;[-&lt;后缀&gt;-]模式，其中&lt;协议&gt;部分可选择范围包括 grpc、http、http2、https、mongo、redis、tcp、tls 以及 udp，Istio 可以通过对这些协议的支持来提供路由能力。例如 name: http2-foo 和 name: http 都是有效的端口名，但 name: http2foo 就是无效的。如果没有给端口进行命名，或者命名没有使用指定前缀，那么这一端口的流量就会被视为普通 TCP 流量（除非显式的用 Protocol: UDP 声明该端口是 UDP 端口）。</p>
+</li>
+<li>
+<p>Pod 端口: Pod 必须包含每个容器将监听的明确端口列表。在每个端口的容器规范中使用 containerPort。任何未列出的端口都将绕过 Istio Proxy。</p>
+</li>
+<li>
+<p>关联服务：Pod 不论是否公开端口，为了满足服务发现的需要，都必须关联到至少一个 Kubernetes 服务上，如果一个 Pod 属于多个服务，这些服务不能在同一端口上使用不同协议，例如 HTTP 和 TCP。</p>
+</li>
+<li>
+<p>Deployment 应带有 app 以及 version 标签：在使用 Kubernetes Deployment 进行 Pod 部署的时候，建议显式的为 Deployment 加上 app 以及 version 标签。每个 Deployment 都应该有一个有意义的 app 标签和一个用于标识 Deployment 版本的 version 标签。app 标签在分布式追踪的过程中会被用来加入上下文信息。Istio 还会用 app 和 version 标签来给遥测指标数据加入上下文信息。</p>
+</li>
+<li>
+<p>Application UID：不要使用 ID（UID）值为 1337 的用户来运行应用。</p>
+</li>
+<li>
+<p>NET_ADMIN 功能: 如果您的集群中实施了 Pod 安全策略，除非您使用 Istio CNI 插件，您的 pod 必须具有NET_ADMIN功能。请参阅必需的 Pod 功能。</p>
+</li>
+</ul>
+<h2 id="4-nbspnbsp部署应用">4   部署应用</h2>
+<p>在 Istio 中部署业务应用时，<strong>建议</strong>做到以下几点：</p>
+<ul>
+<li>使用 app 标签表明应用身份</li>
+<li>使用 version 标签表明应用版本</li>
+<li>创建目标规则</li>
+<li>创建默认路由规则</li>
+</ul>
+<h3 id="41-nbspnbsp启动应用">4.1   启动应用</h3>
+<p>本实例在 kubernetes 资源一文中延伸，不同之处在于应用资源时需要注入 sidecar，前面我们分析过了可以是手动注入，也可以是自动注入；</p>
+<ul>
+<li>手动注入：<code>istioctl kube-inject -f gorpc-kube.yaml | kubectl apply -f -</code></li>
+<li>自动注入：<code>kubectl apply -f gorpc-kube.yaml</code></li>
+</ul>
+<h3 id="42-nbspnbsp创建目标规则和默认路由规则">4.2   创建目标规则和默认路由规则</h3>
+<p><a href="https://github.com/wpxun/blog/blob/master/gorpcweb/gorpc-istio.yaml">gorpc-istio.yaml</a> 放在 github 项目上
+配置清单内容纲目：</p>
+<ul>
+<li>DestinationRule, goapi.default</li>
+<li>DestinationRule, goapisec.default</li>
+<li>VirtualService,
+goapisec.default -&gt; v3, prefix: /sec;
+goapi.default -&gt; v1, prefix: /;</li>
+<li>Gateway, number: 443, hosts: - &ldquo;*.jemper.cn&rdquo;</li>
+</ul>
+<p>直接部署即可：<code>kubectl apply -f gorpc-istio.yaml</code>，这些资源没有注入的概念。</p>
+<h3 id="43-nbspnbsp访问服务">4.3   访问服务</h3>
+<p>注意要点：</p>
+<ul>
+<li>Service 对象中的 Port 部分必须以“协议名”为前缀，目前支持的协议名包括 http、http2、mongo、redis 和 grpc。Istio 会根据这些命名来确定为这些端口提供什么样的服务，不符合命名规范的端口会被当作 TCP 服务，其功能支持范围会大幅缩小。
+另外官方建议为 Pod 模板加入两个标签：app 和 version。</li>
+<li>Istio 的注入要求：没有 Service 的 Deployment 是无法被 Istio 发现并进行操作的。为了满足服务发现的需要，所有的 Pod 都必须有关联的服务，如果没有 Service 则容器只能启动一个</li>
+<li>DNS 解析是在网格内，外部流量无法解析服务名</li>
+<li>Istio 用于控制网格内的访问，不能控制外部流量的访问。在容器内使用服务 IP 访问受到 Istio 控制，在宿主机使用服务 IP 进行访问不受 Istio 控制。</li>
+<li>注入只会对部分资源起作用，比如 Deployment 等，对 Service、DestinationRule、VirtualService 等没有注入操作</li>
+</ul>
+<p>所以应该要创建一个在网格内的客户端应用来访问服务。
+for i in <code>seq 10</code>; do curl http://goapi:81/index; done
+for i in <code>seq 10</code>; do curl http://10.102.19.38:81/index; done
+for i in <code>seq 10</code>; do curl http://35.237.188.250:30001/index; done</p>
+<h3 id="44-nbspnbsp总结">4.4   总结</h3>
+<p>总的来说，可以把上述两部分合成一条命令：</p>
+<ul>
+<li>手动注入：<code>istioctl kube-inject -f gorpc-kube.yaml | kubectl apply -f gorpc-istio.yaml -f -</code></li>
+<li>自动注入：<code>kubectl apply -f gorpc-istio.yaml -f gorpc-kube.yaml</code></li>
+</ul>
+<p>删除应用：<code>kubectl delete -f gorpc-istio.yaml  -f gorpc-kube.yaml</code></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] 崔秀龙. 深入浅出 Istio | Service Mesh 快速入门与实践. 版次：2019年3月第1版
+[2] 杨章显. Service Mesh 实战 | 基于 Linkerd 和 Kubernetes 的微服务实践. 版次：2019年1月第1版</p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/istio-prometheus/" data-toggle="tooltip" data-placement="top" title="Istio Prometheus">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/microservice-architecture-difficult/" data-toggle="tooltip" data-placement="top" title="微服务架构">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

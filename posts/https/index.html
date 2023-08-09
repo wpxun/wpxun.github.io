@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>HTTPS 性能和调试 - HOME</title>
+  <meta property="og:title" content="HTTPS 性能和调试 - HOME" />
+  <meta name="twitter:title" content="HTTPS 性能和调试 - HOME" />
+  <meta name="description" content="HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：
+
+基础部分：TCP/IP，可以参阅《TCP 传输原理》
+安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅《密码学》和《SSL/TLS 协议》
+应用部分：HTTP/2，可以参阅《HTTP/2 协议》
+">
+  <meta property="og:description" content="HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：
+
+基础部分：TCP/IP，可以参阅《TCP 传输原理》
+安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅《密码学》和《SSL/TLS 协议》
+应用部分：HTTP/2，可以参阅《HTTP/2 协议》
+">
+  <meta name="twitter:description" content="HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：
+
+基础部分：TCP/IP，可以参阅《TCP 传输原理》
+安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅《密码学》和《SSL/TLS 协议》
+应用部分：HTTP/2，可以参阅《HTTP/2 协议》
+">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/https/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">HTTPS 性能和调试</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 1, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/http/">
+            <i class="fas fa-folder"></i>
+            HTTP
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/http/">
+            <i class="fas fa-tag"></i>
+            HTTP
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/tls/">
+            <i class="fas fa-tag"></i>
+            TLS
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E8%B0%83%E8%AF%95/">
+            <i class="fas fa-tag"></i>
+            调试
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp传输层优化">1   传输层优化</a>
+      <ul>
+        <li><a href="#11-nbspnbsp三次握手">1.1   三次握手</a></li>
+        <li><a href="#12-nbspnbsp流量控制">1.2   流量控制</a></li>
+        <li><a href="#13-nbspnbsp拥塞控制">1.3   拥塞控制</a></li>
+        <li><a href="#14-nbspnbsp传输层队首阻塞">1.4   传输层队首阻塞</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-nbspnbsp应用层优化">2   应用层优化</a>
+      <ul>
+        <li><a href="#21-nbspnbsp长连接">2.1   长连接</a></li>
+        <li><a href="#22-nbspnbsp多个-tcp-连接">2.2   多个 TCP 连接</a></li>
+        <li><a href="#23-nbspnbspcdn-技术">2.3   CDN 技术</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsphttp2-优化">3   HTTP/2 优化</a></li>
+    <li><a href="#4-nbspnbspssltls-优化">4   SSL/TLS 优化</a></li>
+    <li><a href="#5-nbspnbsp部署或升级">5   部署或升级</a>
+      <ul>
+        <li><a href="#51-nbspnbsp数字证书">5.1   数字证书</a></li>
+        <li><a href="#52-nbspnbspweb-服务器">5.2   WEB 服务器</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-nbspnbsp调试">6   调试</a>
+      <ul>
+        <li><a href="#61-nbspnbspnghttp2">6.1   nghttp2</a></li>
+        <li><a href="#62-nbspnbspcurl命令">6.2   cURL命令</a></li>
+        <li><a href="#63-nbspnbsp抓包解密">6.3   抓包解密</a></li>
+        <li><a href="#64-nbspnbsptcpdump-抓包">6.4   tcpdump 抓包</a></li>
+        <li><a href="#65-nbspnbspwireshark-抓包">6.5   Wireshark 抓包</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+      <p>HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：</p>
+<ol>
+<li>基础部分：TCP/IP，可以参阅<a href="/2019/03/10/tcp-protocol/">《TCP 传输原理》</a></li>
+<li>安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅<a href="/2019/03/21/cryptology/">《密码学》</a>和<a href="/2019/03/24/tls/">《SSL/TLS 协议》</a></li>
+<li>应用部分：HTTP/2，可以参阅<a href="/2019/03/31/http2/">《HTTP/2 协议》</a></li>
+</ol>
+<h2 id="1-nbspnbsp传输层优化">1   传输层优化</h2>
+<p>网络层性能关键点：延迟、带宽；</p>
+<h3 id="11-nbspnbsp三次握手">1.1   三次握手</h3>
+<p>HTTP 需要 1.5*RTT，HTTPS 需要 2*RTT，建立一次连接的成本非常高，所以不管是 HTTP 还是 HTTPS，重用连接或者使用长连接是网站性能优化非常关键的一步骤；</p>
+<h3 id="12-nbspnbsp流量控制">1.2   流量控制</h3>
+<p>接收方在每次发送 ACK 包的时候会告知发送方其接收窗口（rwnd）的大小，发送方看到接收方接收窗口比较大小，就会暂停或者发送少量的数据；Linux 系统默认接收窗口是 65535 字节（64KB），窗口缩放可以关闭，不过建议开启。</p>
+<h3 id="13-nbspnbsp拥塞控制">1.3   拥塞控制</h3>
+<ul>
+<li>慢启动：慢启动的优点是在比较拥塞的网络，慢启动可以避免拥塞进一步加剧，但是它的缺点也是明显的，对于正常的网络，慢启动将降低传输的效率，例如本来一个 RTT 就可以传完的数据，现在要分成几个 RTT；比如 Linux 2 的 initcwnd 只有 3MSS，如果有 7MSS 数据要发送就不得不用 3RTT；如果把 initcwnd 改成 10，则 7MSS 并行发送，只需要 1RTT。
+可以通过命令查看 <code>ss -nli | fgrep cwnd</code>；
+修改某个网卡的 cwnd <code>sudo ip route change default via 127.0.0.1 dev eth0 proto static initcwnd 10</code>；</li>
+</ul>
+<h3 id="14-nbspnbsp传输层队首阻塞">1.4   传输层队首阻塞</h3>
+<p>TCP 要保证数据包的正确传输，一个 HTTP/1.1、HTTP/2 或者 HTTPS 数据包发出后，会拆分为多个 TCP 包发送，对于接收方来说，收到所有 TCP 数据包后才能进行组装，然后才会发给应用层进行下一步处理。应用层无法解决传输层的问题，因此要完全解决队头阻塞问题，需要重新设计和实现传输层。目前而言，真正落地在应用的只看到 Google 的 QUIC。</p>
+<p>另外要特别注意 HTTP 队首阻塞：
+对于同一个 TCP 连接，HTTP/1.1 通过 Pipelining 管道技术实现一次性发送多个请求，这样就解决了 HTTP/1.0 的客户端的队首阻塞。但是，HTTP/1.1 规定，服务器端的响应的发送要根据请求被接收的顺序排队，也就是说，先接收到的请求的响应也要先发送。这样造成的问题是，如果最先收到的请求的处理时间长的话，响应生成也慢，就会阻塞已经生成了的响应的发送。也会造成队首阻塞。可见，HTTP/1.1 的队首阻塞发生在服务器端。
+如果队头阻塞的粒度是 http request 这个级别，那么 HTTP/2 over TCP 的确解决了 HTTP/1.1 中的问题。但是，HTTP/2 目前实现层面上都是基于 TCP（HTTP 从来没有说过必须通过 TCP 实现，你可以用它其他传输协议实现哟），因此 HTTP/2 并没有解决传输层 TCP 的队首阻塞问题，它仅仅是通过多路复用解决了以前 HTTP/1.1 管线化请求时的队首阻塞。</p>
+<p>目前的解决方案有：</p>
+<ol>
+<li>HTTP/2 over TCP(我们接触最多的 HTTP/2) 解决了 http request 级别的队头阻塞问题；</li>
+<li>HTTP/2 over QUIC 解决了传输层的队头阻塞问题（除去 header frame），是我们理解的真正解决了该问题；</li>
+</ol>
+<h2 id="2-nbspnbsp应用层优化">2   应用层优化</h2>
+<p>http/1.1 于 1999发布，主要文档为 RFC 7230，提出了很多新的机制：
+（1）从面向文档的协议彻底转变为面向资源的协议（REST 理论）
+（2）支持 keepalive 并默认开启，需要注意的 TCP Keep-Alive 和 HTTP Keep-Alive 是不同层次上的概念，TCP 的 keep alive 是检查当前 TCP 连接是否活着；HTTP 的 Keep-alive 是要让一个 TCP 连接在 timeout 周期内永久存活。
+（3）相比较于 1.0，必须得传 Host 头，支持同一IP的多虚拟机</p>
+<p>HTTP/1.1 的设计目标并没有重点关注性能，在高可用和高并发上的瓶颈越来越大，为了提升性能，基于 HTTP/1.1 出现了很多优化方案，比如长连接、HTTP pipelining(管道)、多 TCP、WebSocket 机制，这些优化方案能提升性能，但也带来很多负面的影响，比如 HTTP 管理技术基于 HTTP/1.1 并没有可行性（线头阻塞），而长连接技术给浏览器和服务器带来了很大的负载。
+中间发展了 SPDY、RPC 等协议来解决性能问题，特别是 SPDY 是 HTTP/2 的灯塔。</p>
+<h3 id="21-nbspnbsp长连接">2.1   长连接</h3>
+<p>连接的创建成本非常高，所以使用长连接达到复用的目的。但是长连接可能会给服务器带来很大的负载，因为即使没有后续的请求，服务也必须保持一个连接，限制了服务器的并发处理能力，所以很多浏览器和 Web 服务器设置了长连接超时时间，比如 60 秒内没有任何新请求则关闭长连接，节省资源。</p>
+<p>需要注意的是并不是所有的应用场景都适合使用长连接：</p>
+<ul>
+<li>API 服务，API接口响应一般非常快速，也无须保存状态，所以处理完成后应该尽快关闭连接。客户端请求/响应模型一般很少使用长连接。</li>
+<li>视频服务，视频服务传输的数据量非常大，一个连接只会发送一个请求，完成一个请求的时间比较长，没有必要采用长连接技术。</li>
+</ul>
+<p>以下适合用长连接：</p>
+<ul>
+<li>Web 网站相对适合使用长连接技术，因为 Web 要加载很多子元素，一个连接可以并行发送多个子请求。</li>
+<li>数据库持久连接，也就是连接池。</li>
+</ul>
+<h3 id="22-nbspnbsp多个-tcp-连接">2.2   多个 TCP 连接</h3>
+<p>对于一个主机，浏览器一般会并行打开 6 个连接，当然打开多个 TCP 连接对服务器和浏览器是很大的消耗。如果还想避免单机 6 个连接的限制，出现了多主机优化手段，也就是静态元素拆分成多个主机，缺陷就更明显了，就是消耗过多的客户端和服务端资源。</p>
+<h3 id="23-nbspnbspcdn-技术">2.3   CDN 技术</h3>
+<p>通过 CDN 技术，网站可以在世界范围内部署 CDN 节点，某个用户访问该网站，可以选择最近的一个 CDN 节点，选择最短的路径。
+其优势在于：</p>
+<ul>
+<li>延迟减少，加快握手，HTTP/1.1 需要 1.5 次 RTT，HTTP/2 需要 2 次 RTT，效果比较明显。</li>
+<li>CDN 厂商会用更好的技术方案来加速 TLS/SSL 连接。</li>
+</ul>
+<h2 id="3-nbspnbsphttp2-优化">3   HTTP/2 优化</h2>
+<h2 id="4-nbspnbspssltls-优化">4   SSL/TLS 优化</h2>
+<h2 id="5-nbspnbsp部署或升级">5   部署或升级</h2>
+<p>本文的 HTTPS 指的是构建在 HTTP/2 上，当然服务器是要向下兼容 HTTP/1.1。对于安全部分要定期检测，可以使用工具定期检测网站的 TLS 配置，例如 Qualys Lab 的 SSL Test.</p>
+<h3 id="51-nbspnbsp数字证书">5.1   数字证书</h3>
+<p>证书的生成有多种方式，开发者熟悉以下两种生成方式就可以了。</p>
+<h4 id="511-nbspnbsp自签名证书">5.1.1   自签名证书</h4>
+<p>使用上面提到的 openssl 工具生成。
+私钥：openssl genrsa -out privkey.pem 2048
+证书：openssl req -new -x509 -sha256 -key privkey.pem -out cert.pem -days 365 -subj &ldquo;/CN=blog.xxx.com&rdquo;</p>
+<h4 id="512-nbspnbsplets-encrypt-证书">5.1.2   Let’s Encrypt 证书</h4>
+<p>Let’s Encrypt 官网推荐用 certbot 工具，macOS 上使用 brew install cerbot 安装即可。</p>
+<p>$ certbot certonly  -d &ldquo;*.xxx.com&rdquo; -d &ldquo;xxx.com&rdquo; &ndash;manual &ndash;preferred-challenges dns-01  &ndash;server <a href="https://acme-v02.api.letsencrypt.org/directory">https://acme-v02.api.letsencrypt.org/directory</a></p>
+<ul>
+<li>certonly 是插件；</li>
+<li>-d 支持的域名，*.xxx.com 是通配符证书，但不支持 xxx.com，所以后面还得再配置一个 xxx.com，多个 -d 参数需要配置多条 TXT 记录，注意 TXT 可以对同一主机配置多条值，等证书都生成了才可以删除 TXT 配置；</li>
+<li>&ndash;preferred-challenges dns-01 域名的认证方式，这里的 dns-01 表示用设置域名 TXT 的方式来验证，也只有 dns-01 才支持通配符证书；</li>
+<li>acme 版本，只有 v02 才支持 通配符证书；</li>
+</ul>
+<p>需要注意的可能要创建一些文件夹，如没权限时会提示手动创建，不用特别记。
+&ndash;logs-dir    /var/log/letsencrypt
+&ndash;config-dir  /etc/letsencrypt
+&ndash;work-dir    /var/lib/letsencrypt
+sudo mkdir -p /usr/local/sbin
+sudo chown -R $(whoami) /usr/local/sbin</p>
+<p>域名 TXT 是否配置成功可以用 dig 进行验证：
+dig  -t txt _acme-challenge.xxx.com，验证 txt 是否配置好。</p>
+<p>运行成功之后会有提示，最后一句表示<strong>更新证书</strong>的命令</p>
+<pre tabindex="0"><code>   Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/xxx.com/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/xxx.com/privkey.pem
+   Your cert will expire on 2019-06-19. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot
+   again. To non-interactively renew *all* of your certificates, run
+   &#34;certbot renew&#34;
+</code></pre><table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cert.pem</td>
+<td>服务端证书</td>
+</tr>
+<tr>
+<td>chain.pem</td>
+<td>浏览器需要的所有证书但不包括服务端证书，比如根证书和中间证书</td>
+</tr>
+<tr>
+<td>fullchain.pem</td>
+<td>包括了cert.pem和chain.pem的内容，服务端证书是第一张证书，接下来是中间证书</td>
+</tr>
+<tr>
+<td>privkey.pem</td>
+<td>证书的私钥</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-nbspnbspweb-服务器">5.2   WEB 服务器</h3>
+<p>每种 Web 服务器配置 HTTPS 的方式都略有差异，这里以 nginx 为例。
+通过 nginx -V 可以查看是否支持 ssl(&ndash;with-http_ssl_module) 和 http2(&ndash;with-http_v2_module)
+OpenSSL 1.0.2 版本及以上的都支持 ALPN。server 配置例如：</p>
+<pre tabindex="0"><code>server {
+    listen 80;
+    listen [::]:80;
+    server_name jemper.cn www.jemper.cn;
+    return 301 https://www.jemper.cn$request_uri;
+}
+
+server {
+        listen 443 ssl http2;
+        server_name www.jemper.cn jemper.cn;
+
+  ssl on;
+  ssl_certificate /etc/nginx/jemper.cn/fullchain.pem;
+  ssl_certificate_key /etc/nginx/jemper.cn/privkey.pem;
+  ssl_trusted_certificate  /etc/nginx/jemper.cn/chain.pem;
+
+  ......
+}
+</code></pre><p>证书一般情况下 fullchain.pem 和 privkey.pem 就够用了，另外需要注意，如果服务器有修改证书，必须 reload nginx 才会重新加载密钥等。</p>
+<h2 id="6-nbspnbsp调试">6   调试</h2>
+<h3 id="61-nbspnbspnghttp2">6.1   nghttp2</h3>
+<ol>
+<li>
+<p>nghttp2 工具集中的 nghttpd 服务器：nghttpd -v -d /usr/local/www 443 /Users/ada/.ssh/localhost/wpxkey.pem /Users/ada/.ssh/localhost/cert.pem</p>
+</li>
+<li>
+<p>nghttp2 工具集中的 nghttp 命令行客户端，
+nghttp -ns <a href="https://www.jemper.cn">https://www.jemper.cn</a>
+nghttp -v &ndash;no-dep -w 14 -H&quot;header1: myhead&quot; https://localhost
+常用参数有</p>
+</li>
+</ol>
+<ul>
+<li>-v（打印 debug 信息），一般打印出来足以进行 HTTP/2的分析和学习</li>
+<li>-n（丢弃下载的数据，如 HTML 内容）</li>
+<li>-a（下载在 HTML 中指明的、与 HTML 同一个域的引用资源，不过推送的资源不受此参数影响）</li>
+<li>-s（打印统计信息）</li>
+<li><code>-H &lt;header&gt;</code>（给请求添加首部，如 -H&rsquo;:method: PUT&rsquo;）</li>
+<li>-w 设置窗口大小 -w 14 表示 2^14-1</li>
+<li>&ndash;no-dep Don&rsquo;t send dependency based priority hint to server</li>
+</ul>
+<h3 id="62-nbspnbspcurl命令">6.2   cURL命令</h3>
+<p>cURL命令
+curl -w &ldquo;@curl.txt&rdquo; -so /dev/null <a href="https://www.jemper.cn">https://www.jemper.cn</a>
+curl -v &ndash;http2 <a href="https://www.jemper.cn">https://www.jemper.cn</a>
+常用参数：
+-w tells cURL to use our format file, 可以是文本 <code>-w &quot;TCP handshake: %{time_connect}, SSL handshake: %{time_appconnect}\n&quot;</code>，也可以是文件 <code>-w &quot;@curl.txt&quot;</code>。
+-o redirects the out of the request to /dev/null
+-s tells cURL not to show a progress meter，即不显示进度
+-k, &ndash;insecure turn off curl&rsquo;s verification of the certificate
+-H, &ndash;header Pass custom header，可设置多次
+-d, &ndash;data HTTP POST data
+-v  显示更多关于你访问的 URL 的调度信息
+&ndash;http2 模拟 HTTP/2 的请求</p>
+<p>打印时间信息（单位秒）：</p>
+<ul>
+<li>time_namelookup:  DNS解析时间,从请求开始到DNS解析完毕所用时间</li>
+<li>time_connect:  连接时间,从请求开始到建立TCP连接完成所用时间,包括前边DNS解析时间，如果需要单纯的得到连接时间，用这个time_connect时间减去前边time_namelookup时间</li>
+<li>time_appconnect:  从请求开始到连接建立完成时间，到SSL/SSH等建立连接时间。</li>
+<li>time_pretransfer:  从请求开始到准备传输的时间。</li>
+<li>time_redirect:  重定向时间</li>
+<li>time_starttransfer:  从请求开始到 Web 服务器返回数据的第一个字节所用的时间</li>
+<li>time_total:  总时间，按秒计</li>
+</ul>
+<h3 id="63-nbspnbsp抓包解密">6.3   抓包解密</h3>
+<p>其实很多命令行工具如 openssl、curl 也都有请求日志，但不够详细。</p>
+<ol>
+<li>Chrome 会话密钥日志：Chrome 和 Firefox 都提供了记录 TLS 会话密钥的功能，这是 Mozilla 的规范。</li>
+</ol>
+<pre tabindex="0"><code>SSLKEYLOGFILE = ~/tls/tls_master_secret.log
+open /Applications/Google\ Chrome.app，这种打开方式保证 Chrome 能读取到 SSLKEYLOGFILE 环境变量。
+</code></pre><p>接下来可以使用像 Wireshark 这种工具检查 HTTP/2 流量和观察 HTTP/2 帧。前提是需要在 Wireshark 做一些配置。
+<code>Wireshark/Preferences/Protocals/TLS 中设置 (Pre)-Master-Secret log filename 指向（1）设置的日志文件，最好将 TLS debug file 也配上，这样解密过程中的日志都会记录下来，便于调试分析。</code>
+要注意两个日志文件会起来越大，定期删除日志文件，否则 Wireshark 会运行得非常缓慢。
+本地抓包工具推荐 Wireshark + npcap，过滤 ip.addr = <a href="https://www.xxx.cn">www.xxx.cn</a> &amp;&amp; (ssl || tcp)。
+另外如果用的是 RSA 密钥协商，还可以用 Wireshark 的 RSA key list，不过 TLSv1.2+ 已经不支持 RSA 密钥协商了。</p>
+<p>wireshark 中的 TCP 有专家信息 Expert info，比如 TCP window update、TCP Zero Window Probe、TCP ACKed unseen segment 等，这些并不是 TCP 数据，而是 wireshark 根据一些规则得出的指导信息，每个信息的规则可以看 wireshark 文档 <a href="https://www.wireshark.org/docs/wsug_html_chunked/ChAdvTCPAnalysis.html">TCP Analysis</a></p>
+<ol start="2">
+<li>
+<p>chrome://net-export/ + <a href="https://netlog-viewer.appspot.com">https://netlog-viewer.appspot.com</a>
+可以进行 HTTP/2 帧的分析等。chrome 已经不再集成 chrome://net-internals/#http2 了，改用上面的组合，前者负责 save netlogs，后者负责 catapult netlog_viewer to view them。netlog-viewer 也可以本地化，但觉得没必要。</p>
+</li>
+<li>
+<p>Fiddler、Charles 代理，也就是中间人方式，需要安装代理的证书，特别适合移动端抓包分析。</p>
+</li>
+</ol>
+<h3 id="64-nbspnbsptcpdump-抓包">6.4   tcpdump 抓包</h3>
+<p>Linux 和 MacOS 都可以用该工具抓包，</p>
+<pre tabindex="0"><code>sudo tcpdump port 8080 -n
+sudo tcpdump -i eth0 src host 10.2.200.11 or dst host 10.2.200.11
+sudo tcpdump -i eth0 -s 80 -w /tmp/tcpdump.cap
+</code></pre><ul>
+<li>-i：网卡</li>
+<li>-n：端口号用数字表示，很多命令都通用</li>
+<li>-v -vv -vvv：显示详细的信息</li>
+<li>-s 抓取的字节数，比如想要分析除应用层协议，可以设置为80，一般所有协议的首部大小加起来就 60B 左右</li>
+<li>-w 保存</li>
+<li>可以进行 or/and 等逻辑运行</li>
+</ul>
+<p>tcpdump 显式格式和 Wireshark 有一些不一样，比如：</p>
+<ul>
+<li>win：tcpdump 是 TCP 16bit Window 首部值，而 Wireshark 是运算出来的实际窗口大小。</li>
+<li>length：tcpdump 是 tcp 报文段数据长度， Wireshark 是帧长度</li>
+<li>tcpdump 会标识出传输的段 seq 9577:10945，ack 一样是表示期待收到的一个数据序号</li>
+<li>Flags [.] The &lsquo;.&rsquo; means the ACK flag  was  set</li>
+</ul>
+<p>以下是抓包的样段，我去掉选项、日期等数据，window scale = 7，即乘积为128，服务器8090接收数据，客户端60950发送数据：</p>
+<pre tabindex="0"><code>...
+ 1 16.223370 IP 8090 &gt; 60950: Flags [.], ack 393065, win 3, length 0
+ 2 21.726274 IP 60950 &gt; 8090: Flags [.], seq 393065:393449, ack 1, win 2052, length 384
+ 3 21.751857 IP 8090 &gt; 60950: Flags [.], ack 393449, win 0, length 0
+ 4 27.260046 IP 60950 &gt; 8090: Flags [.], seq 393449:393450, ack 1, win 2052, length 1
+ 5 27.281964 IP 8090 &gt; 60950: Flags [.], ack 393449, win 0, length 0
+ 6 29.130087 IP 8090 &gt; 60950: Flags [.], ack 393449, win 117, length 0
+ 7 29.130141 IP 60950 &gt; 8090: Flags [.], seq 393449:394817, ack 1, win 2052, length 1368
+ 8 29.130147 IP 60950 &gt; 8090: Flags [.], seq 394817:396185, ack 1, win 2052, length 1368
+ 9 29.130152 IP 60950 &gt; 8090: Flags [.], seq 396185:397553, ack 1, win 2052, length 1368
+10 29.130158 IP 60950 &gt; 8090: Flags [.], seq 397553:398921, ack 1, win 2052, length 1368
+11 29.130164 IP 60950 &gt; 8090: Flags [FP.], seq 398921:400001, ack 1, win 2052, length 1080
+12 29.153284 IP 8090 &gt; 60950: Flags [.], ack 394817, win 107, length 0
+13 29.205997 IP 8090 &gt; 60950: Flags [.], ack 400002, win 67, length 0
+...
+
+399 packets captured
+1344 packets received by filter
+</code></pre><ul>
+<li>第1行 确认，并更新 win = 3，实际窗口大小 = 3*128 = 384</li>
+<li>第2行 就马上发送了 384 个数据长度的 TCP 报文段，当然这个报文段的长度是 384+TCP首部长度 = 450（这里没有标识，我是同时通过 Wireshark 抓包看的），可见 TCP 首部是 66 字节。在 Wireshark 会有专家信息“TCP Window Full”</li>
+<li>第3行 确认，在 Wireshark 会有专家信息“TCP ZeroWindow”</li>
+<li>第4行 TCP Zero Window Probe</li>
+<li>第5行 ACK to a TCP Zero Window Probe，并且还是 TCP ZeroWindow</li>
+<li>第6行 TCP window update</li>
+<li>第7、8、9、10行 发送数据</li>
+<li>第11行 也是发送数据，不过同时还有 FIN 和 PSH 标识</li>
+<li>第12行 接收数据，下一序号是 394817，相比上一次确认 393449，相当于接收了 1368 个字节</li>
+<li>第13行 也是接收数据，下一序号是 400002，相比上一次确认 394817，相当于接收了 5185 个字节，这就是 TCP 累积起来确认了</li>
+</ul>
+<p>最后可以看到期望下一序号是 400002，所以一共发送了 400001 个字节数据，但因为握手阶段被算了 1 字节，所以实际发送量是 400000 个字节。
+下面提供两个软件抓包数据对比(两者数据是一致的)：<a href="https://wpxun.github.io/image/2019/04/tcpdump_tcp.log">tcpdump TCP 抓包</a>、<a href="https://wpxun.github.io/image/2019/04/wireshark_tcp.pcapng">Wireshark TCP 抓包</a></p>
+<h3 id="65-nbspnbspwireshark-抓包">6.5   Wireshark 抓包</h3>
+<h4 id="651-nbspnbsp过滤">6.5.1   过滤</h4>
+<ul>
+<li>ip 和 port：ip.addr eq &amp;&amp; tcp.port eq</li>
+<li>直接用协议名：不过用此方式过滤要知道协议之间的依赖关系，否则经常会把某次访问的多种协议过滤掉。</li>
+</ul>
+<h4 id="652-nbspnbsp自动分析">6.5.2   自动分析</h4>
+<p>集中在 Analyze 和 Statistics 两个菜单。</p>
+<ul>
+<li>Analyze/Expert Infomation</li>
+<li>Statistics/Service Response Time</li>
+<li>Statistics/TCP Stream Graph 分析一个方向的传输情况，点击时间轴可以切换相对时间和绝对时间</li>
+<li>Statistics/Summary</li>
+<li>Statistics/Conversations 显示协议流汇总信息</li>
+</ul>
+<p>接下来做一分析，如下是 B 向 A 发送 400000 个字节的情况，这里是 <a href="https://wpxun.github.io/image/2019/04/wireshark_statistics.pcapng">抓包文件</a>。</p>
+<p><strong>1. Statistics/Conversations如下：</strong></p>
+<p>Address A | Address B | Packets | Bytes | Packets A → B | Bytes A → B | Packets B → A</p>
+<ul>
+<li>| - | - | - | - | - | -
+120.77.37.121 | 192.168 .3.3 | 407 | 431090 | 97 | 6506 | 310</li>
+</ul>
+<p>Bytes B → A | Rel Start | Duration | Bits/s A → B | Bits/s B → A</p>
+<ul>
+<li>| - | - | - | -
+424584 | 24 | 69 | 750 | 48984</li>
+</ul>
+<p>分析以上的数据可以得出：</p>
+<ul>
+<li>B 发了 310 个包，明显大于 97 个确认包，很多是合并确认的</li>
+<li>B 消耗的首部字节 424584 - 400000 = 24584B，平均每个包首部为 24584 / 310 = 79B/frame，这么高的原因是因为有重传，我看了一下有 3 个 1368 包重传，那么 （24584 - 1368*3） / 310 = 66B/frame，这样就合理了。</li>
+<li>A 消耗的首部字节 6506 / 97 = 67B/frame，查包没有重传的。</li>
+<li>B 的传输速率 48984b/s = 6123B/s = 5KB/s，为什么这么慢，我们接着往下看。</li>
+</ul>
+<p><strong>2. Statistics/TCP Stream Graph(Stevens)：</strong></p>
+<p><img src="https://wpxun.github.io/image/2019/04/TCP_Stream_Graph.png" alt="TCP Stream Graph">
+横坐标是相对时间（相对开启抓包的时间），27s-52s 是 0 窗口时期，共有三个长的 0 窗口时期（27s 前也有几个横线，那还算正常暂时不讨论），所以要解决网络就是要增加接收方的窗口。尽量不要出现 0 窗口时间。可是通过查包 A 的窗口是一直在增大的，最大到 120KB，仅发 400KB 的数据，窗口 120KB 完全足够了，基本可以达到秒传才对。</p>
+<p>其实真正的原因在 B 从缓存接收数据太慢了导致窗口快速缩小为 0，查看我的代码发现，数据是每秒 100KB 在发（发4次），接收是每秒 1KB 多在接收。所以 B 数据全部发送到 A 的缓冲区要 69 秒（当然 A 应用程序接收完就需要 400KB/1KB/s = 400s，但这跟 B 无关），可以计算出 A 缓冲数据峰值 400KB - 69KB = 331KB，如果强行要改正这种问题，只要把 A 的窗口增大到 400KB 就能秒传了（当然 A 应用程序读完其缓冲区还是需要 400s）。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版
+[2] 阮一峰. HTTPS 升级指南 <a href="http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html">http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html</a>. 2016年8月19日
+[3] 三种解密 HTTPS 流量的方法介绍 <a href="https://imququ.com/post/how-to-decrypt-https.html">https://imququ.com/post/how-to-decrypt-https.html</a>. 2016/03/28
+[4] HTTP/2的历史、特性、调试、性能 <a href="https://www.jianshu.com/p/748c7ca7c50f">https://www.jianshu.com/p/748c7ca7c50f</a>. 2017.07.25
+[5] HTTP队头阻塞. <a href="https://liudanking.com/arch/what-is-head-of-line-blocking-http2-quic/">https://liudanking.com/arch/what-is-head-of-line-blocking-http2-quic/</a>
+[6] TCP 性能优化详解. <a href="https://www.zhuxiaodong.net/2018/tcp-performance-optimize-instruction/">https://www.zhuxiaodong.net/2018/tcp-performance-optimize-instruction/</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/network/" data-toggle="tooltip" data-placement="top" title="网络杂谈">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/http2/" data-toggle="tooltip" data-placement="top" title="HTTP/2 协议">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

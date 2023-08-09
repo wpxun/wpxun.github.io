@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>协议 on HOME</title>
+    <link>https://wpxun.github.io/tags/%E5%8D%8F%E8%AE%AE/</link>
+    <description>Recent content in 协议 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Sun, 31 Mar 2019 14:39:00 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/%E5%8D%8F%E8%AE%AE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTTP/2 协议</title>
+      <link>https://wpxun.github.io/posts/http2/</link>
+      <pubDate>Sun, 31 Mar 2019 14:39:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/http2/</guid>
+      <description>&lt;p&gt;HTTP/1.1 与 HTTP/2 相隔了大概20年，但是从目前的研究和实验情况来看，我们不可能等上几十年才升级到下一个版本，h2 在逐渐的普及。
+h2 和 h1 的最大差别在于在 &lt;strong&gt;http 层&lt;/strong&gt;上增加了&lt;strong&gt;分帧层&lt;/strong&gt;；把原来的 http 层的数据拆分成多种帧类型，并在每种类型前加上协议性的帧首部。基于二进制分帧的优点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;传输使用的编码方式改变（采用帧、流模式），不用创建多个 TCP 连接，单个连接就可以有多个流（处理主页面和所有子元素的请求），能够减少延迟，服务器和浏览器的 socket 负载也大大减少。&lt;/li&gt;
+&lt;li&gt;并行处理，乱序发送帧，不再采用 pipeline 阻塞方式&lt;/li&gt;
+&lt;li&gt;传输的功能得以扩展（如服务端推送、首部压缩、优先级、流量控制）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;学习 HTTP/2 最好的文档是 RFC 7540。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>SSL/TLS 协议</title>
+      <link>https://wpxun.github.io/posts/tls/</link>
+      <pubDate>Sun, 24 Mar 2019 17:55:00 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/tls/</guid>
+      <description>&lt;p&gt;SSL/TLS 是基于 TCP 之上，HTTP 之下的协议。从技术角度上看，HTTP/2 作为新一代的协议，虽然协议文本中并未强制要求加密，但主要的浏览器（Firefox、Chrome、Safari、Opera、IE、Edge）已共同宣布，他们只支持实现基于 TLS 的 HTTP/2，也就是说加密将是下一代协议的强制事实标准。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>TCP 传输原理</title>
+      <link>https://wpxun.github.io/posts/tcp-protocol/</link>
+      <pubDate>Sun, 10 Mar 2019 18:00:59 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/tcp-protocol/</guid>
+      <description>&lt;p&gt;TCP的主要目的是在一个比较不可靠的相互通信上提供可靠的，安全的逻辑回路或者连接服务。为了实现这个服务，TCP 的设计 体系非常庞大，我对其理解只是冰山一角，此文只是将我学过的重点知识进行汇总。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

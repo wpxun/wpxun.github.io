@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工具 on HOME</title>
+    <link>https://wpxun.github.io/tags/%E5%B7%A5%E5%85%B7/</link>
+    <description>Recent content in 工具 on HOME</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Copyright 2023 wpxun</copyright>
+    <lastBuildDate>Mon, 20 Mar 2017 14:06:52 +0000</lastBuildDate><atom:link href="https://wpxun.github.io/tags/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Joomla &#43; Magento 官网加商城</title>
+      <link>https://wpxun.github.io/posts/joomla-magento/</link>
+      <pubDate>Mon, 20 Mar 2017 14:06:52 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/joomla-magento/</guid>
+      <description>&lt;p&gt;今天利用 docker 服务器来搭建 Joomla 公司官网和 Magento 商城。它们都是采用了 php 语言写的应用，所以直接用我相关的文章来配置服务器即可：&lt;a href=&#34;http://blog.jemper.cn/2017/02/08/docker-and-dockerfile/&#34;&gt;docker 入门与 docker-compose 编配工具&lt;/a&gt;。
+说点题外话，如果现在还有小公司在开发什么商城或者官网类型的应用，赶紧放弃，投入到 Joomla 和 Magento 的怀抱吧。这两个已经很成熟，也是开源的，要开发也可以参考这两者或者基于它们去开发，省时省力，也利于成功。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>git 源码安装</title>
+      <link>https://wpxun.github.io/posts/git-source/</link>
+      <pubDate>Fri, 10 Feb 2017 16:06:14 +0000</pubDate>
+      
+      <guid>https://wpxun.github.io/posts/git-source/</guid>
+      <description>&lt;p&gt;用习惯了windows下高版本2.11.0的git，再到centos7自带的1.8.5版本觉得操作还是不方便，所以今天就把它升级到最新版。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

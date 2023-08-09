@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Docker Stack 多服务 - HOME</title>
+  <meta property="og:title" content="Docker Stack 多服务 - HOME" />
+  <meta name="twitter:title" content="Docker Stack 多服务 - HOME" />
+  <meta name="description" content="我们从简到繁看一下 Docker 的学习路线：
+
+docker run：Single Engine(者称 Single-Host，单 Docker 节点)下单服务运行
+docker-compose：Single Engine(或者称 Single-Host，单 Docker 节点)下多服务编排
+docker swarm：Multi-Host(多 Docker 节点，集群)下单服务编排
+docker stack：Multi-Host(多 Docker 节点，集群)下多服务编排
+
+可以看到 docker stack 其实就是 docker-compose 多应用和 docker swarm 规模化两者的结合。">
+  <meta property="og:description" content="我们从简到繁看一下 Docker 的学习路线：
+
+docker run：Single Engine(者称 Single-Host，单 Docker 节点)下单服务运行
+docker-compose：Single Engine(或者称 Single-Host，单 Docker 节点)下多服务编排
+docker swarm：Multi-Host(多 Docker 节点，集群)下单服务编排
+docker stack：Multi-Host(多 Docker 节点，集群)下多服务编排
+
+可以看到 docker stack 其实就是 docker-compose 多应用和 docker swarm 规模化两者的结合。">
+  <meta name="twitter:description" content="我们从简到繁看一下 Docker 的学习路线：
+
+docker run：Single Engine(者称 Single-Host，单 Docker 节点)下单服务运行
+docker-compose：Single Engine(或者称 Single-Host，单 Docker 节点)下多服务编排
+docker swarm：Multi-Host(多 Docker 节点，集群)下单服务编排
+docker …">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/docker-stack/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Docker Stack 多服务</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 26, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/docker/">
+            <i class="fas fa-folder"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/docker/">
+            <i class="fas fa-tag"></i>
+            Docker
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%AE%B9%E5%99%A8/">
+            <i class="fas fa-tag"></i>
+            容器
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp节点初始化">1   节点初始化</a></li>
+    <li><a href="#2-nbspnbsp应用容器化">2   应用容器化</a>
+      <ul>
+        <li><a href="#21-nbspnbsp业务代码">2.1   业务代码</a></li>
+        <li><a href="#22-nbspnbsp容器化">2.2   容器化</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-nbspnbsp分析-stack-文件">3   分析 Stack 文件</a></li>
+    <li><a href="#4-nbspnbsp部署应用">4   部署应用</a></li>
+    <li><a href="#5-nbspnbsp管理应用">5   管理应用</a></li>
+    <li><a href="#6-nbspnbsp删除-stack">6   删除 Stack</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>我们从简到繁看一下 Docker 的学习路线：</p>
+<ul>
+<li>docker run：Single Engine(者称 Single-Host，单 Docker 节点)下单服务运行</li>
+<li>docker-compose：Single Engine(或者称 Single-Host，单 Docker 节点)下多服务编排</li>
+<li>docker swarm：Multi-Host(多 Docker 节点，集群)下单服务编排</li>
+<li>docker stack：Multi-Host(多 Docker 节点，集群)下多服务编排</li>
+</ul>
+<p>可以看到 docker stack 其实就是 docker-compose 多应用和 docker swarm 规模化两者的结合。</p>
+<h2 id="1-nbspnbsp节点初始化">1   节点初始化</h2>
+<p>从 swarm 我们得知环境要求并不高，那么对 stack 也一样，接下来我们用三台主机进行实战部署，跟 swarm 一样对节点进行初始化，成为 swarm 集群，但不需要创建网络，因为网络创建我们通过编排文件进行：</p>
+<pre tabindex="0"><code>姓名        地区                        内部 IP
+binke01    asia-northeast1-a           10.146.0.2 (nic0)   
+binke01-1  asia-northeast1-a           10.146.0.3 (nic0)   
+binke01-3  asia-northeast1-a           10.146.0.5 (nic0)   
+</code></pre><pre tabindex="0"><code>&gt; docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+0kjqucshibpm35zhq7kizldp0     binke01             Ready               Active                                  18.09.5
+qr7i763tagufpcyn4qf37b5fs *   binke01-1           Ready               Active              Leader              18.09.5
+ogvwkwq0zxw3s05shey2ruzqa     binke01-3           Ready               Active                                  18.09.5
+</code></pre><h2 id="2-nbspnbsp应用容器化">2   应用容器化</h2>
+<p>我们先来看一下容器化上下文：</p>
+<pre tabindex="0"><code>&gt; tree multigo
+multigo
+├── config.yaml
+├── Dockerfile
+├── docker-stack.yml
+├── main.go
+└── service
+    ├── config.go
+    └── redis.go
+</code></pre><h3 id="21-nbspnbsp业务代码">2.1   业务代码</h3>
+<p>我们继续使用计数器，需要两个应用，分别是Go web 服务器和 redis 记录数据应用，我们采用的代码和我们在用 Docker Compose 部署的多应用代码几乎一样：</p>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/multigo/main.go
+package main
+
+import (
+  &#34;fmt&#34;
+  &#34;github.com/wpxun/multigo/service&#34;
+  &#34;net/http&#34;
+  &#34;os&#34;
+  &#34;strconv&#34;
+)
+
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+  redis := service.GetRedis()
+  val, err := redis.Incr(&#34;count&#34;).Result()
+  if err != nil {
+    panic(err)
+  }
+  host, _ := os.Hostname()
+  fmt.Fprintln(w, &#34;hello world &#34;+ host +&#34;, visitors = &#34; + strconv.FormatInt(val, 10) )
+}
+
+func main()  {
+  http.Handle(&#34;/pattern&#34;, http.HandlerFunc(IndexHandler))
+  http.ListenAndServe(&#34;:80&#34;, nil)
+}
+EOF
+</code></pre><pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/multigo/config.yaml
+Redis:
+  DialTimeout: 2000000000 #连接超时设定(s)，默认200ms
+  Network: tcp #网络连接协议
+  Address: redis:6379 #连接地址(带端口)
+  Password:  #密码
+  Database: 0 #数据库，默认0
+EOF
+</code></pre><pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/multigo/service/redis.go
+package service
+
+import (
+    &#34;github.com/go-redis/redis&#34;
+)
+
+func GetRedis() *redis.Client {
+    return redis.NewClient(&amp;redis.Options {
+        Addr:         Conf.Redis.Address,
+        Password:     Conf.Redis.Password,
+        DB:           Conf.Redis.Database,
+        Network:      Conf.Redis.Network,
+        DialTimeout:  Conf.Redis.DialTimeout,
+    })
+}
+EOF
+</code></pre><pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/multigo/service/config.go
+package service
+
+import (
+    &#34;fmt&#34;
+    &#34;gopkg.in/yaml.v2&#34;
+    &#34;io/ioutil&#34;
+    &#34;time&#34;
+)
+
+type confstruct struct {
+    Redis struct {
+        Address     string          `yaml:&#34;Address&#34;`
+        Database    int             `yaml:&#34;Database&#34;`
+        DialTimeout time.Duration   `yaml:&#34;DialTimeout&#34;`
+        Network     string          `yaml:&#34;Network&#34;`
+        Password    string          `yaml:&#34;Password&#34;`
+    } `yaml:&#34;Redis&#34;`
+}
+
+var Conf confstruct
+
+func init() {
+    GetYaml(&#34;config&#34;, &amp;Conf)
+}
+
+func GetYaml(filename string, out interface{}) {
+    yamlFile, err := ioutil.ReadFile(fmt.Sprintf(&#34;%s.yaml&#34;, filename))
+    if err != nil {
+        fmt.Println(&#34;Read config file error:&#34;, err.Error())
+    }
+
+    err = yaml.Unmarshal(yamlFile, out)
+
+    if (err != nil) {
+        fmt.Println(&#34;Unmarshal config file error:&#34;, err.Error())
+    }
+}
+
+EOF
+</code></pre><h3 id="22-nbspnbsp容器化">2.2   容器化</h3>
+<p>编写 Dockerfile，采用多阶段构建方式，使得镜像只有 12.9MB。另外 stack 要求提前构建好并推送到创建，也就是 docker-stack.yml 不能用在运行的时候才 build 镜像，原因是多节点部署中，其它节点并没有构建上下文。另外 redis 我们使用官方的 redis 镜像。</p>
+<pre tabindex="0"><code># 多阶段构建
+# 第一阶段，391MB，编译前准备：go 和 git 工具、代码依赖库
+FROM golang:1.12.4-alpine3.9  AS front
+RUN set -xe &amp;&amp; \
+    apk add git &amp;&amp; \
+    go get -v github.com/go-redis/redis &amp;&amp; \
+    go get -v gopkg.in/yaml.v2
+
+# 分成两次 RUN 目的是可复用上面的缓存，编译 go 代码
+COPY . /go/src/github.com/wpxun/multigo
+RUN set -xe &amp;&amp; \
+    go install github.com/wpxun/multigo
+
+
+# 第二阶段，14.6MB；仅仅复制了可执行程序和程序的配置文件
+FROM alpine:3.9
+ENV GOM_VERSION   1904.1
+COPY --from=front /go/bin /go/src/github.com/wpxun/multigo/config.yaml /go/bin/
+EXPOSE 80
+WORKDIR /go/bin
+CMD [&#34;/go/bin/multigo&#34;]
+</code></pre><h2 id="3-nbspnbsp分析-stack-文件">3   分析 Stack 文件</h2>
+<p>Stack 一直是期望的 Compose——完全集成到 Docker 中，并能管理应用的整个生命周期。</p>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt; $GOPATH/github.com/wpxun/multigo/docker-stack.yml
+version: &#34;3.7&#34;
+services:
+  goweb:
+    image: &#34;wpxun/multigo:v1&#34;
+    ports:
+      - target: 80
+        published: 80
+    networks:
+      - counter-net
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      replicas: 8
+      update_config:
+        parallelism: 2
+        failure_action: rollback
+
+  redis:
+    image: &#34;redis:5.0.4-alpine3.9&#34;
+    networks:
+      - counter-net
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - &#39;node.role == worker&#39;
+
+networks:
+  counter-net:
+
+volumes:
+  counter-vol:
+EOF
+</code></pre><p>在该文件整体结构中，定义了 4 种顶级关键字：</p>
+<ul>
+<li>version: 其要求的 version ≥ 3.0</li>
+<li>services: 定义了两个服务，这部分也是核心内容，接下来会讲解</li>
+<li>networks: 创建一个网络，驱动为默认。<strong>stack 编排文件的默认驱动是 overlay(swarm)，而 compose 编排文件的默认驱动是 bridge(local)。</strong></li>
+<li>volumes: 创建一个卷</li>
+</ul>
+<h2 id="4-nbspnbsp部署应用">4   部署应用</h2>
+<p><code>docker stack deploy -c docker-stack.yml multigo</code></p>
+<pre tabindex="0"><code>&gt; docker stack ls
+NAME                SERVICES            ORCHESTRATOR
+multigo             2                   Swarm
+
+&gt; docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE                   PORTS
+8vcqoh0yry5v        multigo_goweb       replicated          8/8                 wpxun/multigo:v1        *:80-&gt;80/tcp
+cygtoce4mfkt        multigo_redis       replicated          1/1                 redis:5.0.4-alpine3.9
+</code></pre><h2 id="5-nbspnbsp管理应用">5   管理应用</h2>
+<p>部署成功之后，所有的 node 节点的 IP 都可以访问到服务，而非仅仅 Leader 节点。</p>
+<h2 id="6-nbspnbsp删除-stack">6   删除 Stack</h2>
+<p><code>docker stack rm</code>，一定要谨慎，删除 Stack 不会进行二次确认，服务和网络会删除，但卷不会删除，这是因为卷的设计初衷是保存持久化数据，其生命周期独立于容器、服务以及 Stack 之外。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] Nigel Poulton. 深入浅出 Dokcer. 版次：2019年4月第1版
+[2] Docker Swarm or Kubernetes — Help me decide. <a href="https://stackshare.io/stackups/docker-swarm-vs-kubernetes">https://stackshare.io/stackups/docker-swarm-vs-kubernetes</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/vagrant/" data-toggle="tooltip" data-placement="top" title="Vagrant 虚拟机管理">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/docker-swarm-mode/" data-toggle="tooltip" data-placement="top" title="Docker Swarm 集群">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

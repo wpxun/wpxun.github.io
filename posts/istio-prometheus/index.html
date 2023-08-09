@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Istio Prometheus - HOME</title>
+  <meta property="og:title" content="Istio Prometheus - HOME" />
+  <meta name="twitter:title" content="Istio Prometheus - HOME" />
+  <meta name="description" content="我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。">
+  <meta property="og:description" content="我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。">
+  <meta name="twitter:description" content="我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/istio-prometheus/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Istio Prometheus</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>May 30, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">
+            <i class="fas fa-folder"></i>
+            云原生
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/kubernetes/">
+            <i class="fas fa-tag"></i>
+            Kubernetes
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/service-mesh/">
+            <i class="fas fa-tag"></i>
+            Service Mesh
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      <p>我选择 Istio 而非 Service Mesh 鼻祖 Linkerd 的原因，是 Istio 有大牌厂商支持、社区生态圈优势、重点支持 Kubernetes。</p>
+<h2 id="1-nbspnbsp遥测插件的远程访问">1   遥测插件的远程访问</h2>
+<p>这里有很多种方法：</p>
+<ul>
+<li>直接用 pod ip + pod port 去访问，</li>
+<li>把 pod ip + pod port 映射到 istio 的 virtualservice</li>
+<li>把 pod ip + pod port 映射到宿主机的端口</li>
+</ul>
+<p>比如这些 Pod 内部开放的端口：Prometheus：9090、Grafana：3000、Kiali：20001、Tracing：80，后两者我们演示一下。</p>
+<h3 id="11-nbspnbsp-istio">1.1    istio</h3>
+<p>istio-ingressgateway 服务开放了 15020:31966/TCP,80:31380/TCP,443:31390/TCP,31400:31400/TCP,15029:32293/TCP,15030:30857/TCP,15031:30499/TCP,15032:31537/TCP,15443:32082/TCP 这些端口到宿主机，可以新建 istio 资源进行访问，官方有文档“<a href="https://istio.io/zh/docs/tasks/telemetry/gateways/">遥测插件的远程访问</a>”</p>
+<h3 id="12-nbspnbsp-port-forward-命令转发">1.2    port-forward 命令转发</h3>
+<p>比如 Prometheus：
+<code>kubectl -n istio-system port-forward  prometheus-d8d46c5b5-vb87x 9090:9090 &amp;</code>
+<code>ssh -N -f -L 0.0.0.0:9091:127.0.0.1:9090 yhdodo19@0.0.0.0 -i ~/.ssh/googledodo</code>
+http://35.237.188.250:9091</p>
+<p>Grafana：
+<code>kubectl -n istio-system port-forward  grafana-67c69bb567-qfzm5 3000:3000 &amp;</code>
+<code>ssh -N -f -L 0.0.0.0:9092:127.0.0.1:3000 yhdodo19@0.0.0.0 -i ~/.ssh/googledodo</code>
+http://35.237.188.250:9092</p>
+<p>kubectl -n istio-system port-forward istio-ingressgateway-5d8d989c76-cctpl 15000:15000 &amp;
+<code>ssh -N -f -L 0.0.0.0:9093:127.0.0.1:15000 yhdodo19@0.0.0.0 -i ~/.ssh/googledodo</code>
+http://35.237.188.250:9093/listeners
+查看该pod的监听器，默认只有 0.0.0.0:15090，比如我添加了 0.0.0.0:443，就可以接受 istio-ingressgateway svc 的 443 接口
+http://35.237.188.250:9093/config_dump</p>
+<p><code>ssh -N -f -L 0.0.0.0:80:127.0.0.1:31390 yhdodo19@0.0.0.0 -i ~/.ssh/googledodo</code></p>
+<pre tabindex="0"><code>{
+    &#34;configs&#34;:[
+        {
+            &#34;@type&#34;:&#34;type.googleapis.com/envoy.admin.v2alpha.BootstrapConfigDump&#34;,
+            &#34;bootstrap&#34;:Object{...},
+            &#34;last_updated&#34;:&#34;2019-06-25T10:15:56.689Z&#34;
+        },
+        {
+            &#34;@type&#34;:&#34;type.googleapis.com/envoy.admin.v2alpha.ClustersConfigDump&#34;,
+            &#34;version_info&#34;:&#34;2019-06-28T03:17:42Z/49&#34;,
+            &#34;static_clusters&#34;:Array[3],
+            &#34;dynamic_active_clusters&#34;:Array[100]
+        },
+        {
+            &#34;@type&#34;:&#34;type.googleapis.com/envoy.admin.v2alpha.ListenersConfigDump&#34;,
+            &#34;version_info&#34;:&#34;2019-06-28T03:17:42Z/49&#34;,
+            &#34;static_listeners&#34;:Array[1],
+            &#34;dynamic_active_listeners&#34;:Array[1]
+        },
+        {
+            &#34;@type&#34;:&#34;type.googleapis.com/envoy.admin.v2alpha.RoutesConfigDump&#34;,
+            &#34;static_route_configs&#34;:Array[1],
+            &#34;dynamic_route_configs&#34;:[
+                {
+                    &#34;version_info&#34;:&#34;2019-06-28T03:17:42Z/49&#34;,
+                    &#34;route_config&#34;:{
+                        &#34;name&#34;:&#34;http.443&#34;,
+                        &#34;virtual_hosts&#34;:[
+                            {
+                                &#34;name&#34;:&#34;kube.jemper.cn:443&#34;,
+                                &#34;domains&#34;:[
+                                    &#34;kube.jemper.cn&#34;,
+                                    &#34;kube.jemper.cn:443&#34;
+                                ],
+                                &#34;routes&#34;:[
+                                    {
+                                        &#34;match&#34;:{
+                                            &#34;prefix&#34;:&#34;/sec&#34;
+                                        },
+                                        &#34;route&#34;:{
+                                            &#34;cluster&#34;:&#34;outbound|82|v3|goapisec.default.svc.cluster.local&#34;,
+                                            &#34;timeout&#34;:&#34;0s&#34;,
+                                            &#34;retry_policy&#34;:{
+                                                &#34;retry_on&#34;:&#34;connect-failure,refused-stream,unavailable,cancelled,resource-exhausted,retriable-status-codes&#34;,
+                                                &#34;num_retries&#34;:2,
+                                                &#34;retry_host_predicate&#34;:[
+                                                    {
+                                                        &#34;name&#34;:&#34;envoy.retry_host_predicates.previous_hosts&#34;
+                                                    }
+                                                ],
+                                                &#34;host_selection_retry_max_attempts&#34;:&#34;5&#34;,
+                                                &#34;retriable_status_codes&#34;:[
+                                                    503
+                                                ]
+                                            },
+                                            &#34;max_grpc_timeout&#34;:&#34;0s&#34;
+                                        },
+                                        &#34;metadata&#34;:{
+                                            &#34;filter_metadata&#34;:{
+                                                &#34;istio&#34;:{
+                                                    &#34;config&#34;:&#34;/apis/networking/v1alpha3/namespaces/default/virtual-service/goapi-default-xixi&#34;
+                                                }
+                                            }
+                                        },
+                                        &#34;decorator&#34;:{
+                                            &#34;operation&#34;:&#34;goapisec.default.svc.cluster.local:82/sec*&#34;
+                                        },
+                                        &#34;per_filter_config&#34;:{
+                                            &#34;mixer&#34;:{
+                                                &#34;disable_check_calls&#34;:true,
+                                                &#34;forward_attributes&#34;:{
+                                                    &#34;attributes&#34;:{
+                                                        &#34;destination.service.host&#34;:{
+                                                            &#34;string_value&#34;:&#34;goapisec.default.svc.cluster.local&#34;
+                                                        },
+                                                        &#34;destination.service.uid&#34;:{
+                                                            &#34;string_value&#34;:&#34;istio://default/services/goapisec&#34;
+                                                        },
+                                                        &#34;destination.service.name&#34;:{
+                                                            &#34;string_value&#34;:&#34;goapisec&#34;
+                                                        },
+                                                        &#34;destination.service.namespace&#34;:{
+                                                            &#34;string_value&#34;:&#34;default&#34;
+                                                        }
+                                                    }
+                                                },
+                                                &#34;mixer_attributes&#34;:{
+                                                    &#34;attributes&#34;:{
+                                                        &#34;destination.service.host&#34;:{
+                                                            &#34;string_value&#34;:&#34;goapisec.default.svc.cluster.local&#34;
+                                                        },
+                                                        &#34;destination.service.uid&#34;:{
+                                                            &#34;string_value&#34;:&#34;istio://default/services/goapisec&#34;
+                                                        },
+                                                        &#34;destination.service.namespace&#34;:{
+                                                            &#34;string_value&#34;:&#34;default&#34;
+                                                        },
+                                                        &#34;destination.service.name&#34;:{
+                                                            &#34;string_value&#34;:&#34;goapisec&#34;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        &#34;match&#34;:{
+                                            &#34;prefix&#34;:&#34;/&#34;
+                                        },
+                                        &#34;route&#34;:{
+                                            &#34;cluster&#34;:&#34;outbound|81|v1|goapi.default.svc.cluster.local&#34;,
+                                            &#34;timeout&#34;:&#34;0s&#34;,
+                                            &#34;retry_policy&#34;:{
+                                                &#34;retry_on&#34;:&#34;connect-failure,refused-stream,unavailable,cancelled,resource-exhausted,retriable-status-codes&#34;,
+                                                &#34;num_retries&#34;:2,
+                                                &#34;retry_host_predicate&#34;:[
+                                                    {
+                                                        &#34;name&#34;:&#34;envoy.retry_host_predicates.previous_hosts&#34;
+                                                    }
+                                                ],
+                                                &#34;host_selection_retry_max_attempts&#34;:&#34;5&#34;,
+                                                &#34;retriable_status_codes&#34;:[
+                                                    503
+                                                ]
+                                            },
+                                            &#34;max_grpc_timeout&#34;:&#34;0s&#34;
+                                        },
+                                        &#34;metadata&#34;:{
+                                            &#34;filter_metadata&#34;:{
+                                                &#34;istio&#34;:{
+                                                    &#34;config&#34;:&#34;/apis/networking/v1alpha3/namespaces/default/virtual-service/goapi-default-xixi&#34;
+                                                }
+                                            }
+                                        },
+                                        &#34;decorator&#34;:{
+                                            &#34;operation&#34;:&#34;goapi.default.svc.cluster.local:81/*&#34;
+                                        },
+                                        &#34;per_filter_config&#34;:{
+                                            &#34;mixer&#34;:{
+                                                &#34;disable_check_calls&#34;:true,
+                                                &#34;forward_attributes&#34;:{
+                                                    &#34;attributes&#34;:{
+                                                        &#34;destination.service.uid&#34;:{
+                                                            &#34;string_value&#34;:&#34;istio://default/services/goapi&#34;
+                                                        },
+                                                        &#34;destination.service.host&#34;:{
+                                                            &#34;string_value&#34;:&#34;goapi.default.svc.cluster.local&#34;
+                                                        },
+                                                        &#34;destination.service.namespace&#34;:{
+                                                            &#34;string_value&#34;:&#34;default&#34;
+                                                        },
+                                                        &#34;destination.service.name&#34;:{
+                                                            &#34;string_value&#34;:&#34;goapi&#34;
+                                                        }
+                                                    }
+                                                },
+                                                &#34;mixer_attributes&#34;:{
+                                                    &#34;attributes&#34;:{
+                                                        &#34;destination.service.namespace&#34;:{
+                                                            &#34;string_value&#34;:&#34;default&#34;
+                                                        },
+                                                        &#34;destination.service.name&#34;:{
+                                                            &#34;string_value&#34;:&#34;goapi&#34;
+                                                        },
+                                                        &#34;destination.service.host&#34;:{
+                                                            &#34;string_value&#34;:&#34;goapi.default.svc.cluster.local&#34;
+                                                        },
+                                                        &#34;destination.service.uid&#34;:{
+                                                            &#34;string_value&#34;:&#34;istio://default/services/goapi&#34;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        &#34;validate_clusters&#34;:false
+                    },
+                    &#34;last_updated&#34;:&#34;2019-06-28T03:17:42.772Z&#34;
+                }
+            ]
+        }
+    ]
+}
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] 崔秀龙. 深入浅出 Istio | Service Mesh 快速入门与实践. 版次：2019年3月第1版
+[2] 杨章显. Service Mesh 实战 | 基于 Linkerd 和 Kubernetes 的微服务实践. 版次：2019年1月第1版</p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/kubernetes-network/" data-toggle="tooltip" data-placement="top" title="Kubernetes 网络">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/istio/" data-toggle="tooltip" data-placement="top" title="Istio 基础">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

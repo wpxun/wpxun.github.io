@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Jenkins 持续集成 - HOME</title>
+  <meta property="og:title" content="Jenkins 持续集成 - HOME" />
+  <meta name="twitter:title" content="Jenkins 持续集成 - HOME" />
+  <meta name="description" content="今天看到《Jenkins2 权威指南》出来了，马上买了一本，DevOps 相关的书籍更新太快了，这包括 Docker、Jenkins，新特性快速推出，旧版本必然快速淘汰，可以看一下 Jenkins 的版本，Jenkins 1.x 相关书籍已经严重滞后了。">
+  <meta property="og:description" content="今天看到《Jenkins2 权威指南》出来了，马上买了一本，DevOps 相关的书籍更新太快了，这包括 Docker、Jenkins，新特性快速推出，旧版本必然快速淘汰，可以看一下 Jenkins 的版本，Jenkins 1.x 相关书籍已经严重滞后了。">
+  <meta name="twitter:description" content="今天看到《Jenkins2 权威指南》出来了，马上买了一本，DevOps 相关的书籍更新太快了，这包括 Docker、Jenkins，新特性快速推出，旧版本必然快速淘汰，可以看一下 Jenkins 的版本，Jenkins 1.x 相关书籍已经严重滞后了。">
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/posts/jenkins/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Jenkins 持续集成</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>April 28, 2019</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/devops/">
+            <i class="fas fa-folder"></i>
+            DevOps
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/jenkins/">
+            <i class="fas fa-tag"></i>
+            Jenkins
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-nbspnbsp基础">1   基础</a>
+      <ul>
+        <li><a href="#11-nbspnbsp安装">1.1   安装</a></li>
+        <li><a href="#12-nbspnbsp主目录">1.2   主目录</a></li>
+        <li><a href="#13-nbspnbsp节点">1.3   节点</a></li>
+        <li><a href="#14-nbspnbsp凭证">1.4   凭证</a></li>
+        <li><a href="#15-nbspnbsppipeline">1.5   Pipeline</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-nbspnbsp声明式流水线">2   声明式流水线</a></li>
+    <li><a href="#3-nbspnbsp构建触发器">3   构建触发器</a></li>
+    <li><a href="#4-nbspnbsp通知">4   通知</a></li>
+    <li><a href="#7-nbspnbsp分布式部署实战">7   分布式部署实战</a>
+      <ul>
+        <li><a href="#71-nbspnbsp-vagrantfile">7.1    Vagrantfile</a></li>
+        <li><a href="#72-nbspnbspscripts">7.2   scripts</a></li>
+        <li><a href="#73-nbspnbsp运行-master-节点的-jenkins">7.3   运行 master 节点的 Jenkins</a></li>
+        <li><a href="#74-nbspnbsp加入-node-从节点">7.4   加入 node 从节点</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-nbspnbsptroubleshooting">8   Troubleshooting</a></li>
+  </ul>
+</nav>
+</aside>
+      <p>今天看到《Jenkins2 权威指南》出来了，马上买了一本，DevOps 相关的书籍更新太快了，这包括 Docker、Jenkins，新特性快速推出，旧版本必然快速淘汰，可以看一下 <a href="http://mirrors.jenkins.io/war-stable/">Jenkins 的版本</a>，Jenkins 1.x 相关书籍已经严重滞后了。</p>
+<h2 id="1-nbspnbsp基础">1   基础</h2>
+<h3 id="11-nbspnbsp安装">1.1   安装</h3>
+<ol>
+<li>作为独立的应用程序安装：（1）二进制包安装，（2）brew、yum 安装，（3）直接下载 war 包，java -jar jenkins.war。
+更新：用 brew、yum 命令更新，或者用新版的 jenkins.war 替换旧版然后重启</li>
+<li>应用服务器安装，比如 tomcat
+更新：注意要删除一些缓存，避免过期页面被引用</li>
+</ol>
+<h3 id="12-nbspnbsp主目录">1.2   主目录</h3>
+<p>不管你把 Jenkins 的 war 文件存放在哪儿，Jenkins 都把其所有重要的数据存放在一个专用的、隔离的，称为 Jenkins 主目录的目录下。在这里，Jenkins 存储关于构建服务器的配置信息、构建作业、构建产物和其他有用的信息，当然也包括你安装了的任何插件。且 Jenkins 主目录格式是跨版本向后兼容的，所以你可以自由地更新或者重新安装 Jenkins 而不影响 Jenkins 主目录。</p>
+<p>一般主目录是 ~/.jenkins 目录，一个好的做法是为 Jenkins 创建一个特殊的用户和用户组。<code>sudo groupadd build</code>，<code>sudo useradd --create-home --shell /bin/bash --groups build jenkins</code>，让主目录在用户空间下。
+确保你的 Jenkins 主目录能定期备份是非常重要的，Jenkins 程序本身相对并不那么重要。</p>
+<ul>
+<li>workspace：是 Jenkins 对你的项目进行构建的地方</li>
+<li>builds：构建历史</li>
+</ul>
+<h3 id="13-nbspnbsp节点">1.3   节点</h3>
+<p>节点代表了任何可以执行 Jenkins 任务的系统，包括了主节点，代理节点和容器，前两都是机器，后者是需要在机器上运行的容器，但都可以称为节点，从这点可以看出，节点是承载任务的，而不是节点机器。</p>
+<ul>
+<li>主节点：运行 Jenkins 实例的主要控制系统，不推荐在主节点上执行高负载任务，而应该在代理节点上运行</li>
+<li>代理节点：也叫从节点，代表非主节点的系统，且由主系统管理，对资源访问有限，降低安全风险</li>
+<li>容器：容器也应该选择在代理节点上运行</li>
+</ul>
+<h3 id="14-nbspnbsp凭证">1.4   凭证</h3>
+<ul>
+<li>
+<p>类型：除了默认类型，还可以安装插件扩展</p>
+</li>
+<li>
+<p>Username with password，用户名密码</p>
+</li>
+<li>
+<p>Docker Host Certificate Authentication</p>
+</li>
+<li>
+<p>SSH Username with private key，ssh 连接</p>
+</li>
+<li>
+<p>Secret file</p>
+</li>
+<li>
+<p>Secret text，比如token</p>
+</li>
+<li>
+<p>Certificate</p>
+</li>
+<li>
+<p>域：尽量匹配对应的域名，不过不强制</p>
+</li>
+<li>
+<p>全局</p>
+</li>
+<li>
+<p>自定义域</p>
+</li>
+<li>
+<p>提供者：</p>
+</li>
+<li>
+<p>jenkins</p>
+</li>
+<li>
+<p>用户</p>
+</li>
+</ul>
+<h3 id="15-nbspnbsppipeline">1.5   Pipeline</h3>
+<p>Jenkins 2 的新特性，通过插件获得流水线这一新功能，通过 Jenkins DSL 实现流水线代码，代码提取到一个 Jenkinsfile 文件中。</p>
+<ul>
+<li>脚本式流水线：node 用于指定节点，偏向程序语言</li>
+<li>声明式流水线：agent 用于指定节点，偏向于自然语言</li>
+</ul>
+<h2 id="2-nbspnbsp声明式流水线">2   声明式流水线</h2>
+<p>创建一个流水线项目后，项目左侧列表会有“流水线语法”链接，可以借助这一脚手架直接生成 DSL 代码，比如与“构建触发”相关的可以选择 properties 步骤生成。当然想要理解声明式还得系统性地学习。</p>
+<p>{% img <a href="https://wpxun.github.io/image/2019/05/declarative_pipeline.png">https://wpxun.github.io/image/2019/05/declarative_pipeline.png</a> 250 %}</p>
+<h2 id="3-nbspnbsp构建触发器">3   构建触发器</h2>
+<p>除了手动立即构建，还可以构建触发器自动的构建，这也是自动化部署的基础，常用的几种构建触发器如下：</p>
+<ul>
+<li>其他工程构建后触发，如标题所述，允许在一个或者多个其它项目之后开发你的项目构建。依赖构建</li>
+<li>定时构建，定时构建</li>
+<li>Build when a change is pushed to GitLab，需要设置 webhook URL</li>
+<li>GitHub hook trigger for GITScm polling，和 GitLab 一样需要在 GitHub 设置 webhook URL</li>
+<li>轮询 SCM，Jenkins 主动询问</li>
+</ul>
+<h2 id="4-nbspnbsp通知">4   通知</h2>
+<h2 id="7-nbspnbsp分布式部署实战">7   分布式部署实战</h2>
+<p>下面通过 vagrant 进行分布式部署，主要还是用于开发和测试使用，本次实战只部署机器和环境，采用手动运行 jenkins.war。首先来看一下目录结构：</p>
+<pre tabindex="0"><code>vagjenkins/
+├── Vagrantfile
+├── certs
+│   ├── domain.crt
+│   └── domain.key
+├── jdk-8u211-linux-x64.tar.gz
+├── jenkins.war
+└── scripts
+    ├── docker.sh
+    ├── hosts.sh
+    ├── java.sh
+    └── registry.sh
+</code></pre><ul>
+<li>certs 和 scripts/registry.sh 是安装 Docker registry 的脚本，具体可以查看 <a href="/2019/04/13/docker-engine/#7-nbsp-nbsp-%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93">Docker Engine</a> 一文。</li>
+<li>jdk-8u211-linux-x64.tar.gz 是运行 jenkins 的 jdk 环境工具</li>
+<li>jenkins.war，在环境创建好后启动，以 java -jar jenkins.war 手动运行</li>
+<li>Vagrantfile 和 scripts 在接下来重点介绍</li>
+</ul>
+<h3 id="71-nbspnbsp-vagrantfile">7.1    Vagrantfile</h3>
+<ul>
+<li>master 节点</li>
+</ul>
+<ol>
+<li>需要安装 Docker</li>
+<li>并运行 Docker Registry 容器，并连接到Docker Registry；</li>
+<li>安装 JDK 环境，预备运行 jenkins.war</li>
+<li>映射 8080 端口到宿主机，访问宿主机的 localhost:8080 即是访问 master 的8080</li>
+</ol>
+<ul>
+<li>node 从节点</li>
+</ul>
+<ol>
+<li>只需安装 Docker，并连接到 master 虚拟机的 Docker Registry</li>
+</ol>
+<p>Vagrantfile 就是基础设置即代码文件，可以将上述的过程代码化：</p>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;&gt; /Users/ada/vagjenkins/Vagrantfile
+# -*- mode: ruby -*-
+# vi:set ft=ruby sw=2 ts=2 sts=2:
+
+NODE_COUNT = 2
+POD_NETWORK_CIDR = &#34;10.244.0.0/16&#34;
+
+MASTER_IP = &#34;192.168.56.113&#34;
+NODE_IP_PREFIX = &#34;192.168.56.&#34;
+
+Vagrant.configure(&#34;2&#34;) do |config|
+  config.vm.box = &#34;centos/7&#34;
+  config.vm.box_version = &#34;1902.01&#34;
+
+  config.vm.provider &#34;virtualbox&#34; do |v|
+    v.memory = 1536
+    v.cpus = 2
+  end
+
+  config.vm.provision &#34;install-docker&#34;, type: &#34;shell&#34;, :path =&gt; &#34;scripts/docker.sh&#34;
+  config.vm.provision &#34;setup-hosts&#34;, type: &#34;shell&#34;, :path =&gt; &#34;scripts/hosts.sh&#34; do |s|
+    s.args = [&#34;eth1&#34;]
+  end
+
+
+  config.vm.define &#34;jenkins-master&#34; do |node|
+    node.vm.hostname = &#34;jenkins-master&#34;
+    node.vm.network :private_network, ip: MASTER_IP
+
+    node.vm.network &#34;forwarded_port&#34;, guest: 8080, host: 8080
+
+    node.vm.provision &#34;install-registry&#34;, type: &#34;shell&#34;, :path =&gt; &#34;scripts/registry.sh&#34;
+    node.vm.provision &#34;install-java&#34;, type: &#34;shell&#34;, :path =&gt; &#34;scripts/java.sh&#34;
+
+  end
+
+
+  (1..NODE_COUNT).each do |i|
+     config.vm.define &#34;jenkins-node0#{i}&#34; do |node|
+        node.vm.hostname = &#34;jenkins-node0#{i}&#34;
+        node.vm.network :private_network, ip: NODE_IP_PREFIX + &#34;#{113 + i}&#34;
+
+     end
+  end
+
+  # config all node to connect registry
+  config.vm.provision &#34;shell&#34;, inline: &lt;&lt;-SHELL
+        mkdir -p /etc/docker/certs.d/192.168.56.113:5000
+        cp /vagrant/certs/domain.crt /etc/docker/certs.d/192.168.56.113:5000/ca.crt
+    SHELL
+
+end
+EOF
+</code></pre><h3 id="72-nbspnbspscripts">7.2   scripts</h3>
+<ol>
+<li>Docker 安装</li>
+</ol>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;&gt; /Users/ada/vagjenkins/scripts/docker.sh
+#!/bin/bash
+
+set -ex
+
+# 安装 docker
+yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+yum install -y docker-ce docker-ce-cli containerd.io
+
+# docker 官方镜像阿里云加速
+mkdir -p /etc/docker
+tee /etc/docker/daemon.json &lt;&lt;-&#39;EOF&#39;
+{
+  &#34;registry-mirrors&#34;: [&#34;https://r11fpimm.mirror.aliyuncs.com&#34;]
+}
+EOF
+
+# 启动
+usermod -aG docker vagrant 
+systemctl start docker
+systemctl enable docker
+EOF
+</code></pre><ol start="2">
+<li>设置主机名</li>
+</ol>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;&gt; /Users/ada/vagjenkins/scripts/hosts.sh
+#!/bin/bash
+
+set -xe
+
+IFNAME=$1
+IP=&#34;$(ip -4 a s $IFNAME | grep &#34;inet&#34; | head -1 |awk &#39;{print $2}&#39; | cut -d&#39;/&#39; -f1)&#34;
+sed -e &#34;s/^.*${HOSTNAME}.*/${IP} ${HOSTNAME} ${HOSTNAME}/&#34; -i /etc/hosts
+EOF
+</code></pre><ol start="3">
+<li>启动 docker registry 容器</li>
+</ol>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;&gt; /Users/ada/vagjenkins/scripts/registry.sh
+#!/bin/bash
+
+set -ex
+
+# run container
+docker pull registry:2.7.1
+docker run -d \
+  --restart=always \
+  --name registry \
+  -v `pwd`/registry:/var/lib/registry \
+  -v /vagrant/certs:/certs \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+  -p 5000:5000 \
+  registry:2.7.1
+
+# setup firewall, 因为 vagrant 镜像默认防火墙是关闭的，所以不用设置
+#firewall-cmd --permanent --add-port=8080/tcp
+#firewall-cmd --reload
+EOF
+</code></pre><ol start="4">
+<li>安装 jdk 和 git，建议用 ssh 连接 git，一般有两种办法</li>
+</ol>
+<ul>
+<li>如果是把 ssh 密钥放在服务器的话，必须得用 <code>ssh -T git@github.com</code> 连接 github，把 git 服务器指纹写入 known_hosts，否则构建不会在指纹提示自动输入 yes</li>
+<li>只是安装 git，在 jenkins 创建新凭据，只需要填写 ssh 密钥，但每次使用时都需要指定用凭据，方便的是会自动采集指纹写入 known_hosts</li>
+</ul>
+<p>我这里选择了第二种方式，注意设置环境变量的 $ 符号不要被解析掉：</p>
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;&gt; /Users/ada/vagjenkins/scripts/java.sh
+#!/bin/bash
+
+set -ex
+
+# untar jdk
+mkdir -p /usr/local/java
+tar -zxf /vagrant/jdk-8u211-linux-x64.tar.gz -C /usr/local/java/
+
+# set env
+cat &lt;&lt;EOF &gt;&gt; /home/vagrant/.bash_profile
+export JAVA_HOME=/usr/local/java/jdk1.8.0_211
+export JRE_HOME=\${JAVA_HOME}/jre
+export CLASSPATH=.:\${JAVA_HOME}/lib:\${JRE_HOME}/lib
+export PATH=\${JAVA_HOME}/bin:\$PATH
+EOF
+
+yum install -y git
+EOF
+</code></pre><h3 id="73-nbspnbsp运行-master-节点的-jenkins">7.3   运行 master 节点的 Jenkins</h3>
+<p>完成以上步骤，启动虚拟机，用 java -jar /vagrant/jenkins.war 运行 Jenkins，因为 8080 已经映射到宿主机，所以可以在宿主机访问 Jenkins：localhost:8080。</p>
+<h3 id="74-nbspnbsp加入-node-从节点">7.4   加入 node 从节点</h3>
+<p>这里主要就把从节点的 ssh 私钥（服务器鉴权放在 /home/vagrant/.ssh/authorized_keys）生成 jenkins 的凭据，节点的 ssh 私钥可以通过 vagrant ssh [name] &ndash;debug 的输出日志中获取，一般放在 /Users/ada/vagjenkins/.vagrant/machines/[name]/virtualbox/private_key，通过 ssh、scp 去连接都需要该 private_key，例子如下：</p>
+<ul>
+<li><code>scp  -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-node01/virtualbox/private_key  /Users/ada/.ssh/github/*  vagrant@192.168.56.114:/home/vagrant/.ssh</code>、</li>
+<li>NAT 网络通过端口转发连接，<code>ssh -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-master/virtualbox/private_key vagrant@127.0.0.1 -p 2222</code></li>
+<li>因为我创建了主机网络，所以还可以直接通过主机网络的 IP 地址连接，<code>ssh -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-master/virtualbox/private_key vagrant@192.168.56.113</code></li>
+</ul>
+<p>主节点通过 ssh 连接到从节点，同样需要 known_hosts 验证，在可以在服务器手动执行 <code>ssh vagrant@192.168.56.115</code> 验证再到 jenkins 启动节点。</p>
+<h2 id="8-nbspnbsptroubleshooting">8   Troubleshooting</h2>
+<ul>
+<li>Jenkins 出现更新出错的问题，一般就是 /etc/resolv.conf 解析出问题，可以用以下的方式查看：
+curl -I &ndash;connect-timeout 10 -m 20  <a href="https://updates.jenkins.io/update-center.json">https://updates.jenkins.io/update-center.json</a></li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>参考文献</strong>
+[1] what-is-scrum. <a href="https://www.scrum.org/resources/what-is-scrum">https://www.scrum.org/resources/what-is-scrum</a>
+[2] 如何从零开始搭建 CI/CD 流水线 <a href="https://www.infoq.cn/article/WHt0wFMDRrBU-dtkh1Xp">https://www.infoq.cn/article/WHt0wFMDRrBU-dtkh1Xp</a></p>
+    </article>
+
+    
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/kubernetes-install/" data-toggle="tooltip" data-placement="top" title="Kubernetes 集群安装">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/vagrant/" data-toggle="tooltip" data-placement="top" title="Vagrant 虚拟机管理">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

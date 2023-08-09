@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Go包 - HOME</title>
+  <meta property="og:title" content="Go包 - HOME" />
+  <meta name="twitter:title" content="Go包 - HOME" />
+  <meta name="author" content=""/>
+  <meta property="og:site_name" content="HOME" />
+  <meta property="og:url" content="https://wpxun.github.io/tags/go%E5%8C%85/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.115.2">
+  <link href="/tags/go%E5%8C%85/index.xml" rel="alternate" type="application/rss+xml" title="HOME" />
+  <link href="/tags/go%E5%8C%85/index.xml" rel="feed" type="application/rss+xml" title="HOME" />
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/style-dark.css" media="all and (prefers-color-scheme: dark)" />
+
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">HOME</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <section class="list term-list">
+      <article class="article">
+        <a href="/posts/go-context/" class="article-titles">
+          <h2 class="article-title">go context 包</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 8, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/go%E5%8C%85/">
+              <i class="fas fa-tag"></i>
+              Go包
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <p>整个 context 包原码就有一个文件即 context.go，我估计 context 的设计就是由 http 引出来的，学习 context 其实也是学习 go 的接口设计范式。</p>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-context/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/go-time/" class="article-titles">
+          <h2 class="article-title">go time 包</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>March 8, 2019</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/golang/">
+              <i class="fas fa-folder"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/golang/">
+              <i class="fas fa-tag"></i>
+              Golang
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/go%E5%8C%85/">
+              <i class="fas fa-tag"></i>
+              Go包
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          <h3 id="时间概念">时间概念</h3>
+<p>时间对所有程序语言来说原理都是一样的：时间点、时间段、时区和显示格式。</p>
+<ul>
+<li>时间点：时间点没有时区差异，也就是说全世界无论哪个时区都是同一个时间点，时间戳就是时间点的表达方式，所以时间戳没有时区差异。</li>
+<li>时间段：时间段其实就是一个整数型，从小到大依次是皮秒（ps）、纳秒（ns）、微秒（μs）、毫秒（ms）、秒（s），在 go 程序中 1s == 1e9。</li>
+<li>时区：时间点有时区差异，同一个时间戳在不同时区具有时差区别。</li>
+<li>显示格式：这部分没有逻辑问题，纯粹是视图显示。</li>
+</ul>
+        </div>
+        <div class="article-readmore"><a href="/posts/go-time/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+    </section>
+    
+  </div>
+
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2023 wpxun</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-rsslink">
+      <a href="/tags/go%E5%8C%85/index.xml" type="application/rss+xml" target="_blank" title="RSS">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>
