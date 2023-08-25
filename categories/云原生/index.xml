@@ -14,7 +14,7 @@
       <pubDate>Wed, 26 Jun 2019 17:00:00 +0000</pubDate>
       
       <guid>https://wpxun.github.io/posts/istio-traffic-management/</guid>
-      <description>&lt;p&gt;流量管理是 istio 最核心的问题，涉及 v1alpha3 中的配置资源，包括Gateway、VirtualSerice、DestinationRule 等。本文主要是基于 &lt;a href=&#34;https://wpxun.github.io/2019/05/30/istio/&#34;&gt;Istio 基础&lt;/a&gt;一文已经部署的实例来进行讲解。&lt;/p&gt;</description>
+      <description>&lt;p&gt;流量管理是 istio 最核心的问题，涉及 v1alpha3 中的配置资源，包括Gateway、VirtualSerice、DestinationRule 等。本文主要是基于 &lt;a href=&#34;https://wpxun.github.io/posts/istio/&#34;&gt;Istio 基础&lt;/a&gt;一文已经部署的实例来进行讲解。&lt;/p&gt;</description>
     </item>
     
     <item>

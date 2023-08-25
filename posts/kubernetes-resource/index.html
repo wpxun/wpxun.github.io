@@ -207,7 +207,7 @@ ReplicaSet 的 SELECTOR 和 Pod 的 LABELS 关联，直接创建（非 rs 或 de
 SELECTOR 逗号表示 AND，必须满足 SELECTOR 的条件才能关联；
 Pod 的 NodeSelector 表示在哪个节点部署，如果找不到节点，则 Pod 处于 Pending 状态</p>
 <h2 id="4-nbspnbsp一个简单的例子">4   一个简单的例子</h2>
-<p>本实例和 <a href="/2019/04/26/docker-stack/">Docker Stack 多服务</a>采用类似的服务程序，不过增加了一个 RPC 服务。</p>
+<p>本实例和 <a href="/posts/docker-stack/">Docker Stack 多服务</a>采用类似的服务程序，不过增加了一个 RPC 服务。</p>
 <ul>
 <li>goapi：前端页面服务，代码位于 <a href="https://github.com/wpxun/blog/tree/master/gorpcweb">wpxun/blog/tree/master/gorpcweb</a>，镜像已经推送到 <a href="https://cloud.docker.com/repository/docker/wpxun/gorpcweb">DockerHub</a></li>
 <li>gorpcsvc：提供了一个服务给 gorpcweb 进行基于 HTTP 的 RPC 函数调用，代码位于 <a href="https://github.com/wpxun/blog/tree/master/gorpcsvc">wpxun/blog/tree/master/gorpcsvc</a>，镜像已经推送到 <a href="https://cloud.docker.com/repository/docker/wpxun/gorpcsvc">DockerHub</a></li>

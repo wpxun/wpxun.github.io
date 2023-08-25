@@ -24,7 +24,7 @@
       
       <guid>https://wpxun.github.io/posts/go-network/</guid>
       <description>&lt;p&gt;本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
-在进行原理讲解之前我觉得有必要熟悉一下 &lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;TCP 传输原理&lt;/a&gt;和 &lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;C Socket 编程&lt;/a&gt;，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。&lt;/p&gt;</description>
+在进行原理讲解之前我觉得有必要熟悉一下 &lt;a href=&#34;https://wpxun.github.io/posts/tcp-protocol/&#34;&gt;TCP 传输原理&lt;/a&gt;和 &lt;a href=&#34;https://wpxun.github.io/posts/c-socket/&#34;&gt;C Socket 编程&lt;/a&gt;，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。&lt;/p&gt;</description>
     </item>
     
   </channel>

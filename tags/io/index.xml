@@ -14,7 +14,7 @@
       <pubDate>Wed, 13 Mar 2019 14:55:00 +0000</pubDate>
       
       <guid>https://wpxun.github.io/posts/go-io/</guid>
-      <description>&lt;p&gt;理解 I/O 的一些概念问题可以先看另一篇文章&lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;《C Socket 编程》&lt;/a&gt;
+      <description>&lt;p&gt;理解 I/O 的一些概念问题可以先看另一篇文章&lt;a href=&#34;https://wpxun.github.io/posts/c-socket/&#34;&gt;《C Socket 编程》&lt;/a&gt;
 Go 语言把 I/O 操作抽象成为 Reader 和 Writer 接口，并在 C 语言的基础上又设置了一层缓存操作。&lt;/p&gt;</description>
     </item>
     

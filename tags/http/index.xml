@@ -16,9 +16,9 @@
       <guid>https://wpxun.github.io/posts/https/</guid>
       <description>&lt;p&gt;HTTPS 整个知识体系非常庞大，我认识到的学习 HTTPS 的最佳步骤是：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;基础部分：TCP/IP，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;《TCP 传输原理》&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/21/cryptology/&#34;&gt;《密码学》&lt;/a&gt;和&lt;a href=&#34;https://wpxun.github.io/2019/03/24/tls/&#34;&gt;《SSL/TLS 协议》&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;应用部分：HTTP/2，可以参阅&lt;a href=&#34;https://wpxun.github.io/2019/03/31/http2/&#34;&gt;《HTTP/2 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;基础部分：TCP/IP，可以参阅&lt;a href=&#34;https://wpxun.github.io/posts/tcp-protocol/&#34;&gt;《TCP 传输原理》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;安全部分：分别是学习密码学、OpenSSL命令行、TLS/SSL，可以参阅&lt;a href=&#34;https://wpxun.github.io/posts/cryptology/&#34;&gt;《密码学》&lt;/a&gt;和&lt;a href=&#34;https://wpxun.github.io/posts/tls/&#34;&gt;《SSL/TLS 协议》&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;应用部分：HTTP/2，可以参阅&lt;a href=&#34;https://wpxun.github.io/posts/http2/&#34;&gt;《HTTP/2 协议》&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;</description>
     </item>
     
@@ -45,7 +45,7 @@ h2 和 h1 的最大差别在于在 &lt;strong&gt;http 层&lt;/strong&gt;上增�
       
       <guid>https://wpxun.github.io/posts/go-network/</guid>
       <description>&lt;p&gt;本篇主要内容是 Go HTTP 原理和 RPC 相关知识。
-在进行原理讲解之前我觉得有必要熟悉一下 &lt;a href=&#34;https://wpxun.github.io/2019/03/10/tcp-protocol/&#34;&gt;TCP 传输原理&lt;/a&gt;和 &lt;a href=&#34;https://wpxun.github.io/2019/03/11/c-socket/&#34;&gt;C Socket 编程&lt;/a&gt;，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。&lt;/p&gt;</description>
+在进行原理讲解之前我觉得有必要熟悉一下 &lt;a href=&#34;https://wpxun.github.io/posts/tcp-protocol/&#34;&gt;TCP 传输原理&lt;/a&gt;和 &lt;a href=&#34;https://wpxun.github.io/posts/c-socket/&#34;&gt;C Socket 编程&lt;/a&gt;，因为 Go 是在 C 的基础上进行封装的，这样对哪些属于 C，哪些属于 Go 有一个清晰的了解，也更能避繁就简。&lt;/p&gt;</description>
     </item>
     
   </channel>

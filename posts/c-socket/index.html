@@ -141,7 +141,7 @@ tcp   176656      0 10.170.0.4:8090         112.97.60.187:20530     ESTABLISHED
 <p>接收（Recv-Q）和发送（Send-Q）的缓冲区大小由系统默认设置，也可以调用 setsockopt() getsockopt() 进行设置，两个缓冲区都是 FIFO（先进先出），主动关闭套接字后该套接字将只能 read，不能 send。
 数据流虽然是数据报形式发送，到存放到缓冲区后就没有数据报概念了，因此只能读取到没有数据为止，不能假设写到连接一端的数据大小与从连接另一端读取的数据大小之间存在任何一致性，换句话说，在发送端通过调用一次 send() 传入的数据可以通过在另一端调用 recv() 多次来获取；而调用 recv() 一次可能返回调用 send() 多次所传入的数据。
 Local Address 和 Foreign Address 也没什么虽然特别说的。
-state 这个却需要深入理解，这部分可以参考<a href="/2019/03/10/tcp-protocol/">《TCP 传输原理》</a>一文。</p>
+state 这个却需要深入理解，这部分可以参考<a href="/posts/tcp-protocol/">《TCP 传输原理》</a>一文。</p>
 <p>需要注意的是，一个连接的 socket 往往不是直接对外的，而是经路由（网络层）进行内外网转换：
 <img src="https://wpxun.github.io/image/2019/03/socket_connect.png" alt="socket 连接"></p>
 <h2 id="2-nbspnbspsocket-编程">2   Socket 编程</h2>
