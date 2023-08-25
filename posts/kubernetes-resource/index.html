@@ -120,9 +120,8 @@
 <li>指定的组位于REST路径 /apis/$GROUP_NAME/$VERSION，并使用 apiVersion：$GROUP_NAME/$VERSION（例如 apiVersion：batch/v1）。 在Kubernetes API参考中可以看到支持的API组的完整列表。</li>
 </ol>
 <h3 id="13-nbspnbsp资源">1.3   资源</h3>
-<p>首先预览下 Kubernetes 的整个资源对象框架：
-{% img <a href="https://wpxun.github.io/image/2019/05/kubernetes.png">https://wpxun.github.io/image/2019/05/kubernetes.png</a> 600 %}
-最底层是容器引擎如 Docker 或 rkt，然后是基于容器引擎创建的容器，其次 Pod 是 Kubernetes 的基础，其它资源都是 Pod 更高层次的封装，以此提供管理的便捷性及满足各种应用需求。所有支持的资源可通过 <code>kubectl api-resources</code> 查看。</p>
+<p>首先预览下 Kubernetes 的整个资源对象框架：</p>
+<!-- raw HTML omitted -->
 <p>资源（Resource）是一个 API 集合的抽象，自定义一种新资源就等于是对 Kubernetes API 的扩展，定义之后可以使用 kubectl 直接操作，这是 Kubernetes 扩展性的一个体现。</p>
 <h3 id="14-nbspnbsp通过-api-调用分析">1.4   通过 API 调用分析</h3>
 <p>我们通过  curl -k &ndash;header &ldquo;Authorization: Bearer [value]&rdquo; https://192.168.1.11:6443 方式查看相关的信息</p>

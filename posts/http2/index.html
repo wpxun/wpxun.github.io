@@ -602,8 +602,7 @@ else
 </code></pre><p>（1）第一个 octets： <code>:authority</code> 这部分通过查静态表 Index = 1，首两位是01，所以是 01000001(41)；
 （2）第二个 octets： 第一个 bit 位表示是否是 Huffman 编码，这里当然要用 Huffman 编码，所以是 1，后面一共用 10 octets 长度表示值，所以是 10001010(8a)；
 （3）第三个 octets 到结束：<code>www.jemper.cn</code> 这个值的每一个字节通过查 Huffman 表得知分别为：1111000 1111000 1111000 010111 1110100 00101 101001 101011 00101 101100 010111 00100 101010；一共是 79 bit，后面用 <code>1</code> 填充到  octets 的倍数，即用 10 octets 能完全表示，连接起来就得到要传输的值：11110001 11100011 11000010 11111101 00001011 01001101 01100101 10110001 01110010 01010101(f1 e3 c2 fd 0b 4d 65 b1 72 55)。</p>
-<p>粗糙的结论：:method: GET 11 个字节只用了 1 个字节传输， :authority: <a href="https://www.jemper.cn">www.jemper.cn</a> 24 个字节只用了 12 个字节；即 35 个字节只用了 13 个字节传输，压缩率达 62.8%；其中静态表贡献了 94.7%，Huffman 贡献了 23%，可见一斑。
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p>粗糙的结论：:method: GET 11 个字节只用了 1 个字节传输， :authority: <a href="https://www.jemper.cn">www.jemper.cn</a> 24 个字节只用了 12 个字节；即 35 个字节只用了 13 个字节传输，压缩率达 62.8%；其中静态表贡献了 94.7%，Huffman 贡献了 23%，可见一斑。</p>
 <hr>
 <p>有趣轶事：</p>
 <ol>

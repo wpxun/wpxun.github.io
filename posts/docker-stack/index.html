@@ -316,7 +316,7 @@ cygtoce4mfkt        multigo_redis       replicated          1/1                 
 <p>部署成功之后，所有的 node 节点的 IP 都可以访问到服务，而非仅仅 Leader 节点。</p>
 <h2 id="6-nbspnbsp删除-stack">6   删除 Stack</h2>
 <p><code>docker stack rm</code>，一定要谨慎，删除 Stack 不会进行二次确认，服务和网络会删除，但卷不会删除，这是因为卷的设计初衷是保存持久化数据，其生命周期独立于容器、服务以及 Stack 之外。</p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <p><strong>参考文献</strong>
 [1] Nigel Poulton. 深入浅出 Dokcer. 版次：2019年4月第1版
 [2] Docker Swarm or Kubernetes — Help me decide. <a href="https://stackshare.io/stackups/docker-swarm-vs-kubernetes">https://stackshare.io/stackups/docker-swarm-vs-kubernetes</a></p>

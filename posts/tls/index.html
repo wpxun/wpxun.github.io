@@ -167,7 +167,7 @@ ECDHE 和 ECHD 密码套件差不多，但是不包含匿名的密码套件；</
 <li><strong>certificate</strong>：一般只是证明服务端的身份，银行大额转账则要求双向认证，这时候就需要用到银行发的 Ukey。</li>
 </ul>
 <p><strong>身份认证</strong>就是密码学中<strong>数字签名</strong>的实际应用例子，由权威的 CA 机构签名背书给服务器发放<strong>数字证书</strong>（类似现实生活中身份证，驾驶证），身份认证就是对数字证书的身份求证，除了 TLS 使用的数字证书，银行 Ukey 里的数字证书都是一样的原理。SSL/TLS 通信流程图结合密码学的数字签名就可以讲清楚身份认证的过程。</p>
-<p><strong>数字证书</strong>解决了服务器身份认证和公钥传输问题，服务器实体并不能自己证明自己，所以需要通过 CA 机构来进行认证，对服务端来说 CA 机构的私钥用来给服务器颁发证书，对客户端来说浏览器集成了 CA 机构的公钥可以验证服务器证书。**理解数字证书就要理解一次对话中需要两对非对称加密：CA 机构的公钥私钥和服务器的公钥私钥，且这两套的算法没有必然的联系。**目前密钥协商已不再使用 RSA 算法，所以服务器的公钥和私钥已经限于身份认证功能了。</p>
+<p><strong>数字证书</strong>解决了服务器身份认证和公钥传输问题，服务器实体并不能自己证明自己，所以需要通过 CA 机构来进行认证，对服务端来说 CA 机构的私钥用来给服务器颁发证书，对客户端来说浏览器集成了 CA 机构的公钥可以验证服务器证书。**理解数字证书就要理解一次对话中需要两对非对称加密：CA 机构的公钥私钥和服务器的公钥私钥，且这两套的算法没有必然的联系。**目前密钥协商已不再使用 RSA 算法，所以服务器的公钥和私钥已经限于身份认证功能了。更多知识请参阅<a href="/2019/03/21/cryptology/">《密码学》</a></p>
 <h3 id="23-nbspnbsp密钥协商">2.3   密钥协商</h3>
 <ul>
 <li><strong>server_key_exchange</strong>: 一般 HTTPS 网站会部署 ECDHE_RSA、DHE_RSA、ECDHE_ECDSA、RSA 这四种密码套件，这些套件中，前三个一定需要发送 server_key_exchange 子消息才有足够的信息进行密钥协商，最后一个不允许服务器发送 server_key_exchange 子消息，因为单靠 RSA 已经足以进行密钥协商（密钥传输），除 RSA 之外 DH_DSS、DH_RAS 都不需要该子消息。
@@ -324,7 +324,8 @@ session id、证书（对端的，一般为空）、压缩算法（一般不启�
 </ul>
 <p><strong>参考文献</strong>
 [1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版
-[2] 阮一峰. HTTPS 升级指南 <a href="http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html">http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html</a>. 2016年8月19日</p>
+[2] 阮一峰. HTTPS 升级指南 <a href="http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html">http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html</a>. 2016年8月19日
+[3] rsa公钥和私钥到底哪个才是用来加密，哪个用来解密  <a href="https://www.cnblogs.com/007sx/p/10987906.html">https://www.cnblogs.com/007sx/p/10987906.html</a></p>
     </article>
 
     

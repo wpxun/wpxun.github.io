@@ -123,11 +123,10 @@ Docker 主要以 linux 内核的 namespace 和 cgroup 等特性为基础，保�
 <h2 id="2-nbspnbsp引擎架构">2   引擎架构</h2>
 <h3 id="21-nbspnbspdocker-vs-虚拟机">2.1   Docker vs 虚拟机</h3>
 <p>容器比虚拟机轻量级的原因是共享宿主机的操作系统内核；而虚拟机各自运行一个完整的 Guest OS 并通过 hypervisor 连接到宿主机。所以 Docker 的 linux 内核版本一定是跟宿主机一样，不同的是操作系统发行版本。下面引用 <a href="https://docs.docker.com/get-started/">docker 文档图片</a>：</p>
-<p>{% img <a href="https://wpxun.github.io/image/2019/04/Container@2x.png">https://wpxun.github.io/image/2019/04/Container@2x.png</a> 300 %}
-{% img <a href="https://wpxun.github.io/image/2019/04/VM@2x.png">https://wpxun.github.io/image/2019/04/VM@2x.png</a> 300 %}</p>
+<!-- raw HTML omitted -->
 <h3 id="22-nbspnbsp引擎模块">2.2   引擎模块</h3>
 <p>一般我们用 Docker(大写D)表示整个 Docker，docker 和 dockerd 表示执行程序，docker ≈ docker client，dockerd ≈ docker daemon，docker engine ≈ client + daemon + containerd + runc，daemon ≈ 镜像管理、镜像构建、REST API、身份验证、安全、核心网络以及编排。总体逻辑如下图：
-{% img <a href="https://wpxun.github.io/image/2019/04/docker_engine.jpeg">https://wpxun.github.io/image/2019/04/docker_engine.jpeg</a> 300 %}</p>
+<!-- raw HTML omitted --></p>
 <h3 id="23-nbspnbsp模块通信">2.3   模块通信</h3>
 <p>综合 <code>systemctl status docker</code>、<code>systemctl status containerd</code> 等可以理解以下内容：</p>
 <ol>
@@ -144,7 +143,7 @@ docker 默认是 unix socket，所以只能同一宿主机调用，远程调用�
 docker -H unix:///tmp/dockerapi.sock images
 </code></pre><h3 id="24-nbspnbsp启动容器的过程">2.4   启动容器的过程</h3>
 <p>dockerd 监听 client 的处理请求，并连接到 containerd 管理容器在宿主机的生命周期：start、stop、pause、rm 等。启动容器的过程如下图：
-{% img <a href="https://wpxun.github.io/image/2019/04/docker_step_container.jpeg">https://wpxun.github.io/image/2019/04/docker_step_container.jpeg</a> 300 %}</p>
+<!-- raw HTML omitted --></p>
 <h2 id="3-nbspnbsp安装">3   安装</h2>
 <p>安装 docker 和 docker-compose 等都很简单，按<a href="https://docs.docker.com/install/linux/docker-ce/centos/">官方文档</a>安装就可以了。一般安装最新社区版（CE）即可，安装完成后 systemctl start docker、systemctl enable docker 自启动。macOS 和 Windows 抛弃了过时的 Docker Toolbox，采用桌面版安装。一般 linux 服务器只安装 Docker Engine(Docker 引擎)，Mac 的桌面版包括了 Docker 引擎、Compose、Machine、Notary。</p>
 <p>最好通过非 root 用户使用 Docker，如有提示：Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock; 处理方式文档中有说明

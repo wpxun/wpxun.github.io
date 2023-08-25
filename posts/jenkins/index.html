@@ -83,8 +83,11 @@
       <ul>
         <li><a href="#71-nbspnbsp-vagrantfile">7.1    Vagrantfile</a></li>
         <li><a href="#72-nbspnbspscripts">7.2   scripts</a></li>
+        <li><a href="#73---运行-master-节点的-jenkins">7.3   运行 master 节点的 Jenkins</a></li>
+        <li><a href="#74---加入-node-从节点">7.4   加入 node 从节点</a></li>
       </ul>
     </li>
+    <li><a href="#8---troubleshooting">8   Troubleshooting</a></li>
   </ul>
 </nav>
 </aside>
@@ -148,7 +151,7 @@
 </ul>
 <h2 id="2-nbspnbsp声明式流水线">2   声明式流水线</h2>
 <p>创建一个流水线项目后，项目左侧列表会有“流水线语法”链接，可以借助这一脚手架直接生成 DSL 代码，比如与“构建触发”相关的可以选择 properties 步骤生成。当然想要理解声明式还得系统性地学习。</p>
-<p>{% img <a href="https://wpxun.github.io/image/2019/05/declarative_pipeline.png">https://wpxun.github.io/image/2019/05/declarative_pipeline.png</a> 250 %}</p>
+<!-- raw HTML omitted -->
 <h2 id="3-nbspnbsp构建触发器">3   构建触发器</h2>
 <p>除了手动立即构建，还可以构建触发器自动的构建，这也是自动化部署的基础，常用的几种构建触发器如下：</p>
 <ul>
@@ -296,73 +299,79 @@ IP=&#34;$(ip -4 a s $IFNAME | grep &#34;inet&#34; | head -1 |awk &#39;{print $2}
 sed -e &#34;s/^.*${HOSTNAME}.*/${IP} ${HOSTNAME} ${HOSTNAME}/&#34; -i /etc/hosts
 EOF
 </code></pre><ol start="3">
-<li>
-<p>启动 docker registry 容器</p>
+<li>启动 docker registry 容器</li>
+</ol>
 <pre tabindex="0"><code>cat &lt;&lt;EOF &gt;&gt; /Users/ada/vagjenkins/scripts/registry.sh
 #!/bin/bash
-</code></pre></li>
+
+set -ex
+
+# run container
+
+docker pull registry:2.7.1
+docker run -d \
+  --restart=always \
+  --name registry \
+  -v `pwd`/registry:/var/lib/registry \
+  -v /vagrant/certs:/certs \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+  -p 5000:5000 \
+  registry:2.7.1
+
+# setup firewall, 因为 vagrant 镜像默认防火墙是关闭的，所以不用设置
+
+#firewall-cmd --permanent --add-port=8080/tcp
+#firewall-cmd --reload
+EOF
+</code></pre><ol start="4">
+<li>安装 jdk 和 git，建议用 ssh 连接 git，一般有两种办法</li>
 </ol>
-<p>set -ex</p>
-<h1 id="run-container">run container</h1>
-<p>docker pull registry:2.7.1
-docker run -d <br>
-&ndash;restart=always <br>
-&ndash;name registry <br>
--v <code>pwd</code>/registry:/var/lib/registry <br>
--v /vagrant/certs:/certs <br>
--e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt <br>
--e REGISTRY_HTTP_TLS_KEY=/certs/domain.key <br>
--p 5000:5000 <br>
-registry:2.7.1</p>
-<h1 id="setup-firewall-因为-vagrant-镜像默认防火墙是关闭的所以不用设置">setup firewall, 因为 vagrant 镜像默认防火墙是关闭的，所以不用设置</h1>
-<p>#firewall-cmd &ndash;permanent &ndash;add-port=8080/tcp
-#firewall-cmd &ndash;reload
-EOF</p>
-<pre tabindex="0"><code>4. 安装 jdk 和 git，建议用 ssh 连接 git，一般有两种办法
-- 如果是把 ssh 密钥放在服务器的话，必须得用 `ssh -T git@github.com` 连接 github，把 git 服务器指纹写入 known_hosts，否则构建不会在指纹提示自动输入 yes
-- 只是安装 git，在 jenkins 创建新凭据，只需要填写 ssh 密钥，但每次使用时都需要指定用凭据，方便的是会自动采集指纹写入 known_hosts
+<ul>
+<li>如果是把 ssh 密钥放在服务器的话，必须得用 <code>ssh -T git@github.com</code> 连接 github，把 git 服务器指纹写入 known_hosts，否则构建不会在指纹提示自动输入 yes</li>
+<li>只是安装 git，在 jenkins 创建新凭据，只需要填写 ssh 密钥，但每次使用时都需要指定用凭据，方便的是会自动采集指纹写入 known_hosts</li>
+</ul>
+<p>我这里选择了第二种方式，注意设置环境变量的 $ 符号不要被解析掉：</p>
+<pre tabindex="0"><code>
+cat &lt;&lt;EOF &gt;&gt; /Users/ada/vagjenkins/scripts/java.sh
+#!/bin/bash
 
-我这里选择了第二种方式，注意设置环境变量的 $ 符号不要被解析掉：
-</code></pre><p>cat &laquo;EOF &raquo; /Users/ada/vagjenkins/scripts/java.sh
-#!/bin/bash</p>
-<p>set -ex</p>
-<h1 id="untar-jdk">untar jdk</h1>
-<p>mkdir -p /usr/local/java
-tar -zxf /vagrant/jdk-8u211-linux-x64.tar.gz -C /usr/local/java/</p>
-<h1 id="set-env">set env</h1>
-<p>cat &laquo;EOF &raquo; /home/vagrant/.bash_profile
+set -ex
+
+# untar jdk
+
+mkdir -p /usr/local/java
+tar -zxf /vagrant/jdk-8u211-linux-x64.tar.gz -C /usr/local/java/
+
+# set env
+
+cat &lt;&lt;EOF &gt;&gt; /home/vagrant/.bash_profile
 export JAVA_HOME=/usr/local/java/jdk1.8.0_211
-export JRE_HOME=${JAVA_HOME}/jre
-export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
-export PATH=${JAVA_HOME}/bin:$PATH
-EOF</p>
-<p>yum install -y git
-EOF</p>
-<pre tabindex="0"><code>### 7.3   运行 master 节点的 Jenkins
+export JRE_HOME=\${JAVA_HOME}/jre
+export CLASSPATH=.:\${JAVA_HOME}/lib:\${JRE_HOME}/lib
+export PATH=\${JAVA_HOME}/bin:\$PATH
+EOF
 
-完成以上步骤，启动虚拟机，用 java -jar /vagrant/jenkins.war 运行 Jenkins，因为 8080 已经映射到宿主机，所以可以在宿主机访问 Jenkins：localhost:8080。
-
-### 7.4   加入 node 从节点
-
-这里主要就把从节点的 ssh 私钥（服务器鉴权放在 /home/vagrant/.ssh/authorized_keys）生成 jenkins 的凭据，节点的 ssh 私钥可以通过 vagrant ssh [name] --debug 的输出日志中获取，一般放在 /Users/ada/vagjenkins/.vagrant/machines/[name]/virtualbox/private_key，通过 ssh、scp 去连接都需要该 private_key，例子如下：
-
-- `scp  -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-node01/virtualbox/private_key  /Users/ada/.ssh/github/*  vagrant@192.168.56.114:/home/vagrant/.ssh`、
-- NAT 网络通过端口转发连接，`ssh -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-master/virtualbox/private_key vagrant@127.0.0.1 -p 2222`
-- 因为我创建了主机网络，所以还可以直接通过主机网络的 IP 地址连接，`ssh -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-master/virtualbox/private_key vagrant@192.168.56.113`
-
-主节点通过 ssh 连接到从节点，同样需要 known_hosts 验证，在可以在服务器手动执行 `ssh vagrant@192.168.56.115` 验证再到 jenkins 启动节点。
-
-## 8   Troubleshooting
-
-- Jenkins 出现更新出错的问题，一般就是 /etc/resolv.conf 解析出问题，可以用以下的方式查看：
-  curl -I --connect-timeout 10 -m 20  https://updates.jenkins.io/update-center.json
-
-&lt;br/&gt;&lt;br/&gt;&lt;br/&gt; 
-
- **参考文献** 
-[1] what-is-scrum. https://www.scrum.org/resources/what-is-scrum
-[2] 如何从零开始搭建 CI/CD 流水线 https://www.infoq.cn/article/WHt0wFMDRrBU-dtkh1Xp
-</code></pre>
+yum install -y git
+EOF
+</code></pre><h3 id="73---运行-master-节点的-jenkins">7.3   运行 master 节点的 Jenkins</h3>
+<p>完成以上步骤，启动虚拟机，用 java -jar /vagrant/jenkins.war 运行 Jenkins，因为 8080 已经映射到宿主机，所以可以在宿主机访问 Jenkins：localhost:8080。</p>
+<h3 id="74---加入-node-从节点">7.4   加入 node 从节点</h3>
+<p>这里主要就把从节点的 ssh 私钥（服务器鉴权放在 /home/vagrant/.ssh/authorized_keys）生成 jenkins 的凭据，节点的 ssh 私钥可以通过 vagrant ssh [name] &ndash;debug 的输出日志中获取，一般放在 /Users/ada/vagjenkins/.vagrant/machines/[name]/virtualbox/private_key，通过 ssh、scp 去连接都需要该 private_key，例子如下：</p>
+<ul>
+<li><code>scp  -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-node01/virtualbox/private_key  /Users/ada/.ssh/github/*  vagrant@192.168.56.114:/home/vagrant/.ssh</code>、</li>
+<li>NAT 网络通过端口转发连接，<code>ssh -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-master/virtualbox/private_key vagrant@127.0.0.1 -p 2222</code></li>
+<li>因为我创建了主机网络，所以还可以直接通过主机网络的 IP 地址连接，<code>ssh -i /Users/ada/vagjenkins/.vagrant/machines/jenkins-master/virtualbox/private_key vagrant@192.168.56.113</code></li>
+</ul>
+<p>主节点通过 ssh 连接到从节点，同样需要 known_hosts 验证，在可以在服务器手动执行 <code>ssh vagrant@192.168.56.115</code> 验证再到 jenkins 启动节点。</p>
+<h2 id="8---troubleshooting">8   Troubleshooting</h2>
+<ul>
+<li>Jenkins 出现更新出错的问题，一般就是 /etc/resolv.conf 解析出问题，可以用以下的方式查看：
+curl -I &ndash;connect-timeout 10 -m 20  <a href="https://updates.jenkins.io/update-center.json">https://updates.jenkins.io/update-center.json</a></li>
+</ul>
+<p><strong>参考文献</strong>
+[1] what-is-scrum. <a href="https://www.scrum.org/resources/what-is-scrum">https://www.scrum.org/resources/what-is-scrum</a>
+[2] 如何从零开始搭建 CI/CD 流水线 <a href="https://www.infoq.cn/article/WHt0wFMDRrBU-dtkh1Xp">https://www.infoq.cn/article/WHt0wFMDRrBU-dtkh1Xp</a></p>
     </article>
 
     

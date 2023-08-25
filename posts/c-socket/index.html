@@ -136,7 +136,7 @@ tcp        0      0 10.170.0.4:22           112.97.60.187:20524     ESTABLISHED
 tcp        0      0 10.170.0.4:22           112.97.60.187:20526     ESTABLISHED
 tcp   176656      0 10.170.0.4:8090         112.97.60.187:20530     ESTABLISHED
 </code></pre><p>上面前三行输出内容中，LISTEN 是服务器监听 socket，第一个 ESTABLISHED 是服务器的连接 socket，第二是 ESTABLISHED 是客户端的连接 socket。根据上面列的信息，其实就可以知道套接字结构的主要属性：
-{% img <a href="https://wpxun.github.io/image/2019/03/%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BB%93%E6%9E%84.png">https://wpxun.github.io/image/2019/03/%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BB%93%E6%9E%84.png</a> 300 %}
+<!-- raw HTML omitted -->
 套接字结构</p>
 <p>接收（Recv-Q）和发送（Send-Q）的缓冲区大小由系统默认设置，也可以调用 setsockopt() getsockopt() 进行设置，两个缓冲区都是 FIFO（先进先出），主动关闭套接字后该套接字将只能 read，不能 send。
 数据流虽然是数据报形式发送，到存放到缓冲区后就没有数据报概念了，因此只能读取到没有数据为止，不能假设写到连接一端的数据大小与从连接另一端读取的数据大小之间存在任何一致性，换句话说，在发送端通过调用一次 send() 传入的数据可以通过在另一端调用 recv() 多次来获取；而调用 recv() 一次可能返回调用 send() 多次所传入的数据。
@@ -168,8 +168,7 @@ state 这个却需要深入理解，这部分可以参考<a href="/2019/03/10/tc
 <li><code>ssize_t recv(ind sockfd, const void *buf, size_t nbytes, int flags); 成功返回接收字节数，失败返回 -1，如果通信对端正常关闭，则返回 0；</code>nbytes：要传输的数据字节数，flags：接收数据时指定的可选项信息。</li>
 </ul>
 <p>这两个比 write 和 read 多了 flags 选项。可选项可查阅资料。</p>
-<p>{% img <a href="https://wpxun.github.io/image/2019/03/TCP%E5%A5%97%E6%8E%A5%E5%AD%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png">https://wpxun.github.io/image/2019/03/TCP%E5%A5%97%E6%8E%A5%E5%AD%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png</a> 300 %}
-TCP 套接字的工作流程</p>
+<!-- raw HTML omitted -->
 <p>参考 C 语言代码实现：
 <a href="https://wpxun.github.io/image/2019/03/main_tcp_server.c">TCP 服务端 C 语言实现</a>
 <a href="https://wpxun.github.io/image/2019/03/main_tcp_client.c">TCP 客户端 C 语言实现</a></p>
@@ -180,8 +179,7 @@ TCP 套接字的工作流程</p>
 <li><code>ssize_t sendto(int socket, void *restrict buffer, size_t length, int flags, const struct sockaddr * dest_addr, socklen_t dest_len); 成功返回发送的字节数，失败返回 -1；</code></li>
 <li><code>ssize_t recvfrom(int socket, const void *message, size_t length, int flags, struct sockaddr *restrict address, socklen_t *restrict address_len); 成功返回发送的字节数，失败返回 -1；并置相应的 errno；</code></li>
 </ul>
-<p>{% img <a href="https://wpxun.github.io/image/2019/03/UDP%E5%A5%97%E6%8E%A5%E5%AD%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png">https://wpxun.github.io/image/2019/03/UDP%E5%A5%97%E6%8E%A5%E5%AD%97%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png</a> 300 %}
-UDP 套接字的工作流程</p>
+<!-- raw HTML omitted -->
 <p>参考 C 语言代码实现：
 <a href="https://wpxun.github.io/image/2019/03/main_udp_server.c">UDP 服务端 C 语言实现</a>
 <a href="https://wpxun.github.io/image/2019/03/main_udp_client.c">UDP 客户端 C 语言实现</a></p>
@@ -226,8 +224,7 @@ select() 函数是最具代表性的实现复用服务器的方法，它将多�
 以 HTTP/2 为例进行分析：
 <img src="https://wpxun.github.io/image/2019/03/http2_segment.png" alt="基于 TCP 的 HTTP/2 帧">
 缓冲区 TCP 报文段数据是指去掉 TCP 首部后的数据字节流，数据字节流是连续的，没有边界的，承载的是 HTTP/2 帧数据片段，且一个 TCP 报文段数据和一个 HTTP/2 帧是没有对应关系的，可能一个 TCP 报文段数据包含多个 HTTP/2 帧，也可能多个 TCP 报文段数据承载一个 HTTP/2 帧。如果把 TCP 报文段数据整体来看，就是多个 HTTP/2 帧首尾相连。因为帧是协议化的，所以 HTTP/2 才能够识别帧，并取出负载数据，并按流 ID 组成各个请求响应。
-总之，TCP 层接收到数据去掉首部信息后才放入缓冲区，所以缓冲区仅仅是应用层的数据，应用层协议最重要的就是把字节流协议化，以便能从字节流中识别出来数据。<br>
-<!-- raw HTML omitted --></p>
+总之，TCP 层接收到数据去掉首部信息后才放入缓冲区，所以缓冲区仅仅是应用层的数据，应用层协议最重要的就是把字节流协议化，以便能从字节流中识别出来数据。</p>
 <p><strong>参考文献</strong>
 [1] 程国钢.等. Linux C 编程从基础到实践
 [2] 尹圣雨（韩）. TCP/IP网络编程. 版次：2014年7月第1版

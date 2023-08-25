@@ -225,11 +225,26 @@
 对称加密算法有很多，如一次性密码本（XOR运算）、流密码算法（RC4_128、CHACHA20）、块密码算法（AES_256_CBC、3DES_EDE_CBC）、AEAD算法（AES_GCM（目前主流的AEAD）、AES_CCM、CHACHA20_Poly1305（谷歌提出的AEAD）），AEAD加密模式由于同时完成了机密性和完整性保护，在安全性上更有保障，服务器应该优先支持相关的密码套件。</p>
 <h3 id="22-nbspnbsp非对称加密">2.2   非对称加密</h3>
 <p>也叫公开密钥算法，因为计算量大，日常开发不会用来保证数据机密性，而是基于网络传输信息不安全事实，采用非对称加密进行身份认证。非对称加密的私钥由谁生成就由谁保管；对服务器来说，私钥是服务器生成的，由服务器保密，公钥给用户；对 github.com 来说，私钥由用户生成的，由用户保密，公钥上传配置到 github.com。</p>
-<p>公开密钥算法最重要和最广泛使用的算法就是 RSA 算法，它是 Ron Rivest、Adi Shamir、Leonard Adleman 三人创建的。 **RSA 算法是一个多用途的算法，可以进行加密解密、密钥协商、数字签名；**基础原理都是一样的：公钥加密私钥解密，私钥加密公钥解密。</p>
+<p><strong>公私钥特性</strong></p>
 <ul>
-<li>加密解密：双向加密，如果不考虑性能，双方可以用各自的密钥对实现双向加密。</li>
-<li>密钥协商：单向加密，即公钥加密密钥发给对方，对方用私钥解密得到密钥，实现对称加密。目前已经被淘汰。</li>
-<li>数字签名：也是单向，不过和密钥协商相反，是用私钥加密数据（签名值），把签名值和数据发给对方，对方用公钥解密难签名。数字证书是数字签名一种例子，只是用 CA 机构的私钥给服务器的公钥这个数据进行签名而已。一言蔽之：数字签名是为了证明身份，不是为了加密数据。</li>
+<li>公钥与私钥是成对出现的；</li>
+<li>私钥文件中包含了公钥数据，所以可以基于私钥导出公钥；</li>
+<li>密钥越长，越难破解，所以2048位密钥比1024位密钥要更安全；</li>
+<li>公钥和私钥都是密钥，被公开的那个就是公钥，没有被公开的那个就是私钥。</li>
+</ul>
+<p>公开密钥算法最重要和最广泛使用的算法就是 RSA 算法，它是 Ron Rivest、Adi Shamir、Leonard Adleman 三人创建的。 **RSA 算法是一个多用途的算法，可以进行加密解密、数字签名、密钥协商；**基础原理都是一样的：公钥加密私钥解密，私钥签名公钥验签。</p>
+<ul>
+<li>
+<p>加密解密：公钥用于加密、私钥用于解密，这才能起到加密作用。</p>
+<p>因为公钥是公开的，很多人可以持有公钥。若用私钥加密，那所有持有公钥的人都可以进行解密，这是不安全的！</p>
+<p>若用公钥加密，那只能由私钥解密，而私钥是私有不公开的，只能由特定的私钥持有人解密，保证的数据的安全性。</p>
+<p>密钥协商也是利用这一点，即公钥加密密钥发给对方，对方用私钥解密得到密钥，实现对称加密。目前已经被淘汰。</p>
+</li>
+<li>
+<p>数字签名：私钥用于签名、公钥用于验签</p>
+<p>用私钥加密数据（签名值），把签名值和数据发给对方，对方用公钥解密验签。数字证书是数字签名一种例子，只是用 CA 机构的私钥给服务器的公钥这个数据进行签名而已。一言蔽之：数字签名是为了证明身份，不是为了加密数据。</p>
+<p>签名和加密作用不同，签名并不是为了保密，而是为了保证这个签名是由特定的某个人签名的，而不是被其它人伪造的签名，所以私钥的私有性就适合用在签名用途上。私钥签名后，只能由对应的公钥解密，公钥又是公开的（很多人可持有），所以这些人拿着公钥来解密，解密成功后就能判断出是持有私钥的人做的签名，验证了身份合法性。</p>
+</li>
 </ul>
 <p>RSA 原理 n = p*q, 其中p、q是大质数, φ(n) = (p-1)(q-1); 公钥 e、n: 1 &lt; e &lt; f(n), e 和 f(n) 互质; 私钥 d、n: e*d mod f(n) = 1.
 签名：m^e mod n = c（密文）
@@ -310,11 +325,12 @@ MAC 采用一个消息和密钥作为输入，并且产生一个 MAC 标记作�
 常见系统如 OpenBSD 自 5.6 起，macOS 自 10.11 El Capitan 起，Alpine Linux 自 3.5.0 起。在 macOS 上测试如下：</p>
 <pre tabindex="0"><code>adadeMBP:~ ada$ openssl version
 LibreSSL 2.6.5
-</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+</code></pre><!-- raw HTML omitted -->
 <p><strong>参考文献</strong>
 [1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版
 [2] Mrpre. SSL中的RSA、DHE、ECDHE、ECDH流程与区别 <a href="https://blog.csdn.net/mrpre/article/details/78025940">https://blog.csdn.net/mrpre/article/details/78025940</a>. 2017年09月19日
-[3] TLS Perfect Forward Secrecy 之 DH/ECDHE <a href="https://blog.nlogn.cn/pfs-ecdhe/">https://blog.nlogn.cn/pfs-ecdhe/</a></p>
+[3] TLS Perfect Forward Secrecy 之 DH/ECDHE <a href="https://blog.nlogn.cn/pfs-ecdhe/">https://blog.nlogn.cn/pfs-ecdhe/</a>
+[3] rsa公钥和私钥到底哪个才是用来加密，哪个用来解密  <a href="https://www.cnblogs.com/007sx/p/10987906.html">https://www.cnblogs.com/007sx/p/10987906.html</a></p>
     </article>
 
     
