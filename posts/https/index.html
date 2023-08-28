@@ -430,12 +430,12 @@ sudo tcpdump -i eth0 -s 80 -w /tmp/tcpdump.cap
 <p>其实真正的原因在 B 从缓存接收数据太慢了导致窗口快速缩小为 0，查看我的代码发现，数据是每秒 100KB 在发（发4次），接收是每秒 1KB 多在接收。所以 B 数据全部发送到 A 的缓冲区要 69 秒（当然 A 应用程序接收完就需要 400KB/1KB/s = 400s，但这跟 B 无关），可以计算出 A 缓冲数据峰值 400KB - 69KB = 331KB，如果强行要改正这种问题，只要把 A 的窗口增大到 400KB 就能秒传了（当然 A 应用程序读完其缓冲区还是需要 400s）。</p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><strong>参考文献</strong>
-[1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版
-[2] 阮一峰. HTTPS 升级指南 <a href="http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html">http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html</a>. 2016年8月19日
-[3] 三种解密 HTTPS 流量的方法介绍 <a href="https://imququ.com/post/how-to-decrypt-https.html">https://imququ.com/post/how-to-decrypt-https.html</a>. 2016/03/28
-[4] HTTP/2的历史、特性、调试、性能 <a href="https://www.jianshu.com/p/748c7ca7c50f">https://www.jianshu.com/p/748c7ca7c50f</a>. 2017.07.25
-[5] HTTP队头阻塞. <a href="https://liudanking.com/arch/what-is-head-of-line-blocking-http2-quic/">https://liudanking.com/arch/what-is-head-of-line-blocking-http2-quic/</a>
-[6] TCP 性能优化详解. <a href="https://www.zhuxiaodong.net/2018/tcp-performance-optimize-instruction/">https://www.zhuxiaodong.net/2018/tcp-performance-optimize-instruction/</a>
+[1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版<br>
+[2] 阮一峰. HTTPS 升级指南 <a href="http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html">http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html</a>. 2016年8月19日<br>
+[3] 三种解密 HTTPS 流量的方法介绍 <a href="https://imququ.com/post/how-to-decrypt-https.html">https://imququ.com/post/how-to-decrypt-https.html</a>. 2016/03/28<br>
+[4] HTTP/2的历史、特性、调试、性能 <a href="https://www.jianshu.com/p/748c7ca7c50f">https://www.jianshu.com/p/748c7ca7c50f</a>. 2017.07.25<br>
+[5] HTTP队头阻塞. <a href="https://liudanking.com/arch/what-is-head-of-line-blocking-http2-quic/">https://liudanking.com/arch/what-is-head-of-line-blocking-http2-quic/</a><br>
+[6] TCP 性能优化详解. <a href="https://www.zhuxiaodong.net/2018/tcp-performance-optimize-instruction/">https://www.zhuxiaodong.net/2018/tcp-performance-optimize-instruction/</a><br>
 [7]【TCP/IP】HTTP协议与HTTPS的加密流程 <a href="https://www.cnblogs.com/jojop/p/14111938.html">https://www.cnblogs.com/jojop/p/14111938.html</a></p>
     </article>
 
