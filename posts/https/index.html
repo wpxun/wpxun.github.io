@@ -429,7 +429,7 @@ sudo tcpdump -i eth0 -s 80 -w /tmp/tcpdump.cap
 横坐标是相对时间（相对开启抓包的时间），27s-52s 是 0 窗口时期，共有三个长的 0 窗口时期（27s 前也有几个横线，那还算正常暂时不讨论），所以要解决网络就是要增加接收方的窗口。尽量不要出现 0 窗口时间。可是通过查包 A 的窗口是一直在增大的，最大到 120KB，仅发 400KB 的数据，窗口 120KB 完全足够了，基本可以达到秒传才对。</p>
 <p>其实真正的原因在 B 从缓存接收数据太慢了导致窗口快速缩小为 0，查看我的代码发现，数据是每秒 100KB 在发（发4次），接收是每秒 1KB 多在接收。所以 B 数据全部发送到 A 的缓冲区要 69 秒（当然 A 应用程序接收完就需要 400KB/1KB/s = 400s，但这跟 B 无关），可以计算出 A 缓冲数据峰值 400KB - 69KB = 331KB，如果强行要改正这种问题，只要把 A 的窗口增大到 400KB 就能秒传了（当然 A 应用程序读完其缓冲区还是需要 400s）。</p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><strong>参考文献</strong>
+<p><strong>参考文献</strong><br>
 [1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版<br>
 [2] 阮一峰. HTTPS 升级指南 <a href="http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html">http://www.ruanyifeng.com/blog/2016/08/migrate-from-http-to-https.html</a>. 2016年8月19日<br>
 [3] 三种解密 HTTPS 流量的方法介绍 <a href="https://imququ.com/post/how-to-decrypt-https.html">https://imququ.com/post/how-to-decrypt-https.html</a>. 2016/03/28<br>

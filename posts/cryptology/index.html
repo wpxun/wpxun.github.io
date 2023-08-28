@@ -232,7 +232,7 @@
 <li>密钥越长，越难破解，所以2048位密钥比1024位密钥要更安全；</li>
 <li>公钥和私钥都是密钥，被公开的那个就是公钥，没有被公开的那个就是私钥。</li>
 </ul>
-<p>公开密钥算法最重要和最广泛使用的算法就是 RSA 算法，它是 Ron Rivest、Adi Shamir、Leonard Adleman 三人创建的。 **RSA 算法是一个多用途的算法，可以进行加密解密、数字签名、密钥协商；**基础原理都是一样的：公钥加密私钥解密，私钥签名公钥验签。</p>
+<p>公开密钥算法最重要和最广泛使用的算法就是 RSA 算法，它是 Ron Rivest、Adi Shamir、Leonard Adleman 三人创建的。 <strong>RSA 算法是一个多用途的算法，可以进行加密解密、数字签名、密钥协商；</strong> 础原理都是一样的：公钥加密私钥解密，私钥签名公钥验签。</p>
 <ul>
 <li>
 <p>加密解密：公钥用于加密、私钥用于解密，这才能起到加密作用。</p>
@@ -254,8 +254,7 @@
 <h2 id="3-nbspnbsp组合加密算法">3   组合加密算法</h2>
 <p>组合基础算法和简单加密算法实现密码学的“机密性”、“完整性”、“身份验证”和“不可抵赖性”中的一个或者多个的算法；比如消息验证码需要组合 Hash 算法和加密算法、TLS 协议握手需要协商出密码套件。</p>
 <h3 id="31-nbspnbsp消息验证码message-authentication-code-mac">3.1   消息验证码(Message Authentication Code, Mac)</h3>
-<p><strong>实现了完整性。</strong>
-消息验证码适用于不需要对数据进行加密，只需要保证数据完整性的情形，当然也可以变通，既对数据进行加密同时也保证完整性。HTTP 应用最多的 Mac 算法是 HMAC 算法（使用 Hash 算法作为基元，更具体算法比如 HMAC-SHA256 算法使用了 SHA256 作为加密基元），还有 TLS 的 AEAD 使用了 GHASH 算法（也是一种 Mac 算法）、CMAC。Mac 不能进行身份验证，原因就在于消息发送方和接收方拥有同样的密钥，所以双方都可以抵赖。
+<p><strong>实现了完整性。</strong> 息验证码适用于不需要对数据进行加密，只需要保证数据完整性的情形，当然也可以变通，既对数据进行加密同时也保证完整性。HTTP 应用最多的 Mac 算法是 HMAC 算法（使用 Hash 算法作为基元，更具体算法比如 HMAC-SHA256 算法使用了 SHA256 作为加密基元），还有 TLS 的 AEAD 使用了 GHASH 算法（也是一种 Mac 算法）、CMAC。Mac 不能进行身份验证，原因就在于消息发送方和接收方拥有同样的密钥，所以双方都可以抵赖。
 MAC 采用一个消息和密钥作为输入，并且产生一个 MAC 标记作为输出。这个标记和消息一起，可以被任何拥有相同密钥的成员校验。
 这类算法的变种很多，原理的步骤如下：
 （1）把消息先进行 Hash 运算，也就是使用 Hash 算法得到消息的摘要值；
@@ -263,7 +262,7 @@ MAC 采用一个消息和密钥作为输入，并且产生一个 MAC 标记作�
 （3）接收方用相同的密钥对“MAC 值”进行解密得到消息摘要，对消息进行 Hash 运算得到消息摘要；
 （4）比较消息摘要；</p>
 <h3 id="32-nbspnbsp加密和验证模式">3.2   加密和验证模式</h3>
-<p>**实现了机密性和完整性。**对称加密算法可以保证消息的机密性，Mac 算法可以保证消息的完整性，将两者结合起来，就可以保证消息同时具备机密性和完整性。</p>
+<p><strong>实现了机密性和完整性。</strong> 称加密算法可以保证消息的机密性，Mac 算法可以保证消息的完整性，将两者结合起来，就可以保证消息同时具备机密性和完整性。</p>
 <h4 id="321-nbspnbspad-加密模式">3.2.1   AD 加密模式</h4>
 <p>使用者结合对称加密算法和 Mac 算法，提供机密性和完整性的模式也叫 AE 加密模式（暂且理解 AE、AD 是一样的意思吧 ），主要有三种方式，只是加密算法和 Mac 算法顺序问题，总体上和消息验证码很相似，只是用同一个密钥对消息也进行加密。</p>
 <ul>
@@ -326,11 +325,11 @@ MAC 采用一个消息和密钥作为输入，并且产生一个 MAC 标记作�
 <pre tabindex="0"><code>adadeMBP:~ ada$ openssl version
 LibreSSL 2.6.5
 </code></pre><!-- raw HTML omitted -->
-<p><strong>参考文献</strong>
-[1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版
-[2] Mrpre. SSL中的RSA、DHE、ECDHE、ECDH流程与区别 <a href="https://blog.csdn.net/mrpre/article/details/78025940">https://blog.csdn.net/mrpre/article/details/78025940</a>. 2017年09月19日
-[3] TLS Perfect Forward Secrecy 之 DH/ECDHE <a href="https://blog.nlogn.cn/pfs-ecdhe/">https://blog.nlogn.cn/pfs-ecdhe/</a>
-[3] rsa公钥和私钥到底哪个才是用来加密，哪个用来解密  <a href="https://www.cnblogs.com/007sx/p/10987906.html">https://www.cnblogs.com/007sx/p/10987906.html</a></p>
+<p><strong>参考文献</strong><br>
+[1] 虞卫东. 深入浅出 HTTPS 从原理一实战. 版次：2018年6月第1版<br>
+[2] Mrpre. SSL中的RSA、DHE、ECDHE、ECDH流程与区别 <a href="https://blog.csdn.net/mrpre/article/details/78025940">https://blog.csdn.net/mrpre/article/details/78025940</a>. 2017年09月19日<br>
+[3] TLS Perfect Forward Secrecy 之 DH/ECDHE <a href="https://blog.nlogn.cn/pfs-ecdhe/">https://blog.nlogn.cn/pfs-ecdhe/</a><br>
+[4] rsa公钥和私钥到底哪个才是用来加密，哪个用来解密  <a href="https://www.cnblogs.com/007sx/p/10987906.html">https://www.cnblogs.com/007sx/p/10987906.html</a></p>
     </article>
 
     
